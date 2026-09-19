@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Year 11 Classroom Tools</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; max-width: 700px; margin: 40px auto; padding: 20px; line-height: 1.6; background: #f8fafc; color: #0f172a; }
+    h1 { border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+    ul { list-style: none; padding: 0; }
+    li { background: white; margin: 10px 0; padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0; }
+    a { font-size: 1.1rem; font-weight: bold; color: #2563eb; text-decoration: none; text-transform: capitalize; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <h1>Year 11 Classroom Tools</h1>
+  <p>Select an activity below to start:</p>
+  <ul id="tool-list">Loading tools...</ul>
+
+  <script>
+    fetch('https://api.github.com/repos/meyerball/Year-11-Classroom-Tools/contents/')
+      .then(res => res.json())
+      .then(files => {
+        const list = document.getElementById('tool-list');
+        list.innerHTML = '';
+        
+        files.forEach(file => {
+          if (file.name.endsWith('.html') && file.name !== 'index.html') {
+            const cleanName = file.name.replace('.html', '').replace(/_/g, ' ');
+            const item = document.createElement('li');
+            item.innerHTML = `<a href="${file.name}">${cleanName}</a>`;
+            list.appendChild(item);
+          }
+        });
+      });
+  </script>
+
+</body>
+</html>
