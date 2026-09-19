@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Year 11 Advanced Mathematics: Post-Exam Challenge Arcade</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- KaTeX for crisp inline math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+  <!-- Canvas Confetti for winning celebrations -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Wordle Flip Animations */
+    .wordle-tile {
+      perspective: 1000px;
+      transition: all 0.2s ease;
+    }
+    .tile-flip {
+      animation: flipTile 0.5s ease forwards;
+    }
+    @keyframes flipTile {
+      0% { transform: rotateX(0deg); }
+      50% { transform: rotateX(90deg); }
+      100% { transform: rotateX(0deg); }
+    }
+
+    /* Pulse Glow */
+    .glow-amber {
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
+    }
+    .glow-blue {
+      box-shadow: 0 0 25px rgba(59, 130, 246, 0.25);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1e293b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Top Navigation & Period Control Bar -->
+  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 lg:px-8 py-3.5">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('hub')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-blue-500 to-cyan-400 flex items-center justify-center text-white text-xl shadow-lg shadow-indigo-500/25">
+          <i class="ph-bold ph-function"></i>
+        </div>
+        <div>
+          <h1 class="text-base font-extrabold tracking-tight text-white flex items-center gap-2">
+            Math Arcade <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Year 11 Adv</span>
+          </h1>
+          <p class="text-xs text-slate-400">Post-Exam Challenge Series</p>
+        </div>
+      </div>
+
+      <!-- Quick Session Stats & 50-Minute Lesson Clock -->
+      <div class="flex items-center gap-3 md:gap-6 bg-slate-800/80 px-4 py-1.5 rounded-2xl border border-slate-700">
+        <!-- Timer -->
+        <div class="flex items-center gap-2">
+          <i class="ph-fill ph-timer text-amber-400 text-lg"></i>
+          <div>
+            <div class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Period Timer</div>
+            <div id="sessionTimerDisplay" class="text-sm md:text-base font-mono font-bold text-amber-300">50:00</div>
+          </div>
+          <button id="timerToggleBtn" onclick="toggleTimer()" class="ml-1 text-slate-400 hover:text-white text-sm p-1">
+            <i id="timerIcon" class="ph-bold ph-play"></i>
+          </button>
+        </div>
+
+        <div class="h-6 w-px bg-slate-700"></div>
+
+        <!-- Global Points -->
+        <div class="flex items-center gap-2">
+          <i class="ph-fill ph-trophy text-yellow-400 text-lg"></i>
+          <div>
+            <div class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Total Score</div>
+            <div id="globalScore" class="text-sm md:text-base font-mono font-extrabold text-emerald-400">0 pts</div>
+          </div>
+        </div>
+
+        <div class="h-6 w-px bg-slate-700 hidden sm:block"></div>
+
+        <!-- Audio mute button -->
+        <button onclick="toggleAudio()" id="audioBtn" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-700 transition" title="Sound Effects">
+          <i id="audioIcon" class="ph-bold ph-speaker-high text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Quick Nav Buttons -->
+      <div class="flex items-center gap-1.5">
+        <button onclick="switchView('hub')" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-800 transition flex items-center gap-1.5" data-tab="hub">
+          <i class="ph-bold ph-squares-four"></i> Hub
+        </button>
+        <button onclick="switchView('wordle')" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-800 transition flex items-center gap-1.5" data-tab="wordle">
+          <i class="ph-bold ph-textbox"></i> Wordle
+        </button>
+        <button onclick="switchView('grid')" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-800 transition flex items-center gap-1.5" data-tab="grid">
+          <i class="ph-bold ph-grid-nine"></i> Grid
+        </button>
+        <button onclick="switchView('vault')" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-800 transition flex items-center gap-1.5" data-tab="vault">
+          <i class="ph-bold ph-lock-key"></i> Vault
+        </button>
+        <button onclick="switchView('target')" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-800 transition flex items-center gap-1.5" data-tab="target">
+          <i class="ph-bold ph-target"></i> Target
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notification Banner Modal / Message Toast -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-800 border border-slate-600 shadow-2xl rounded-xl px-5 py-3 flex items-center gap-3 text-sm">
+    <i id="toastIcon" class="ph-fill ph-info text-cyan-400 text-xl"></i>
+    <span id="toastMsg" class="font-medium text-slate-200">Alert message</span>
+  </div>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8">
+
+    <!-- ==================== VIEW 1: ARCADE HUB / INSTRUCTIONS ==================== -->
+    <section id="view-hub" class="space-y-8">
+      <!-- Welcome Hero Banner -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-indigo-500/20 p-6 md:p-10 shadow-2xl">
+        <div class="absolute -right-12 -top-12 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-12 -bottom-12 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative max-w-3xl space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-xs font-semibold text-indigo-300">
+            <i class="ph-fill ph-sparkle"></i> Post-Exam Relief Activity
+          </div>
+          <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
+            Year 11 Math Masters <span class="bg-gradient-to-r from-indigo-400 via-cyan-300 to-emerald-400 bg-clip-text text-transparent">Championship</span>
+          </h2>
+          <p class="text-slate-300 text-sm md:text-base leading-relaxed">
+            You’ve officially conquered the Preliminary Course and exams! Today’s mission is 100% self-directed: compete individually or in pairs to crack all 4 mathematical challenge stations before the 50-minute bell rings.
+          </p>
+          <div class="flex flex-wrap gap-4 pt-2">
+            <button onclick="startSession()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 font-bold text-sm text-white shadow-lg shadow-indigo-600/30 transition flex items-center gap-2">
+              <i class="ph-bold ph-play-circle text-lg"></i> Start 50-Minute Challenge
+            </button>
+            <button onclick="showInstructionsModal()" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-semibold text-sm text-slate-300 transition flex items-center gap-2">
+              <i class="ph-bold ph-book-open-text text-lg"></i> Game Rules & Syllabus Tips
+            </button>
+            <button onclick="showTeacherAnswerKey()" class="px-4 py-3 rounded-xl bg-slate-800/40 hover:bg-slate-800 border border-slate-700/50 font-medium text-xs text-slate-400 transition flex items-center gap-1.5">
+              <i class="ph-bold ph-key"></i> Teacher / End-of-Lesson Key
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Challenge Stations Grid -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+            <i class="ph-bold ph-game-controller text-indigo-400"></i> Active Challenge Stations
+          </h3>
+          <span class="text-xs font-medium text-slate-400">4 Stations • Approx. 10–15 mins each</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <!-- Card 1: Wordle -->
+          <div onclick="switchView('wordle')" class="group cursor-pointer rounded-2xl bg-slate-800/70 hover:bg-slate-800 border border-slate-700 hover:border-indigo-500/50 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition">
+                <i class="ph-bold ph-textbox"></i>
+              </div>
+              <h4 class="text-lg font-bold text-white group-hover:text-emerald-300 transition">Math Wordle</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                6 rounds of preliminary math terminology. Guess the mystery terms with color-coded feedback & syllabus hints.
+              </p>
+            </div>
+            <div class="mt-6 flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-slate-700/60">
+              <span class="font-medium text-emerald-400">6 Mystery Words</span>
+              <span class="flex items-center gap-1 font-semibold group-hover:translate-x-1 transition text-white">Play <i class="ph-bold ph-arrow-right"></i></span>
+            </div>
+          </div>
+
+          <!-- Card 2: Immaculate Grid -->
+          <div onclick="switchView('grid')" class="group cursor-pointer rounded-2xl bg-slate-800/70 hover:bg-slate-800 border border-slate-700 hover:border-indigo-500/50 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center text-2xl group-hover:scale-110 transition">
+                <i class="ph-bold ph-grid-nine"></i>
+              </div>
+              <h4 class="text-lg font-bold text-white group-hover:text-blue-300 transition">Immaculate Grid</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Choose the correct mathematical functions and curves that satisfy both row and column criteria simultaneously.
+              </p>
+            </div>
+            <div class="mt-6 flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-slate-700/60">
+              <span class="font-medium text-blue-400">3 Unique 3×3 Grids</span>
+              <span class="flex items-center gap-1 font-semibold group-hover:translate-x-1 transition text-white">Play <i class="ph-bold ph-arrow-right"></i></span>
+            </div>
+          </div>
+
+          <!-- Card 3: Vault Codebreaker -->
+          <div onclick="switchView('vault')" class="group cursor-pointer rounded-2xl bg-slate-800/70 hover:bg-slate-800 border border-slate-700 hover:border-indigo-500/50 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-2xl group-hover:scale-110 transition">
+                <i class="ph-bold ph-lock-key"></i>
+              </div>
+              <h4 class="text-lg font-bold text-white group-hover:text-amber-300 transition">Vault Codebreaker</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Compute calculus gradients, exact radian trig values, log laws, and conditional probabilities to generate the 4-digit PINs.
+              </p>
+            </div>
+            <div class="mt-6 flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-slate-700/60">
+              <span class="font-medium text-amber-400">4 Security Vaults</span>
+              <span class="flex items-center gap-1 font-semibold group-hover:translate-x-1 transition text-white">Crack <i class="ph-bold ph-arrow-right"></i></span>
+            </div>
+          </div>
+
+          <!-- Card 4: Target Number Breakdown -->
+          <div onclick="switchView('target')" class="group cursor-pointer rounded-2xl bg-slate-800/70 hover:bg-slate-800 border border-slate-700 hover:border-indigo-500/50 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-2xl group-hover:scale-110 transition">
+                <i class="ph-bold ph-target"></i>
+              </div>
+              <h4 class="text-lg font-bold text-white group-hover:text-purple-300 transition">Target Countdown</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Use your dealt numbers and math operators to hit target totals. Includes powers, square roots, and basic operators.
+              </p>
+            </div>
+            <div class="mt-6 flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-slate-700/60">
+              <span class="font-medium text-purple-400">4 Tricky Rounds</span>
+              <span class="flex items-center gap-1 font-semibold group-hover:translate-x-1 transition text-white">Solve <i class="ph-bold ph-arrow-right"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Syllabus Topics Covered in this Arcade -->
+      <div class="rounded-2xl bg-slate-900/60 border border-slate-800 p-6">
+        <h4 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+          <i class="ph-bold ph-certificate text-indigo-400"></i> Course Topics Integrated
+        </h4>
+        <div class="flex flex-wrap gap-2 text-xs">
+          <span class="px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-indigo-300">MA-F1 Functions & Transformations</span>
+          <span class="px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300">MA-T1 Radians & Unit Circle</span>
+          <span class="px-3 py-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300">MA-T2 Bearings, Cosine & Sine Rules</span>
+          <span class="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">MA-C1 First Principles & Differentiation</span>
+          <span class="px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300">MA-E1 Exponentials & Logarithmic Laws</span>
+          <span class="px-3 py-1.5 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300">MA-S1 Discrete Random Variables & Venn Diagrams</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 2: MATH WORDLE ==================== -->
+    <section id="view-wordle" class="hidden space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+        <div>
+          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-semibold mb-1">
+            Station 1 • Terminology & Definitions
+          </div>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-white">Math Wordle</h2>
+          <p class="text-xs md:text-sm text-slate-400">Guess the hidden 5 or 6 letter preliminary math concept within 6 attempts.</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Round Selector -->
+          <div class="flex items-center bg-slate-800 rounded-xl p-1 border border-slate-700">
+            <button onclick="setWordleRound(0)" class="wordle-round-btn px-2.5 py-1 rounded-lg text-xs font-bold text-white bg-indigo-600">R1</button>
+            <button onclick="setWordleRound(1)" class="wordle-round-btn px-2.5 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white">R2</button>
+            <button onclick="setWordleRound(2)" class="wordle-round-btn px-2.5 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white">R3</button>
+            <button onclick="setWordleRound(3)" class="wordle-round-btn px-2.5 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white">R4</button>
+            <button onclick="setWordleRound(4)" class="wordle-round-btn px-2.5 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white">R5</button>
+            <button onclick="setWordleRound(5)" class="wordle-round-btn px-2.5 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white">R6</button>
+          </div>
+          <button onclick="resetWordleRound()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm border border-slate-700" title="Reset Round">
+            <i class="ph-bold ph-arrow-counter-clockwise"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Current Hint Box -->
+      <div class="rounded-2xl bg-slate-800/60 border border-slate-700 p-4 flex items-start gap-3.5">
+        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center flex-shrink-0 text-lg">
+          <i class="ph-fill ph-lightbulb"></i>
+        </div>
+        <div>
+          <div class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Concept Clue</div>
+          <p id="wordleClueText" class="text-sm font-medium text-slate-200 mt-0.5">Clue loading...</p>
+        </div>
+      </div>
+
+      <!-- Wordle Game Board -->
+      <div class="flex flex-col items-center justify-center py-4">
+        <div id="wordleGrid" class="grid gap-2 mb-6">
+          <!-- Rows will be injected by JS -->
+        </div>
+
+        <!-- On-Screen Keyboard -->
+        <div id="wordleKeyboard" class="w-full max-w-lg flex flex-col gap-1.5 px-2">
+          <!-- Keyboard keys injected by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 3: IMMACULATE GRID ==================== -->
+    <section id="view-grid" class="hidden space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+        <div>
+          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-blue-500/15 text-blue-300 text-xs font-semibold mb-1">
+            Station 2 • Synthesis & Properties
+          </div>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-white">The Preliminary Immaculate Grid</h2>
+          <p class="text-xs md:text-sm text-slate-400">Click a cell and pick the exact function or relation that satisfies BOTH intersecting conditions.</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="flex items-center bg-slate-800 rounded-xl p-1 border border-slate-700">
+            <button onclick="setGridBoard(0)" class="grid-board-btn px-3 py-1 rounded-lg text-xs font-bold text-white bg-indigo-600">Board 1</button>
+            <button onclick="setGridBoard(1)" class="grid-board-btn px-3 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white">Board 2</button>
+            <button onclick="setGridBoard(2)" class="grid-board-btn px-3 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white">Board 3</button>
+          </div>
+          <button onclick="resetCurrentGrid()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm border border-slate-700" title="Clear Board">
+            <i class="ph-bold ph-arrow-counter-clockwise"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Immaculate Grid Container -->
+      <div class="max-w-4xl mx-auto overflow-x-auto pb-4">
+        <div id="immaculateGridContainer" class="min-w-[620px] bg-slate-900/90 rounded-2xl border border-slate-800 p-4 shadow-xl">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Function Choice Modal / Drawer -->
+      <div id="gridCandidateModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div>
+              <div class="text-xs font-bold uppercase tracking-wider text-indigo-400">Select Matching Function</div>
+              <h4 id="modalCellConditions" class="text-sm font-semibold text-slate-200 mt-0.5">Row Condition × Column Condition</h4>
+            </div>
+            <button onclick="closeGridCandidateModal()" class="text-slate-400 hover:text-white text-lg p-1">
+              <i class="ph-bold ph-x"></i>
+            </button>
+          </div>
+          <div id="gridCandidateList" class="grid grid-cols-1 gap-2.5 max-h-80 overflow-y-auto pr-1">
+            <!-- Candidate cards injected by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 4: VAULT CODEBREAKER ==================== -->
+    <section id="view-vault" class="hidden space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+        <div>
+          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 text-xs font-semibold mb-1">
+            Station 3 • Rapid Calculation
+          </div>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-white">Calculus & Trig Vault Codebreaker</h2>
+          <p class="text-xs md:text-sm text-slate-400">Solve each 4-part mathematical riddle to reveal the multi-digit safe passcode.</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="flex items-center bg-slate-800 rounded-xl p-1 border border-slate-700">
+            <button onclick="setVaultIndex(0)" class="vault-tab-btn px-3 py-1 rounded-lg text-xs font-bold text-white bg-indigo-600">Vault Alpha</button>
+            <button onclick="setVaultIndex(1)" class="vault-tab-btn px-3 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white">Vault Beta</button>
+            <button onclick="setVaultIndex(2)" class="vault-tab-btn px-3 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white">Vault Gamma</button>
+            <button onclick="setVaultIndex(3)" class="vault-tab-btn px-3 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white">Vault Delta</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Vault Challenge Container -->
+      <div class="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- 4 Clues List -->
+        <div class="lg:col-span-2 space-y-4" id="vaultCluesContainer">
+          <!-- Injected by JS -->
+        </div>
+
+        <!-- Safe Dial Keypad -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-5 shadow-xl">
+          <div id="vaultGraphic" class="w-20 h-20 rounded-full bg-amber-500/10 border-2 border-amber-500/30 flex items-center justify-center text-amber-400 text-3xl shadow-inner transition">
+            <i id="vaultLockIcon" class="ph-bold ph-lock-simple"></i>
+          </div>
+
+          <div>
+            <h4 id="vaultNameDisplay" class="text-lg font-bold text-white">Vault Alpha</h4>
+            <div id="vaultStatusText" class="text-xs font-semibold text-amber-400 uppercase tracking-wider mt-1">Locked • Enter 4 Digits</div>
+          </div>
+
+          <!-- 4-Digit Display Boxes -->
+          <div class="flex items-center justify-center gap-3">
+            <div id="vDigit0" class="w-11 h-14 rounded-xl bg-slate-800 border-2 border-slate-700 text-2xl font-mono font-bold flex items-center justify-center text-white">-</div>
+            <div id="vDigit1" class="w-11 h-14 rounded-xl bg-slate-800 border-2 border-slate-700 text-2xl font-mono font-bold flex items-center justify-center text-white">-</div>
+            <div id="vDigit2" class="w-11 h-14 rounded-xl bg-slate-800 border-2 border-slate-700 text-2xl font-mono font-bold flex items-center justify-center text-white">-</div>
+            <div id="vDigit3" class="w-11 h-14 rounded-xl bg-slate-800 border-2 border-slate-700 text-2xl font-mono font-bold flex items-center justify-center text-white">-</div>
+          </div>
+
+          <!-- Keypad Grid -->
+          <div class="grid grid-cols-3 gap-2 w-full max-w-[220px]">
+            <button onclick="pressVaultKey('1')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-lg text-white transition">1</button>
+            <button onclick="pressVaultKey('2')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-lg text-white transition">2</button>
+            <button onclick="pressVaultKey('3')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-lg text-white transition">3</button>
+            <button onclick="pressVaultKey('4')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-lg text-white transition">4</button>
+            <button onclick="pressVaultKey('5')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-lg text-white transition">5</button>
+            <button onclick="pressVaultKey('6')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-lg text-white transition">6</button>
+            <button onclick="pressVaultKey('7')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-lg text-white transition">7</button>
+            <button onclick="pressVaultKey('8')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-lg text-white transition">8</button>
+            <button onclick="pressVaultKey('9')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-lg text-white transition">9</button>
+            <button onclick="clearVaultDigits()" class="py-2.5 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/50 font-bold text-xs text-rose-300 transition">CLR</button>
+            <button onclick="pressVaultKey('0')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-lg text-white transition">0</button>
+            <button onclick="submitVaultPIN()" class="py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-bold text-xs text-white transition flex items-center justify-center">
+              <i class="ph-bold ph-key"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 5: TARGET NUMBER BREAKDOWN ==================== -->
+    <section id="view-target" class="hidden space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+        <div>
+          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-purple-500/15 text-purple-300 text-xs font-semibold mb-1">
+            Station 4 • Number Fluency & Operator Logic
+          </div>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-white">Target Number Countdown</h2>
+          <p class="text-xs md:text-sm text-slate-400">Use the dealt numbers exactly once and standard arithmetic operations to reach the target integer.</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="flex items-center bg-slate-800 rounded-xl p-1 border border-slate-700">
+            <button onclick="setTargetRound(0)" class="target-round-btn px-3 py-1 rounded-lg text-xs font-bold text-white bg-indigo-600">Challenge 1</button>
+            <button onclick="setTargetRound(1)" class="target-round-btn px-3 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white">Challenge 2</button>
+            <button onclick="setTargetRound(2)" class="target-round-btn px-3 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white">Challenge 3</button>
+            <button onclick="setTargetRound(3)" class="target-round-btn px-3 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white">Challenge 4</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Target Board Screen -->
+      <div class="max-w-3xl mx-auto space-y-6">
+        <!-- Target Banner -->
+        <div class="bg-gradient-to-r from-purple-950/60 via-slate-900 to-indigo-950/60 border border-purple-500/30 rounded-3xl p-6 md:p-8 text-center space-y-2 shadow-2xl">
+          <div class="text-xs font-bold uppercase tracking-widest text-purple-400">Target Integer</div>
+          <div id="targetGoalNumber" class="text-5xl md:text-7xl font-mono font-extrabold text-white tracking-tight">100</div>
+          <div id="targetRoundGoalPrompt" class="text-xs text-slate-300">Using the card values below, create an expression that evaluates to this target!</div>
+        </div>
+
+        <!-- Available Number Cards -->
+        <div>
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400 text-center mb-2.5">Available Number Tiles (Click to Insert)</div>
+          <div id="targetCardsContainer" class="flex flex-wrap items-center justify-center gap-3">
+            <!-- Cards rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Math Operators Bar -->
+        <div class="flex flex-wrap items-center justify-center gap-2">
+          <button onclick="insertTargetChar('+')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-base text-cyan-400 transition">+</button>
+          <button onclick="insertTargetChar('-')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-base text-cyan-400 transition">−</button>
+          <button onclick="insertTargetChar('*')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-base text-cyan-400 transition">×</button>
+          <button onclick="insertTargetChar('/')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-base text-cyan-400 transition">÷</button>
+          <button onclick="insertTargetChar('(')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-base text-amber-400 transition">(</button>
+          <button onclick="insertTargetChar(')')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-base text-amber-400 transition">)</button>
+          <button onclick="insertTargetChar('**')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono font-bold text-base text-purple-400 transition">^ (Power)</button>
+          <button onclick="clearTargetInput()" class="px-4 py-2 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/50 font-semibold text-xs text-rose-300 transition">Clear</button>
+        </div>
+
+        <!-- Expression Input & Evaluation -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-lg">
+          <label for="targetExpressionInput" class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
+            <span>Your Arithmetic Expression</span>
+            <span id="targetEvalPreview" class="font-mono text-emerald-400 lowercase text-sm">Value = 0</span>
+          </label>
+          <div class="flex items-center gap-2">
+            <input id="targetExpressionInput" type="text" placeholder="e.g. (10 + 2) * 8 + 4" class="w-full bg-slate-800 border border-slate-700 focus:border-purple-500 rounded-xl px-4 py-3 font-mono text-lg text-white placeholder-slate-500 focus:outline-none" />
+            <button onclick="checkTargetSolution()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 font-bold text-sm text-white shadow-lg shadow-purple-600/30 transition flex-shrink-0">
+              Submit Check
+            </button>
+          </div>
+          <div id="targetValidationMsg" class="text-xs font-medium text-slate-400">
+            Rules: Use each dealt number card at most once. Standard algebraic order of operations applies.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL 1: INSTRUCTIONS & SYLLABUS ADVICE -->
+  <div id="instructionsModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 md:p-8 shadow-2xl space-y-6">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-lg">
+            <i class="ph-bold ph-book-open-text"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white">Arcade Guide & Station Instructions</h3>
+        </div>
+        <button onclick="closeInstructionsModal()" class="text-slate-400 hover:text-white text-xl p-1">
+          <i class="ph-bold ph-x"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+        <div class="rounded-xl bg-indigo-950/40 border border-indigo-500/20 p-4">
+          <h4 class="font-bold text-indigo-300 mb-1 flex items-center gap-1.5">
+            <i class="ph-bold ph-hourglass-high"></i> Lesson Flow (50-Minute Recommended Schedule)
+          </h4>
+          <ul class="list-disc list-inside text-xs space-y-1 text-slate-300">
+            <li><strong>00–10 mins:</strong> Station 1: Math Wordle (6 terminology rounds)</li>
+            <li><strong>10–25 mins:</strong> Station 2: The Immaculate Grid (3 function matrix challenges)</li>
+            <li><strong>25–40 mins:</strong> Station 3: Vault Codebreaker (4 mathematical PIN missions)</li>
+            <li><strong>40–50 mins:</strong> Station 4: Target Number Countdown & Reveal Scores!</li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <h5 class="font-bold text-emerald-400 flex items-center gap-1.5"><i class="ph-bold ph-textbox"></i> Station 1: Math Wordle</h5>
+            <p class="text-xs text-slate-400">Green = Correct letter in correct spot. Yellow = Letter is in the math term but different spot. Gray = Letter not in word. Use the syllabus clue for direction!</p>
+          </div>
+          <div>
+            <h5 class="font-bold text-blue-400 flex items-center gap-1.5"><i class="ph-bold ph-grid-nine"></i> Station 2: The Immaculate Grid</h5>
+            <p class="text-xs text-slate-400">Like the popular sports grid, each cell requires an equation that fulfills both the Row and Column headers. Click a cell to choose the matching candidate from the pop-up list.</p>
+          </div>
+          <div>
+            <h5 class="font-bold text-amber-400 flex items-center gap-1.5"><i class="ph-bold ph-lock-key"></i> Station 3: Vault Codebreaker</h5>
+            <p class="text-xs text-slate-400">Every vault has 4 separate math problems (Calculus, Trig, Logarithms, Probability). Each answer gives one digit of the vault code.</p>
+          </div>
+          <div>
+            <h5 class="font-bold text-purple-400 flex items-center gap-1.5"><i class="ph-bold ph-target"></i> Station 4: Target Countdown</h5>
+            <p class="text-xs text-slate-400">Apply standard order of operations to reach the target using the allowed cards. You don't have to use all numbers, but you cannot reuse cards.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end">
+        <button onclick="closeInstructionsModal()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-semibold text-xs text-white transition">
+          Got It, Let's Play!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: TEACHER / END-OF-LESSON ANSWER KEY -->
+  <div id="teacherKeyModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-3xl w-full max-h-[85vh] overflow-y-auto p-6 md:p-8 shadow-2xl space-y-6">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg">
+            <i class="ph-bold ph-key"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-white">Full Solutions & Master Answer Key</h3>
+            <p class="text-xs text-slate-400">For relief teacher reference or whole-class review in the final 5 minutes.</p>
+          </div>
+        </div>
+        <button onclick="closeTeacherAnswerKey()" class="text-slate-400 hover:text-white text-xl p-1">
+          <i class="ph-bold ph-x"></i>
+        </button>
+      </div>
+
+      <div class="space-y-6 text-xs md:text-sm text-slate-300">
+        <!-- Wordle Answers -->
+        <div class="bg-slate-800/60 rounded-xl p-4 border border-slate-700">
+          <h4 class="font-bold text-emerald-400 text-sm mb-2">Station 1: Math Wordle Answers</h4>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+            <div><strong>R1:</strong> RADIAN (6)</div>
+            <div><strong>R2:</strong> DERIV (5)</div>
+            <div><strong>R3:</strong> DOMAIN (6)</div>
+            <div><strong>R4:</strong> SECANT (6)</div>
+            <div><strong>R5:</strong> LOCUS (5)</div>
+            <div><strong>R6:</strong> FACTOR (6)</div>
+          </div>
+        </div>
+
+        <!-- Grid Answers -->
+        <div class="bg-slate-800/60 rounded-xl p-4 border border-slate-700">
+          <h4 class="font-bold text-blue-400 text-sm mb-2">Station 2: Immaculate Grid Highlights</h4>
+          <p class="text-slate-400 mb-2">Each cell requires functions matching both axis criteria:</p>
+          <ul class="list-disc list-inside space-y-1 text-slate-300">
+            <li><strong>Trig & Origin (0,0):</strong> $y = \sin(x)$ or $y = \tan(x)$</li>
+            <li><strong>Trig & Period $\pi$:</strong> $y = \tan(x)$ or $y = \sin(2x)$</li>
+            <li><strong>Polynomial & Increasing $x>0$:</strong> $y = x^3$ or $y = x^2$</li>
+            <li><strong>Exponential/Log & Increasing:</strong> $y = e^x$ or $y = \ln(x)$</li>
+          </ul>
+        </div>
+
+        <!-- Vault Codebreaker Answers -->
+        <div class="bg-slate-800/60 rounded-xl p-4 border border-slate-700">
+          <h4 class="font-bold text-amber-400 text-sm mb-2">Station 3: Vault PINs</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-700/60">
+              <span class="font-bold text-white">Vault Alpha:</span> <span class="font-mono text-amber-300 font-bold">1 3 8 2</span>
+              <p class="text-[11px] text-slate-400 mt-0.5">$f'(1)=1$ | $4\sin(\pi/6)+\tan(\pi/4)=3$ | $\log_2(4x)=5 \Rightarrow x=8$ | $10 \times P(A \cap B)=2$</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-700/60">
+              <span class="font-bold text-white">Vault Beta:</span> <span class="font-mono text-amber-300 font-bold">4 7 9 3</span>
+              <p class="text-[11px] text-slate-400 mt-0.5">$\lim_{x \to 2}(x+2)=4$ | $3^2 - 2 = 7$ | $\sqrt{81}=9$ | $P(odd)=3/6 \Rightarrow 3$</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-700/60">
+              <span class="font-bold text-white">Vault Gamma:</span> <span class="font-mono text-amber-300 font-bold">6 2 5 1</span>
+              <p class="text-[11px] text-slate-400 mt-0.5">$\frac{d}{dx}[3x^2]|_{x=1}=6$ | $\sec(0)+\cos(0)=2$ | $5^x=3125 \Rightarrow 5$ | $\csc(\pi/2)=1$</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-700/60">
+              <span class="font-bold text-white">Vault Delta:</span> <span class="font-mono text-amber-300 font-bold">8 0 4 6</span>
+              <p class="text-[11px] text-slate-400 mt-0.5">$2^3=8$ | $\sin(\pi)=0$ | $\log_3(81)=4$ | $f'(x)=2x+4 \Rightarrow f'(1)=6$</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Target Number Countdown -->
+        <div class="bg-slate-800/60 rounded-xl p-4 border border-slate-700">
+          <h4 class="font-bold text-purple-400 text-sm mb-2">Station 4: Target Solutions (Examples)</h4>
+          <ul class="list-disc list-inside space-y-1 text-slate-300">
+            <li><strong>Target 100:</strong> Cards [2, 3, 5, 8, 10] $\rightarrow (10 \times 8) + (5 \times 3) + 5 = 100$ or $(8 + 2) \times 10 = 100$</li>
+            <li><strong>Target 42:</strong> Cards [3, 4, 6, 7, 9] $\rightarrow 6 \times 7 = 42$</li>
+            <li><strong>Target 75:</strong> Cards [5, 10, 15, 2, 4] $\rightarrow (15 \times 5) = 75$ or $(10 \times 7) + 5$</li>
+            <li><strong>Target 24:</strong> Cards [2, 3, 4, 8, 12] $\rightarrow (8 - 2) \times 4 = 24$ or $12 \times 2 = 24$</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end">
+        <button onclick="closeTeacherAnswerKey()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 font-semibold text-xs text-white transition">
+          Close Solutions
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+       AUDIO SYNTHESIZER (Web Audio API - No External Assets)
+       ========================================================= */
+    let audioCtx = null;
+    let audioEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playTone(freq, type = 'sine', duration = 0.15, gain = 0.1) {
+      if (!audioEnabled) return;
+      try {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        g.gain.setValueAtTime(gain, audioCtx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(g);
+        g.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        // Audio policy safeguard
+      }
+    }
+
+    function soundSuccess() {
+      playTone(523.25, 'triangle', 0.1, 0.15); // C5
+      setTimeout(() => playTone(659.25, 'triangle', 0.1, 0.15), 100); // E5
+      setTimeout(() => playTone(783.99, 'triangle', 0.25, 0.15), 200); // G5
+    }
+
+    function soundError() {
+      playTone(220, 'sawtooth', 0.15, 0.15);
+      setTimeout(() => playTone(180, 'sawtooth', 0.2, 0.15), 120);
+    }
+
+    function soundKey() {
+      playTone(400, 'sine', 0.05, 0.05);
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      const icon = document.getElementById('audioIcon');
+      if (audioEnabled) {
+        icon.className = 'ph-bold ph-speaker-high text-lg';
+        showToast('Sound effects enabled', 'info');
+      } else {
+        icon.className = 'ph-bold ph-speaker-slash text-lg';
+        showToast('Sound effects muted', 'info');
+      }
+    }
+
+    /* =========================================================
+       GLOBAL APP STATE & SESSION TIMER
+       ========================================================= */
+    let globalScore = 0;
+    let timerDuration = 50 * 60; // 50 mins in seconds
+    let timerRunning = false;
+    let timerInterval = null;
+
+    function addScore(points, reason = '') {
+      globalScore += points;
+      document.getElementById('globalScore').textContent = `${globalScore} pts`;
+      if (reason) {
+        showToast(`+${points} pts: ${reason}`, 'success');
+      }
+      try {
+        confetti({
+          particleCount: 35,
+          spread: 60,
+          origin: { y: 0.85 }
+        });
+      } catch (e) {}
+    }
+
+    function toggleTimer() {
+      const icon = document.getElementById('timerIcon');
+      if (timerRunning) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        icon.className = 'ph-bold ph-play';
+        showToast('Timer paused', 'info');
+      } else {
+        startTimer();
+      }
+    }
+
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerRunning = true;
+      document.getElementById('timerIcon').className = 'ph-bold ph-pause';
+      timerInterval = setInterval(() => {
+        if (timerDuration > 0) {
+          timerDuration--;
+          updateTimerDisplay();
+        } else {
+          clearInterval(timerInterval);
+          timerRunning = false;
+          document.getElementById('timerIcon').className = 'ph-bold ph-arrow-counter-clockwise';
+          showToast('Time is up! 50-minute exam period completed!', 'warning');
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(timerDuration / 60);
+      const secs = timerDuration % 60;
+      const str = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      document.getElementById('sessionTimerDisplay').textContent = str;
+    }
+
+    function startSession() {
+      startTimer();
+      switchView('wordle');
+      showToast('Championship started! Station 1: Wordle', 'info');
+    }
+
+    function showToast(msg, type = 'info') {
+      const toast = document.getElementById('toast');
+      const text = document.getElementById('toastMsg');
+      const icon = document.getElementById('toastIcon');
+
+      text.textContent = msg;
+      if (type === 'success') {
+        icon.className = 'ph-fill ph-check-circle text-emerald-400 text-xl';
+      } else if (type === 'warning') {
+        icon.className = 'ph-fill ph-warning-circle text-amber-400 text-xl';
+      } else {
+        icon.className = 'ph-fill ph-info text-cyan-400 text-xl';
+      }
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 3000);
+    }
+
+    function switchView(tabKey) {
+      const views = ['hub', 'wordle', 'grid', 'vault', 'target'];
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        if (el) el.classList.add('hidden');
+      });
+
+      const activeEl = document.getElementById(`view-${tabKey}`);
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      // Update Nav active styling
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        if (b.dataset.tab === tabKey) {
+          b.classList.add('bg-indigo-600', 'text-white');
+          b.classList.remove('text-slate-300');
+        } else {
+          b.classList.remove('bg-indigo-600', 'text-white');
+          b.classList.add('text-slate-300');
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showInstructionsModal() {
+      document.getElementById('instructionsModal').classList.remove('hidden');
+    }
+    function closeInstructionsModal() {
+      document.getElementById('instructionsModal').classList.add('hidden');
+    }
+
+    function showTeacherAnswerKey() {
+      document.getElementById('teacherKeyModal').classList.remove('hidden');
+    }
+    function closeTeacherAnswerKey() {
+      document.getElementById('teacherKeyModal').classList.add('hidden');
+    }
+
+    /* =========================================================
+       STATION 1: MATH WORDLE IMPLEMENTATION
+       ========================================================= */
+    const wordlePuzzles = [
+      { word: "RADIAN", clue: "The SI angular measure defined such that a full circle contains exactly 2π." },
+      { word: "DERIV", clue: "Slang / root term for the rate-of-change function $f'(x)$." },
+      { word: "DOMAIN", clue: "The complete set of all possible independent input $x$-values for a relation." },
+      { word: "SECANT", clue: "A line passing through two distinct points on a curve, or the reciprocal of cosine." },
+      { word: "LOCUS", clue: "The geometric path traced out by a point satisfying a specific algebraic rule." },
+      { word: "FACTOR", clue: "A divisor or algebraic quantity that multiplies with another to produce a polynomial." }
+    ];
+
+    let currentWordleIndex = 0;
+    let wordleGuesses = [];
+    let wordleCurrentGuess = "";
+    let wordleCompleted = false;
+
+    function setWordleRound(idx) {
+      currentWordleIndex = idx;
+      document.querySelectorAll('.wordle-round-btn').forEach((b, i) => {
+        if (i === idx) {
+          b.className = 'wordle-round-btn px-2.5 py-1 rounded-lg text-xs font-bold text-white bg-indigo-600';
+        } else {
+          b.className = 'wordle-round-btn px-2.5 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white';
+        }
+      });
+      resetWordleRound();
+    }
+
+    function resetWordleRound() {
+      wordleGuesses = [];
+      wordleCurrentGuess = "";
+      wordleCompleted = false;
+      const puzzle = wordlePuzzles[currentWordleIndex];
+      document.getElementById('wordleClueText').innerHTML = puzzle.clue;
+      renderWordleGrid();
+      renderWordleKeyboard();
+      if (window.renderMathInElement) {
+        renderMathInElement(document.getElementById('wordleClueText'), {
+          delimiters: [{left: '$', right: '$', display: false}]
+        });
+      }
+    }
+
+    function renderWordleGrid() {
+      const container = document.getElementById('wordleGrid');
+      container.innerHTML = "";
+      const wordLen = wordlePuzzles[currentWordleIndex].word.length;
+      const maxRows = 6;
+
+      for (let r = 0; r < maxRows; r++) {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = `flex gap-2 justify-center`;
+
+        for (let c = 0; c < wordLen; c++) {
+          const tile = document.createElement('div');
+          tile.className = "w-11 h-11 md:w-13 md:h-13 border-2 border-slate-700 rounded-xl font-mono font-extrabold text-xl md:text-2xl flex items-center justify-center text-white bg-slate-900 select-none wordle-tile";
+          
+          if (r < wordleGuesses.length) {
+            const guess = wordleGuesses[r];
+            const target = wordlePuzzles[currentWordleIndex].word;
+            const letter = guess[c];
+            tile.textContent = letter;
+
+            if (letter === target[c]) {
+              tile.className += " bg-emerald-600 border-emerald-500 text-white";
+            } else if (target.includes(letter)) {
+              tile.className += " bg-amber-600 border-amber-500 text-white";
+            } else {
+              tile.className += " bg-slate-800 border-slate-700 text-slate-400";
+            }
+          } else if (r === wordleGuesses.length && c < wordleCurrentGuess.length) {
+            tile.textContent = wordleCurrentGuess[c];
+            tile.className += " border-indigo-400 scale-105";
+          }
+
+          rowDiv.appendChild(tile);
+        }
+        container.appendChild(rowDiv);
+      }
+    }
+
+    function renderWordleKeyboard() {
+      const kb = document.getElementById('wordleKeyboard');
+      kb.innerHTML = "";
+      const rows = [
+        ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+        ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '⌫']
+      ];
+
+      rows.forEach(r => {
+        const rowEl = document.createElement('div');
+        rowEl.className = "flex justify-center gap-1";
+        r.forEach(k => {
+          const btn = document.createElement('button');
+          btn.textContent = k;
+          btn.className = `px-2.5 py-3 rounded-lg font-mono font-bold text-xs md:text-sm text-slate-200 bg-slate-800 hover:bg-slate-700 active:scale-95 transition ${k === 'ENTER' || k === '⌫' ? 'px-4 bg-slate-700 text-white font-sans' : ''}`;
+          btn.onclick = () => handleWordleKey(k);
+          rowEl.appendChild(btn);
+        });
+        kb.appendChild(rowEl);
+      });
+    }
+
+    function handleWordleKey(key) {
+      if (wordleCompleted) return;
+      const wordLen = wordlePuzzles[currentWordleIndex].word.length;
+
+      if (key === '⌫' || key === 'BACKSPACE') {
+        soundKey();
+        if (wordleCurrentGuess.length > 0) {
+          wordleCurrentGuess = wordleCurrentGuess.slice(0, -1);
+          renderWordleGrid();
+        }
+      } else if (key === 'ENTER') {
+        if (wordleCurrentGuess.length !== wordLen) {
+          soundError();
+          showToast(`Word must be ${wordLen} letters!`, 'warning');
+          return;
+        }
+        submitWordleGuess();
+      } else if (/^[A-Z]$/i.test(key)) {
+        if (wordleCurrentGuess.length < wordLen) {
+          soundKey();
+          wordleCurrentGuess += key.toUpperCase();
+          renderWordleGrid();
+        }
+      }
+    }
+
+    function submitWordleGuess() {
+      const target = wordlePuzzles[currentWordleIndex].word;
+      wordleGuesses.push(wordleCurrentGuess);
+
+      if (wordleCurrentGuess === target) {
+        soundSuccess();
+        wordleCompleted = true;
+        renderWordleGrid();
+        addScore(50, `Solved Math Wordle #${currentWordleIndex + 1}!`);
+        showToast(`Brilliant! The word was ${target}!`, 'success');
+      } else if (wordleGuesses.length >= 6) {
+        soundError();
+        wordleCompleted = true;
+        renderWordleGrid();
+        showToast(`Out of tries! The word was ${target}`, 'warning');
+      } else {
+        soundKey();
+        renderWordleGrid();
+      }
+      wordleCurrentGuess = "";
+    }
+
+    // Physical Keyboard Listener
+    window.addEventListener('keydown', (e) => {
+      const wordleView = document.getElementById('view-wordle');
+      if (wordleView && !wordleView.classList.contains('hidden')) {
+        if (e.key === 'Backspace') {
+          handleWordleKey('⌫');
+        } else if (e.key === 'Enter') {
+          handleWordleKey('ENTER');
+        } else if (/^[a-zA-Z]$/.test(e.key)) {
+          handleWordleKey(e.key.toUpperCase());
+        }
+      }
+    });
+
+    /* =========================================================
+       STATION 2: IMMACULATE GRID IMPLEMENTATION
+       ========================================================= */
+    const gridBoards = [
+      // Board 1
+      {
+        rows: [
+          { title: "Trigonometric Function", desc: "Form: y = sin(x), cos(x), tan(x)" },
+          { title: "Polynomial / Power Curve", desc: "Form: y = ax^n + ..." },
+          { title: "Exponential / Log Relation", desc: "Form: y = a^x or y = log(x)" }
+        ],
+        cols: [
+          { title: "Passes through (0,0)", desc: "f(0) = 0" },
+          { title: "Has Period of π", desc: "f(x + π) = f(x)" },
+          { title: "Derivative > 0 for all x > 0", desc: "Strictly increasing in Quadrant I" }
+        ],
+        // cell key: "row_col" -> array of accepted function ids
+        solutions: {
+          "0_0": ["sin_x", "tan_x", "sin_2x"],
+          "0_1": ["tan_x", "sin_2x"],
+          "0_2": ["tan_x"],
+          "1_0": ["x_sq", "x_cube", "line_x"],
+          "1_1": [], // impossible / blank
+          "1_2": ["x_sq", "x_cube", "line_x"],
+          "2_0": [], // standard e^x / ln(x) do not pass origin without shift
+          "2_1": [],
+          "2_2": ["exp_x", "ln_x"]
+        }
+      },
+      // Board 2
+      {
+        rows: [
+          { title: "Even Function", desc: "f(-x) = f(x) (Y-axis symmetry)" },
+          { title: "Odd Function", desc: "f(-x) = -f(x) (Origin symmetry)" },
+          { title: "Neither Even nor Odd", desc: "No pure symmetry" }
+        ],
+        cols: [
+          { title: "Has Horizontal Asymptote", desc: "As x -> ∞ or -∞" },
+          { title: "Has a Turning Point", desc: "Local maximum or minimum" },
+          { title: "Continuous for all x ∈ ℝ", desc: "No breaks or holes" }
+        ],
+        solutions: {
+          "0_0": ["bell_curve"],
+          "0_1": ["cos_x", "x_sq"],
+          "0_2": ["cos_x", "x_sq"],
+          "1_0": ["hyperbola_odd"],
+          "1_1": ["sin_x", "cubic_origin"],
+          "1_2": ["sin_x", "x_cube"],
+          "2_0": ["exp_x"],
+          "2_1": ["shifted_parabola"],
+          "2_2": ["exp_x"]
+        }
+      },
+      // Board 3
+      {
+        rows: [
+          { title: "Gradient at x=0 is 1", desc: "f'(0) = 1" },
+          { title: "Gradient at x=0 is 0", desc: "Stationary point at origin" },
+          { title: "Not differentiable at x=0", desc: "Sharp corner or vertical" }
+        ],
+        cols: [
+          { title: "Trigonometric Type", desc: "Circular / periodic" },
+          { title: "Polynomial / Absolute Type", desc: "Algebraic power" },
+          { title: "Exponential / Other Type", desc: "Transcendental" }
+        ],
+        solutions: {
+          "0_0": ["sin_x", "tan_x"],
+          "0_1": ["line_x"],
+          "0_2": ["exp_x"],
+          "1_0": ["cos_x"],
+          "1_1": ["x_sq"],
+          "1_2": [],
+          "2_0": [],
+          "2_1": ["abs_x"],
+          "2_2": ["sqrt_x"]
+        }
+      }
+    ];
+
+    const allCandidates = [
+      { id: "sin_x", label: "y = \\sin(x)", name: "y = sin(x)" },
+      { id: "cos_x", label: "y = \\cos(x)", name: "y = cos(x)" },
+      { id: "tan_x", label: "y = \\tan(x)", name: "y = tan(x)" },
+      { id: "sin_2x", label: "y = \\sin(2x)", name: "y = sin(2x)" },
+      { id: "x_sq", label: "y = x^2", name: "y = x^2" },
+      { id: "x_cube", label: "y = x^3", name: "y = x^3" },
+      { id: "line_x", label: "y = x", name: "y = x" },
+      { id: "exp_x", label: "y = e^x", name: "y = e^x" },
+      { id: "ln_x", label: "y = \\ln(x)", name: "y = ln(x) (x > 0)" },
+      { id: "abs_x", label: "y = |x|", name: "y = |x|" },
+      { id: "shifted_parabola", label: "y = (x-2)^2 + 1", name: "y = (x-2)^2 + 1" },
+      { id: "bell_curve", label: "y = e^{-x^2}", name: "y = e^(-x^2)" },
+      { id: "hyperbola_odd", label: "y = \\frac{1}{x}", name: "y = 1/x" },
+      { id: "cubic_origin", label: "y = x^3 - 3x", name: "y = x^3 - 3x" },
+      { id: "sqrt_x", label: "y = \\sqrt{x}", name: "y = sqrt(x)" }
+    ];
+
+    let currentGridBoardIndex = 0;
+    let gridUserSelections = {}; // "r_c" -> candidateId
+    let activeModalCell = null;
+
+    function setGridBoard(idx) {
+      currentGridBoardIndex = idx;
+      gridUserSelections = {};
+      document.querySelectorAll('.grid-board-btn').forEach((b, i) => {
+        if (i === idx) {
+          b.className = 'grid-board-btn px-3 py-1 rounded-lg text-xs font-bold text-white bg-indigo-600';
+        } else {
+          b.className = 'grid-board-btn px-3 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white';
+        }
+      });
+      renderImmaculateGrid();
+    }
+
+    function resetCurrentGrid() {
+      gridUserSelections = {};
+      renderImmaculateGrid();
+      showToast('Board cleared', 'info');
+    }
+
+    function renderImmaculateGrid() {
+      const board = gridBoards[currentGridBoardIndex];
+      const container = document.getElementById('immaculateGridContainer');
+      container.innerHTML = "";
+
+      const table = document.createElement('div');
+      table.className = "grid grid-cols-4 gap-2.5 text-center";
+
+      // Top-Left Empty Anchor
+      const corner = document.createElement('div');
+      corner.className = "p-3 rounded-xl bg-slate-800/40 border border-slate-700/60 flex items-center justify-center text-xs font-bold text-slate-400";
+      corner.innerHTML = `<span class="text-[10px] uppercase tracking-wider text-indigo-300">Criteria Grid</span>`;
+      table.appendChild(corner);
+
+      // Top Column Headers
+      board.cols.forEach(col => {
+        const colHeader = document.createElement('div');
+        colHeader.className = "p-3 rounded-xl bg-slate-800 border border-slate-700 flex flex-col justify-center text-left";
+        colHeader.innerHTML = `
+          <div class="text-xs font-bold text-indigo-400 uppercase tracking-wider">${col.title}</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">${col.desc}</div>
+        `;
+        table.appendChild(colHeader);
+      });
+
+      // Rows and 3x3 Cells
+      board.rows.forEach((row, rIdx) => {
+        // Row Header
+        const rowHeader = document.createElement('div');
+        rowHeader.className = "p-3 rounded-xl bg-slate-800 border border-slate-700 flex flex-col justify-center text-left";
+        rowHeader.innerHTML = `
+          <div class="text-xs font-bold text-emerald-400 uppercase tracking-wider">${row.title}</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">${row.desc}</div>
+        `;
+        table.appendChild(rowHeader);
+
+        // 3 Cells in this row
+        board.cols.forEach((col, cIdx) => {
+          const cellKey = `${rIdx}_${cIdx}`;
+          const cellDiv = document.createElement('div');
+          const isSelected = gridUserSelections[cellKey];
+          const solutions = board.solutions[cellKey];
+          const isPossible = solutions && solutions.length > 0;
+
+          if (!isPossible) {
+            cellDiv.className = "p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-center justify-center text-xs font-semibold text-slate-600 select-none";
+            cellDiv.textContent = "N/A (No Match)";
+          } else {
+            cellDiv.className = `p-4 rounded-xl border-2 transition cursor-pointer flex flex-col items-center justify-center min-h-[90px] ${
+              isSelected 
+                ? 'bg-indigo-950/40 border-emerald-500 shadow-md shadow-emerald-500/10' 
+                : 'bg-slate-800/70 border-dashed border-slate-700 hover:border-indigo-400 hover:bg-slate-800'
+            }`;
+
+            if (isSelected) {
+              const cand = allCandidates.find(c => c.id === isSelected);
+              cellDiv.innerHTML = `
+                <div class="text-sm font-bold text-emerald-300 font-mono">${cand ? cand.name : isSelected}</div>
+                <div class="text-[10px] text-emerald-400/80 font-bold uppercase mt-1 flex items-center gap-1"><i class="ph-bold ph-check"></i> Valid Match</div>
+              `;
+            } else {
+              cellDiv.innerHTML = `
+                <div class="text-xs text-slate-400 font-medium">+ Choose Function</div>
+              `;
+            }
+            cellDiv.onclick = () => openGridCandidateModal(rIdx, cIdx);
+          }
+
+          table.appendChild(cellDiv);
+        });
+      });
+
+      container.appendChild(table);
+    }
+
+    function openGridCandidateModal(rIdx, cIdx) {
+      activeModalCell = `${rIdx}_${cIdx}`;
+      const board = gridBoards[currentGridBoardIndex];
+      const rName = board.rows[rIdx].title;
+      const cName = board.cols[cIdx].title;
+
+      document.getElementById('modalCellConditions').textContent = `${rName} × ${cName}`;
+      const list = document.getElementById('gridCandidateList');
+      list.innerHTML = "";
+
+      allCandidates.forEach(cand => {
+        const item = document.createElement('button');
+        item.className = "w-full text-left p-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sm font-semibold text-slate-200 flex items-center justify-between transition group";
+        item.innerHTML = `
+          <span class="font-mono text-indigo-300 group-hover:text-white">${cand.name}</span>
+          <span class="text-xs text-slate-400 group-hover:text-slate-200 font-sans">Select &rarr;</span>
+        `;
+        item.onclick = () => selectGridCandidate(cand.id);
+        list.appendChild(item);
+      });
+
+      document.getElementById('gridCandidateModal').classList.remove('hidden');
+    }
+
+    function closeGridCandidateModal() {
+      document.getElementById('gridCandidateModal').classList.add('hidden');
+      activeModalCell = null;
+    }
+
+    function selectGridCandidate(candId) {
+      if (!activeModalCell) return;
+      const board = gridBoards[currentGridBoardIndex];
+      const validAnswers = board.solutions[activeModalCell] || [];
+
+      if (validAnswers.includes(candId)) {
+        soundSuccess();
+        gridUserSelections[activeModalCell] = candId;
+        addScore(40, 'Immaculate Grid cell match!');
+        closeGridCandidateModal();
+        renderImmaculateGrid();
+      } else {
+        soundError();
+        showToast("Incorrect match for both criteria. Recheck your syllabus properties!", 'warning');
+      }
+    }
+
+    /* =========================================================
+       STATION 3: VAULT CODEBREAKER IMPLEMENTATION
+       ========================================================= */
+    const vaultMissions = [
+      {
+        name: "Vault Alpha",
+        passcode: "1382",
+        clues: [
+          { digit: 1, title: "Calculus Gradient", question: "Find the gradient of $f(x) = 2x^3 - 5x + 7$ at the point where $x = 1$." },
+          { digit: 2, title: "Exact Radian Evaluation", question: "Evaluate: $4 \\sin\\left(\\frac{\\pi}{6}\\right) + \\tan\\left(\\frac{\\pi}{4}\\right)$." },
+          { digit: 3, title: "Logarithm Equation", question: "Solve for $x$: $\\log_2(x) + \\log_2(4) = 5$." },
+          { digit: 4, title: "Probability Intersection", question: "If $P(A) = 0.4$, $P(B) = 0.5$, and $P(A \\cup B) = 0.7$, calculate the value of $10 \\times P(A \\cap B)$." }
+        ]
+      },
+      {
+        name: "Vault Beta",
+        passcode: "4793",
+        clues: [
+          { digit: 1, title: "Limit Evaluation", question: "Evaluate the limit: $\\lim_{x \\to 2}\\left(\\frac{x^2 - 4}{x - 2}\\right)$." },
+          { digit: 2, title: "Exponential Difference", question: "Find the value of $3^2 - 2^1$." },
+          { digit: 3, title: "Radical Root", question: "What is $\\sqrt{81}$?" },
+          { digit: 4, title: "Die Probability", question: "Rolling a fair standard 6-sided die, how many possible outcomes are odd numbers?" }
+        ]
+      },
+      {
+        name: "Vault Gamma",
+        passcode: "6251",
+        clues: [
+          { digit: 1, title: "Derivative Evaluation", question: "If $y = 3x^2$, evaluate $\\frac{dy}{dx}$ when $x = 1$." },
+          { digit: 2, title: "Reciprocal Trig", question: "Evaluate: $\\sec(0) + \\cos(0)$." },
+          { digit: 3, title: "Exponential Index", question: "Find $x$ such that $5^x = 3125$." },
+          { digit: 4, title: "Cosecant Identity", question: "Evaluate $\\csc\\left(\\frac{\\pi}{2}\\right)$." }
+        ]
+      },
+      {
+        name: "Vault Delta",
+        passcode: "8046",
+        clues: [
+          { digit: 1, title: "Cube Power", question: "Calculate $2^3$." },
+          { digit: 2, title: "Sine of Pi", question: "Exact value of $\\sin(\\pi)$." },
+          { digit: 3, title: "Log Base 3", question: "Evaluate $\\log_3(81)$." },
+          { digit: 4, title: "Derivative at One", question: "If $f(x) = x^2 + 4x$, evaluate $f'(1)$." }
+        ]
+      }
+    ];
+
+    let currentVaultIndex = 0;
+    let vaultEnteredPIN = "";
+
+    function setVaultIndex(idx) {
+      currentVaultIndex = idx;
+      vaultEnteredPIN = "";
+      document.querySelectorAll('.vault-tab-btn').forEach((b, i) => {
+        if (i === idx) {
+          b.className = 'vault-tab-btn px-3 py-1 rounded-lg text-xs font-bold text-white bg-indigo-600';
+        } else {
+          b.className = 'vault-tab-btn px-3 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white';
+        }
+      });
+      renderVaultMission();
+    }
+
+    function renderVaultMission() {
+      const mission = vaultMissions[currentVaultIndex];
+      document.getElementById('vaultNameDisplay').textContent = mission.name;
+      document.getElementById('vaultStatusText').textContent = "Locked • Enter 4 Digits";
+      document.getElementById('vaultStatusText').className = "text-xs font-semibold text-amber-400 uppercase tracking-wider mt-1";
+      document.getElementById('vaultLockIcon').className = "ph-bold ph-lock-simple";
+      document.getElementById('vaultGraphic').className = "w-20 h-20 rounded-full bg-amber-500/10 border-2 border-amber-500/30 flex items-center justify-center text-amber-400 text-3xl shadow-inner transition";
+
+      updateVaultDigitDisplay();
+
+      const cluesContainer = document.getElementById('vaultCluesContainer');
+      cluesContainer.innerHTML = "";
+
+      mission.clues.forEach((c, i) => {
+        const card = document.createElement('div');
+        card.className = "rounded-2xl bg-slate-800/70 border border-slate-700 p-4 space-y-1";
+        card.innerHTML = `
+          <div class="flex items-center justify-between text-xs font-bold">
+            <span class="text-amber-400 uppercase tracking-wider">Digit #${c.digit} Clue • ${c.title}</span>
+          </div>
+          <div class="text-sm font-medium text-slate-200 mt-1">${c.question}</div>
+        `;
+        cluesContainer.appendChild(card);
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(cluesContainer, {
+          delimiters: [{left: '$', right: '$', display: false}]
+        });
+      }
+    }
+
+    function pressVaultKey(digit) {
+      if (vaultEnteredPIN.length < 4) {
+        soundKey();
+        vaultEnteredPIN += digit;
+        updateVaultDigitDisplay();
+      }
+    }
+
+    function clearVaultDigits() {
+      soundKey();
+      vaultEnteredPIN = "";
+      updateVaultDigitDisplay();
+    }
+
+    function updateVaultDigitDisplay() {
+      for (let i = 0; i < 4; i++) {
+        const box = document.getElementById(`vDigit${i}`);
+        if (i < vaultEnteredPIN.length) {
+          box.textContent = vaultEnteredPIN[i];
+          box.className = "w-11 h-14 rounded-xl bg-slate-800 border-2 border-amber-400 text-2xl font-mono font-bold flex items-center justify-center text-amber-300 scale-105 transition";
+        } else {
+          box.textContent = "-";
+          box.className = "w-11 h-14 rounded-xl bg-slate-800 border-2 border-slate-700 text-2xl font-mono font-bold flex items-center justify-center text-white";
+        }
+      }
+    }
+
+    function submitVaultPIN() {
+      const mission = vaultMissions[currentVaultIndex];
+      if (vaultEnteredPIN.length !== 4) {
+        soundError();
+        showToast('Please enter all 4 digits', 'warning');
+        return;
+      }
+
+      if (vaultEnteredPIN === mission.passcode) {
+        soundSuccess();
+        document.getElementById('vaultStatusText').textContent = "UNLOCKED • ACCESS GRANTED";
+        document.getElementById('vaultStatusText').className = "text-xs font-bold text-emerald-400 uppercase tracking-wider mt-1";
+        document.getElementById('vaultLockIcon').className = "ph-bold ph-lock-simple-open";
+        document.getElementById('vaultGraphic').className = "w-20 h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-500 text-emerald-400 text-3xl shadow-lg shadow-emerald-500/30 transition";
+
+        addScore(100, `Unlocked ${mission.name}!`);
+        showToast(`Correct Passcode (${mission.passcode})!`, 'success');
+      } else {
+        soundError();
+        showToast(`Incorrect PIN (${vaultEnteredPIN}). Recalculate your answers!`, 'warning');
+        vaultEnteredPIN = "";
+        updateVaultDigitDisplay();
+      }
+    }
+
+    /* =========================================================
+       STATION 4: TARGET NUMBER COUNTDOWN IMPLEMENTATION
+       ========================================================= */
+    const targetChallenges = [
+      {
+        target: 100,
+        numbers: [10, 8, 5, 3, 2],
+        prompt: "Using numbers [10, 8, 5, 3, 2], find a combination that yields 100."
+      },
+      {
+        target: 42,
+        numbers: [9, 7, 6, 4, 3],
+        prompt: "Using numbers [9, 7, 6, 4, 3], build an expression that hits 42."
+      },
+      {
+        target: 75,
+        numbers: [15, 10, 5, 4, 2],
+        prompt: "Using numbers [15, 10, 5, 4, 2], find a path to 75."
+      },
+      {
+        target: 24,
+        numbers: [12, 8, 4, 3, 2],
+        prompt: "Using numbers [12, 8, 4, 3, 2], calculate exactly 24."
+      }
+    ];
+
+    let currentTargetRound = 0;
+
+    function setTargetRound(idx) {
+      currentTargetRound = idx;
+      document.querySelectorAll('.target-round-btn').forEach((b, i) => {
+        if (i === idx) {
+          b.className = 'target-round-btn px-3 py-1 rounded-lg text-xs font-bold text-white bg-indigo-600';
+        } else {
+          b.className = 'target-round-btn px-3 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white';
+        }
+      });
+      renderTargetRound();
+    }
+
+    function renderTargetRound() {
+      const challenge = targetChallenges[currentTargetRound];
+      document.getElementById('targetGoalNumber').textContent = challenge.target;
+      document.getElementById('targetRoundGoalPrompt').textContent = challenge.prompt;
+      document.getElementById('targetExpressionInput').value = "";
+      document.getElementById('targetEvalPreview').textContent = "Value = 0";
+
+      const container = document.getElementById('targetCardsContainer');
+      container.innerHTML = "";
+
+      challenge.numbers.forEach(num => {
+        const card = document.createElement('button');
+        card.textContent = num;
+        card.className = "w-14 h-16 rounded-2xl bg-slate-800 hover:bg-indigo-600 border-2 border-slate-700 hover:border-indigo-400 font-mono font-extrabold text-2xl text-white shadow-md active:scale-95 transition flex items-center justify-center";
+        card.onclick = () => insertTargetChar(num.toString());
+        container.appendChild(card);
+      });
+    }
+
+    function insertTargetChar(char) {
+      soundKey();
+      const input = document.getElementById('targetExpressionInput');
+      input.value += (input.value.length > 0 && !/[\+\-\*\/\(\^\s]$/.test(input.value) && !/^[\+\-\*\/\)]/.test(char) ? ' ' : '') + char;
+      evaluateTargetLive();
+    }
+
+    function clearTargetInput() {
+      soundKey();
+      document.getElementById('targetExpressionInput').value = "";
+      document.getElementById('targetEvalPreview').textContent = "Value = 0";
+    }
+
+    function evaluateTargetLive() {
+      const raw = document.getElementById('targetExpressionInput').value;
+      const preview = document.getElementById('targetEvalPreview');
+      try {
+        // Sanitize for basic arithmetic
+        if (!raw.trim()) {
+          preview.textContent = "Value = 0";
+          return;
+        }
+        const sanitized = raw.replace(/\^/g, '**');
+        if (/^[0-9\+\-\*\/\(\)\s\.]+$/.test(sanitized)) {
+          const val = Function(`'use strict'; return (${sanitized})`)();
+          preview.textContent = `Value = ${Number.isFinite(val) ? val : 'Error'}`;
+        }
+      } catch (e) {
+        preview.textContent = "Value = ...";
+      }
+    }
+
+    document.getElementById('targetExpressionInput').addEventListener('input', evaluateTargetLive);
+
+    function checkTargetSolution() {
+      const challenge = targetChallenges[currentTargetRound];
+      const raw = document.getElementById('targetExpressionInput').value.trim();
+
+      if (!raw) {
+        soundError();
+        showToast('Please type or click an expression', 'warning');
+        return;
+      }
+
+      // 1. Verify permitted numbers rule
+      const sanitized = raw.replace(/\^/g, '**');
+      const usedNumbers = raw.match(/\b\d+\b/g);
+
+      if (!usedNumbers) {
+        soundError();
+        showToast('No numbers detected in formula', 'warning');
+        return;
+      }
+
+      // Check frequency of used numbers against allowed cards
+      const allowedNumbers = [...challenge.numbers];
+      for (let n of usedNumbers) {
+        const numVal = parseInt(n, 10);
+        const idx = allowedNumbers.indexOf(numVal);
+        if (idx === -1) {
+          soundError();
+          showToast(`Number ${numVal} is not in your allowed cards or used more than once!`, 'warning');
+          return;
+        }
+        allowedNumbers.splice(idx, 1);
+      }
+
+      // 2. Evaluate algebraic value
+      try {
+        const res = Function(`'use strict'; return (${sanitized})`)();
+        if (res === challenge.target) {
+          soundSuccess();
+          addScore(75, `Hit Target Number ${challenge.target}!`);
+          showToast(`Exact Match! You produced ${challenge.target}!`, 'success');
+        } else {
+          soundError();
+          showToast(`Evaluates to ${res}, but the target is ${challenge.target}!`, 'warning');
+        }
+      } catch (e) {
+        soundError();
+        showToast('Invalid mathematical syntax in expression', 'warning');
+      }
+    }
+
+    /* =========================================================
+       WINDOW INITIALIZATION
+       ========================================================= */
+    window.onload = function() {
+      updateTimerDisplay();
+      setWordleRound(0);
+      setGridBoard(0);
+      setVaultIndex(0);
+      setTargetRound(0);
+    };
+  </script>
+</body>
+</html>
