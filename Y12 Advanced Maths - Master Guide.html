@@ -1,0 +1,2889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NESA Stage 6 Mathematics Advanced (Y11 & Y12) - Complete Revision Master Guide</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- MathJax Configuration and Script for Rigorous LaTeX -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      startup: {
+        pageReady: () => {
+          return MathJax.startup.defaultPageReady();
+        }
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Lucide Icons Library -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    @media print {
+      .no-print { display: none !important; }
+      .topic-container { display: block !important; page-break-before: always; break-before: page; margin-bottom: 2rem; }
+      details { display: block !important; }
+      details > summary { display: none; }
+      details > div { display: block !important; }
+      body { background-color: #ffffff !important; color: #000000 !important; font-size: 11pt; }
+    }
+    .topic-page {
+      display: none;
+    }
+    .topic-page.active-topic {
+      display: block;
+    }
+    .view-all .topic-page {
+      display: block !important;
+      margin-bottom: 3.5rem;
+      border-bottom: 2px dashed #cbd5e1;
+      padding-bottom: 3.5rem;
+    }
+    .view-all .topic-page:last-child {
+      border-bottom: none;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-900 font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- Top Global Header -->
+  <header class="bg-slate-950 text-white shadow-xl sticky top-0 z-50 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap justify-between items-center gap-3">
+      <div class="flex items-center space-x-3">
+        <span class="bg-sky-600 p-2 rounded-xl text-white shadow-md">
+          <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+        </span>
+        <div>
+          <h1 class="text-base sm:text-lg font-black tracking-tight leading-tight">NESA Mathematics Advanced</h1>
+          <p class="text-[11px] text-sky-400 font-semibold tracking-wide">Stage 6 (Years 11 & 12) Complete Master Revision Guide</p>
+        </div>
+      </div>
+
+      <!-- Action Utilities -->
+      <div class="flex items-center gap-2 text-xs no-print">
+        <button id="view-mode-btn" onclick="toggleViewMode()" class="px-3 py-1.5 rounded-lg font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition flex items-center gap-1.5 border border-slate-700">
+          <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+          <span id="view-mode-label">View: Single Page</span>
+        </button>
+        <button onclick="toggleAllGlobalSolutions()" class="px-3 py-1.5 rounded-lg font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition flex items-center gap-1.5 border border-slate-700">
+          <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+          <span>Toggle Solutions</span>
+        </button>
+        <button onclick="window.print()" class="px-3 py-1.5 rounded-lg font-semibold bg-sky-600 hover:bg-sky-500 text-white transition flex items-center gap-1.5 shadow-sm">
+          <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+          <span>Print / PDF</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Topic Navigation Bar (Tabs) -->
+    <nav class="bg-slate-900 border-t border-slate-800/80 px-4 py-1.5 no-print">
+      <div class="max-w-7xl mx-auto flex items-center space-x-1.5 overflow-x-auto custom-scrollbar text-xs font-semibold py-1">
+        <button onclick="switchTopic(1)" id="tab-1" class="topic-tab px-3 py-1.5 rounded-lg transition whitespace-nowrap bg-sky-600 text-white">1. Functions & Graphs</button>
+        <button onclick="switchTopic(2)" id="tab-2" class="topic-tab px-3 py-1.5 rounded-lg transition whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800">2. Trigonometry</button>
+        <button onclick="switchTopic(3)" id="tab-3" class="topic-tab px-3 py-1.5 rounded-lg transition whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800">3. Differential Calculus</button>
+        <button onclick="switchTopic(4)" id="tab-4" class="topic-tab px-3 py-1.5 rounded-lg transition whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800">4. Integral Calculus</button>
+        <button onclick="switchTopic(5)" id="tab-5" class="topic-tab px-3 py-1.5 rounded-lg transition whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800">5. Exponentials & Logs</button>
+        <button onclick="switchTopic(6)" id="tab-6" class="topic-tab px-3 py-1.5 rounded-lg transition whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800">6. Financial Series</button>
+        <button onclick="switchTopic(7)" id="tab-7" class="topic-tab px-3 py-1.5 rounded-lg transition whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800">7. Probability & Stats</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 text-white py-6 px-4 no-print border-b border-slate-800">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider mb-2">
+          NESA NSW Stage 6 Advanced Blueprint
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Year 11 & Year 12 Master Revision Booklet</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl">
+          Complete high-yield synthesis designed for HSC Trials and final examination preparation. Covers foundational skills to Band 6 discriminations.
+        </p>
+      </div>
+      <div class="bg-slate-800/80 p-3.5 rounded-2xl border border-slate-700/80 flex items-center gap-4 text-xs">
+        <div class="text-center">
+          <div class="text-lg font-black text-sky-400">7 Topics</div>
+          <div class="text-slate-400 text-[10px]">100% Syllabus</div>
+        </div>
+        <div class="h-7 w-px bg-slate-700"></div>
+        <div class="text-center">
+          <div class="text-lg font-black text-emerald-400">21 Questions</div>
+          <div class="text-slate-400 text-[10px]">Worked & Marked</div>
+        </div>
+        <div class="h-7 w-px bg-slate-700"></div>
+        <div class="text-center">
+          <div class="text-lg font-black text-amber-400">35 Quizzes</div>
+          <div class="text-slate-400 text-[10px]">Instant Checks</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Area -->
+  <main id="main-content" class="max-w-7xl mx-auto px-4 py-8 flex-1 w-full space-y-8">
+
+    <!-- ========================================================================= -->
+    <!-- TOPIC 1: FUNCTIONS & GRAPHING TECHNIQUES                                  -->
+    <!-- ========================================================================= -->
+    <article id="topic-1" class="topic-page topic-container active-topic space-y-8">
+      
+      <!-- 1. HSC Exam Presence & Sub-strands -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-100 pb-3 mb-4">
+          <div class="flex items-center gap-3">
+            <span class="p-2.5 bg-sky-100 text-sky-800 rounded-xl font-black text-sm">TOPIC 1</span>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900">Functions & Graphing Techniques</h2>
+              <p class="text-xs text-slate-500 font-medium">Stage 6 Advanced Syllabus: MA-F1 (Year 11) & MA-F2 (Year 12)</p>
+            </div>
+          </div>
+          <div class="bg-sky-50 text-sky-800 text-xs font-black px-3 py-1.5 rounded-xl border border-sky-200">
+            HSC Weighting: ~12% – 16% (12 to 16 Marks)
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="layers" class="w-4 h-4 text-sky-600"></i> Syllabus Sub-strands
+            </h4>
+            <ul class="space-y-1 text-slate-700">
+              <li>• <strong>MA-F1.1:</strong> Algebraic properties, absolute values, factor theorem.</li>
+              <li>• <strong>MA-F1.2:</strong> Linear, quadratic, cubic & polynomial relations.</li>
+              <li>• <strong>MA-F1.3:</strong> Inverses, piecewise, odd & even functions.</li>
+              <li>• <strong>MA-F2:</strong> Graph transformations: $y = f(x \pm c)$, $y = af(x)$, $y = f(kx)$, $y = -f(x)$, $y = f(-x)$.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="crosshair" class="w-4 h-4 text-emerald-600"></i> Core Competencies
+            </h4>
+            <ul class="space-y-1 text-slate-700">
+              <li>• Finding exact domain and range across non-standard functions.</li>
+              <li>• Algebraic inversion $f^{-1}(x)$ and domain restriction for 1-to-1 bijection.</li>
+              <li>• Solving modulus equations $|f(x)| = g(x)$ algebraically and graphically.</li>
+              <li>• Dilation, reflection, translation sequencing without axis ambiguity.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="award" class="w-4 h-4 text-rose-600"></i> Examination Role
+            </h4>
+            <p class="text-slate-700 leading-relaxed">
+              Functions form the conceptual scaffolding for all calculus topics. Appears in Section I multiple choice and frequently as multi-part modeling or parameter threshold problems in Section II (e.g. Q13–Q15).
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Breakdown of Topics & Core Theory -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="function-square" class="w-4 h-4 text-sky-600"></i> Domain, Range & Inverses
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            • <strong>Domain Conditions:</strong> Denominator $\neq 0$; under square root $\ge 0$; log arguments $> 0$.<br>
+            • <strong>Inverse Functions:</strong> Swap $x$ and $y$ and solve for $y$. Exists if and only if $f(x)$ is one-to-one (passes the Horizontal Line Test). Reflection across $y = x$.<br>
+            • <strong>Rule:</strong> $\text{Domain}(f^{-1}) = \text{Range}(f)$ and $\text{Range}(f^{-1}) = \text{Domain}(f)$.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="repeat" class="w-4 h-4 text-indigo-600"></i> Odd, Even & Symmetries
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            • <strong>Even Function:</strong> $f(-x) = f(x)$ for all $x \implies$ symmetric across the $y$-axis (e.g., $x^2$, $\cos x$, $|x|$).<br>
+            • <strong>Odd Function:</strong> $f(-x) = -f(x)$ for all $x \implies$ point symmetry of $180^\circ$ around the origin $(0,0)$ (e.g., $x^3$, $\sin x$, $\frac{1}{x}$).<br>
+            • If $f(-x)$ equals neither, the function has no parity.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="move" class="w-4 h-4 text-purple-600"></i> Graph Transformation Rules
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-1">
+            <li>• $y = f(x) + c$: Vertical shift up by $c$ units.</li>
+            <li>• $y = f(x - c)$: Horizontal shift right by $c$ units.</li>
+            <li>• $y = af(x)$: Vertical dilation by factor $a$.</li>
+            <li>• $y = f(kx)$: Horizontal compression by factor $\frac{1}{k}$.</li>
+            <li>• $y = -f(x)$: Reflection across the $x$-axis.</li>
+            <li>• $y = f(-x)$: Reflection across the $y$-axis.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 3. Reference Sheet Audit -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-black text-emerald-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i> Provided on NESA Reference Sheet
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-2">
+            <li class="bg-white p-2.5 rounded-xl border border-emerald-100 font-mono">
+              $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$ (Quadratic formula)
+            </li>
+            <li class="bg-white p-2.5 rounded-xl border border-emerald-100 font-mono">
+              Distance: $d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$
+            </li>
+            <li class="bg-white p-2.5 rounded-xl border border-emerald-100 font-mono">
+              Gradient: $m = \frac{y_2 - y_1}{x_2 - x_1} = \tan\theta$
+            </li>
+            <li class="bg-white p-2.5 rounded-xl border border-emerald-100 font-mono">
+              Point-gradient: $y - y_1 = m(x - x_1)$
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-rose-50/60 border border-rose-200 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-black text-rose-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i> MUST MEMORISE (Not on Reference Sheet)
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-2">
+            <li class="bg-white p-2.5 rounded-xl border border-rose-100">
+              <strong>Formal definitions:</strong> Even $f(-x) = f(x)$, Odd $f(-x) = -f(x)$.
+            </li>
+            <li class="bg-white p-2.5 rounded-xl border border-rose-100">
+              <strong>Domain of inverse:</strong> $\text{Dom}(f^{-1}) = \text{Ran}(f)$, $\text{Ran}(f^{-1}) = \text{Dom}(f)$.
+            </li>
+            <li class="bg-white p-2.5 rounded-xl border border-rose-100">
+              <strong>Perpendicular line condition:</strong> $m_1 m_2 = -1 \iff m_2 = -\frac{1}{m_1}$.
+            </li>
+            <li class="bg-white p-2.5 rounded-xl border border-rose-100">
+              <strong>Absolute value split:</strong> $|A| = B \iff A = B$ or $A = -B$ (provided $B \ge 0$).
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 4. Marker Insights & Band 6 Discriminators -->
+      <div class="bg-amber-50/60 border border-amber-200 rounded-2xl p-5 shadow-sm">
+        <h3 class="font-black text-amber-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-2">
+          <i data-lucide="lightbulb" class="w-4 h-4 text-amber-600"></i> HSC Marker Insights & Common Pitfalls
+        </h3>
+        <ul class="text-xs text-slate-700 space-y-1.5 list-disc list-inside">
+          <li><strong>Restricting Inverse Domains:</strong> When inverting parabolas (e.g., $y = x^2 - 4$), students routinely forget to restrict the domain to $x \ge 0$ (or $x \le 0$) to make the function 1-to-1, losing a full mark.</li>
+          <li><strong>Extraneous Modulus Roots:</strong> When solving $|ax + b| = cx + d$ by squaring both sides, students often fail to test their roots in the original equation to reject extraneous solutions where $cx + d < 0$.</li>
+          <li><strong>Strict Inequalities in Fractions:</strong> For equations like $\frac{1}{x-2} \ge 3$, multiplying by $x-2$ without squaring $(x-2)^2$ drops the negative branch and flips inequality direction illegally.</li>
+        </ul>
+      </div>
+
+      <!-- 5. High-Yield Exam Questions with Step-by-Step Solutions -->
+      <div class="space-y-4">
+        <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
+          <i data-lucide="help-circle" class="w-5 h-5 text-sky-600"></i> High-Yield Exam Questions (Topic 1)
+        </h3>
+
+        <!-- Question 1.1 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-sky-100 text-sky-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 1.1 • Inverses & Domain Restrictions (Band 5)</span>
+              <span class="text-xs font-bold text-slate-500">[4 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              Consider the quadratic function $f(x) = x^2 - 6x + 5$.
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> State the coordinates of the vertex and the largest domain of the form $[k, \infty)$ for which $f(x)$ has an inverse function $f^{-1}(x)$. <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(b)</strong> Find an explicit equation for $f^{-1}(x)$ and state its domain and range. <span class="text-slate-400">[2 marks]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-sky-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-sky-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <p>Complete the square: $f(x) = (x - 3)^2 - 9 + 5 = (x - 3)^2 - 4$. Vertex is at $(3, -4)$.</p>
+                <p>To pass the horizontal line test, the parabola must be restricted to one side of its axis of symmetry $x = 3$.</p>
+                <p class="font-mono text-sky-950 font-bold mt-1">$$\therefore k = 3 \implies \text{Domain is } [3, \infty) \quad \text{[2 Marks]}$$</p>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <p>Let $y = (x - 3)^2 - 4$ for $x \ge 3, y \ge -4$. Swap $x$ and $y$:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$x = (y - 3)^2 - 4 \implies (y - 3)^2 = x + 4 \implies y - 3 = +\sqrt{x + 4} \quad (\text{since } y \ge 3)$$
+                  $$f^{-1}(x) = 3 + \sqrt{x + 4}$$
+                </div>
+                <p class="mt-1">$$\text{Domain: } x \ge -4 \quad \text{Range: } y \ge 3 \quad \text{[2 Marks]}$$</p>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Question 1.2 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-sky-100 text-sky-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 1.2 • Rational Inequalities & Invariance (Band 5/6)</span>
+              <span class="text-xs font-bold text-slate-500">[4 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              Solve the following rational inequalities algebraically:
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> $\frac{3x + 1}{x - 2} \le 2$ <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(b)</strong> $\frac{1}{x^2 - 4} \ge 1$ <span class="text-slate-400">[2 marks]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-sky-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-sky-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <p>Note condition: $x \neq 2$. Multiply both sides by $(x - 2)^2 > 0$:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$(3x + 1)(x - 2) \le 2(x - 2)^2$$
+                  $$(x - 2)[(3x + 1) - 2(x - 2)] \le 0 \implies (x - 2)(x + 5) \le 0$$
+                </div>
+                <p class="mt-1">Since $x \neq 2$, open bracket at 2:</p>
+                <p class="font-mono text-sky-950 font-bold mt-1">$$-5 \le x < 2 \quad \text{[2 Marks]}$$</p>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <p>For $\frac{1}{x^2 - 4} \ge 1$, we require $x^2 - 4 > 0 \implies x < -2$ or $x > 2$.</p>
+                <p>Inverting both sides (as both are positive):</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$x^2 - 4 \le 1 \implies x^2 \le 5 \implies -\sqrt{5} \le x \le \sqrt{5}$$
+                </div>
+                <p class="mt-1">Intersection with $x^2 > 4$:</p>
+                <p class="font-mono text-sky-950 font-bold mt-1">$$\therefore -\sqrt{5} \le x < -2 \quad \text{or} \quad 2 < x \le \sqrt{5} \quad \text{[2 Marks]}$$</p>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Question 1.3 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-sky-100 text-sky-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 1.3 • Modulus Curves & Roots Threshold (Band 6)</span>
+              <span class="text-xs font-bold text-slate-500">[5 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              Consider the modulus function $y = |x^2 - 4x| - 5$.
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> Find all $x$-intercepts and the $y$-intercept of the function. <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(b)</strong> Determine the exact coordinates of all stationary points / vertices. <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(c)</strong> Hence determine all values of constant $k$ for which $|x^2 - 4x| - 5 = k$ has exactly 4 distinct real solutions. <span class="text-slate-400">[1 mark]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-sky-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-sky-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <p>• $y$-intercept: When $x=0$, $y = |0| - 5 = -5 \implies (0, -5)$.</p>
+                <p>• $x$-intercepts: $|x^2 - 4x| = 5$.</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$x^2 - 4x = 5 \implies x^2 - 4x - 5 = 0 \implies (x - 5)(x + 1) = 0 \implies x = 5, -1$$
+                  $$x^2 - 4x = -5 \implies x^2 - 4x + 5 = 0 \implies \Delta = 16 - 20 = -4 < 0 \text{ (no real roots)}$$
+                </div>
+                <p class="mt-1 font-bold text-sky-950">$$\therefore x\text{-intercepts: } (-1, 0) \text{ and } (5, 0) \quad \text{[2 Marks]}$$</p>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <p>The vertex of $g(x) = x^2 - 4x$ is at $x = 2$, with value $g(2) = -4$.</p>
+                <p>Reflected by modulus: $|g(2)| = 4$. Shifting down by 5 gives local maximum at $(2, -1)$.</p>
+                <p>The cusps at $x = 0$ and $x = 4$ give local minima at $(0, -5)$ and $(4, -5)$.</p>
+                <p class="font-bold text-sky-950 mt-1">$$\therefore \text{Minima at } (0, -5) \text{ and } (4, -5); \text{ Maximum at } (2, -1) \quad \text{[2 Marks]}$$</p>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (c):</p>
+                <p>A horizontal line $y = k$ cuts 4 times strictly between the local minima and local maximum:</p>
+                <p class="font-mono text-sky-950 font-bold mt-1">$$-5 < k < -1 \quad \text{[1 Mark]}$$</p>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- 6. Quick Diagnostic Check (5 Questions) -->
+      <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-md no-print space-y-4">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="p-1.5 bg-sky-500/20 text-sky-400 rounded-lg"><i data-lucide="sparkles" class="w-4 h-4"></i></span>
+          <h3 class="text-sm font-black tracking-wide uppercase text-sky-300">Topic 1 Diagnostic Flash Check</h3>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3 text-xs">
+          <!-- Q1 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">1. What is the maximal natural domain of $f(x) = \frac{1}{\sqrt{9 - x^2}}$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$-3 \le x \le 3$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$-3 < x < 3$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$x > 3$ or $x < -3$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q2 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">2. If $f(x) = x^3 - 5x$, what symmetry does its graph exhibit?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Even ($y$-axis symmetry)</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Odd ($180^\circ$ point rotational)</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">No geometric symmetry</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q3 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">3. The graph $y = f(2x - 6)$ is obtained from $y = f(x)$ by:</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Compress horizontally $\times \frac{1}{2}$, shift right 6</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Compress horizontally $\times \frac{1}{2}$, shift right 3</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Dilate horizontally $\times 2$, shift left 3</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q4 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">4. For $f(x) = x^2 - 4x + 1$ on $[2, \infty)$, what is the domain of $f^{-1}(x)$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$[2, \infty)$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$[-3, \infty)$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$(-\infty, \infty)$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q5 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">5. If $y = f(x)$ has an $x$-intercept at $(4, 0)$, what feature does $y = \frac{1}{f(x)}$ have at $x = 4$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">A vertical asymptote at $x = 4$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">An invariant point at $(4, 0)$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">A local turning point</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+        </div>
+      </div>
+
+    </article>
+
+    <!-- ========================================================================= -->
+    <!-- TOPIC 2: TRIGONOMETRIC FUNCTIONS & CALCULUS                               -->
+    <!-- ========================================================================= -->
+    <article id="topic-2" class="topic-page topic-container space-y-8">
+      
+      <!-- 1. HSC Exam Presence & Sub-strands -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-100 pb-3 mb-4">
+          <div class="flex items-center gap-3">
+            <span class="p-2.5 bg-emerald-100 text-emerald-800 rounded-xl font-black text-sm">TOPIC 2</span>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900">Trigonometric Functions & Calculus</h2>
+              <p class="text-xs text-slate-500 font-medium">Stage 6 Advanced Syllabus: MA-T1, MA-T2 (Year 11) & MA-T3 (Year 12)</p>
+            </div>
+          </div>
+          <div class="bg-emerald-50 text-emerald-800 text-xs font-black px-3 py-1.5 rounded-xl border border-emerald-200">
+            HSC Weighting: ~14% – 18% (14 to 18 Marks)
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="layers" class="w-4 h-4 text-emerald-600"></i> Syllabus Sub-strands
+            </h4>
+            <ul class="space-y-1 text-slate-700">
+              <li>• <strong>MA-T1:</strong> Radian measure, arc length $l = r\theta$, sector area $A = \frac{1}{2}r^2\theta$.</li>
+              <li>• <strong>MA-T2:</strong> Exact ratios, Pythagorean identities, sine/cosine rules.</li>
+              <li>• <strong>MA-T3:</strong> Graphs of $\sin, \cos, \tan$, amplitude/period, trig derivatives & integrals.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="crosshair" class="w-4 h-4 text-sky-600"></i> Core Competencies
+            </h4>
+            <ul class="space-y-1 text-slate-700">
+              <li>• Solving non-linear trig equations across specified radian domains.</li>
+              <li>• Sinusoidal real-world modeling (tides, temperatures, daylight).</li>
+              <li>• Derivatives of $\sin(ax+b)$, $\cos(ax+b)$, $\sec^2(ax+b)$ and chain rule combinations.</li>
+              <li>• Reverse differentiation and finding exact area under trig curves.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="award" class="w-4 h-4 text-purple-600"></i> Examination Role
+            </h4>
+            <p class="text-slate-700 leading-relaxed">
+              Trigonometry frequently merges with optimization and differential modeling. Expect 2–3 multiple choice questions and a major 4–5 mark modeling calculus question in Section II.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Breakdown of Topics & Core Theory -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="compass" class="w-4 h-4 text-emerald-600"></i> Radians & Circular Geometry
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            • Conversion: $\pi\text{ rad} = 180^\circ \implies 1\text{ rad} = \frac{180}{\pi}^\circ$.<br>
+            • Arc Length: $l = r\theta$ ($\theta$ in radians).<br>
+            • Sector Area: $A = \frac{1}{2}r^2\theta$.<br>
+            • Segment Area: $A_{\text{seg}} = \frac{1}{2}r^2(\theta - \sin\theta)$.<br>
+            • Small angle approximations: as $\theta \to 0$, $\sin\theta \approx \theta$, $\tan\theta \approx \theta$.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="activity" class="w-4 h-4 text-sky-600"></i> Sinusoidal Graphs & Models
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            For $y = A\sin(B(x - C)) + D$ or $y = A\cos(B(x - C)) + D$:<br>
+            • <strong>Amplitude:</strong> $|A| = \frac{\text{Max} - \text{Min}}{2}$.<br>
+            • <strong>Vertical Shift / Mean:</strong> $D = \frac{\text{Max} + \text{Min}}{2}$.<br>
+            • <strong>Period:</strong> $T = \frac{2\pi}{B}$ (for $\tan(Bx)$, period is $\frac{\pi}{B}$).<br>
+            • <strong>Phase shift:</strong> $C$ units horizontally.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="calculator" class="w-4 h-4 text-purple-600"></i> Trigonometric Calculus
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-1 font-mono">
+            <li>• $\frac{d}{dx}\sin(f(x)) = f'(x)\cos(f(x))$</li>
+            <li>• $\frac{d}{dx}\cos(f(x)) = -f'(x)\sin(f(x))$</li>
+            <li>• $\frac{d}{dx}\tan(f(x)) = f'(x)\sec^2(f(x))$</li>
+            <li>• $\int \cos(ax+b)\,dx = \frac{1}{a}\sin(ax+b) + c$</li>
+            <li>• $\int \sin(ax+b)\,dx = -\frac{1}{a}\cos(ax+b) + c$</li>
+            <li>• $\int \sec^2(ax+b)\,dx = \frac{1}{a}\tan(ax+b) + c$</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 3. Reference Sheet Audit -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-black text-emerald-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i> Provided on NESA Reference Sheet
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-2">
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $l = r\theta, \quad A = \frac{1}{2}r^2\theta$
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $\frac{a}{\sin A} = \frac{b}{\sin B} = \frac{c}{\sin C}, \quad c^2 = a^2 + b^2 - 2ab\cos C$
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $\text{Area} = \frac{1}{2}ab\sin C$
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $\frac{d}{dx}\sin(ax) = a\cos(ax), \quad \frac{d}{dx}\cos(ax) = -a\sin(ax)$
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $\int \cos(ax)\,dx = \frac{1}{a}\sin(ax) + c, \quad \int \sin(ax)\,dx = -\frac{1}{a}\cos(ax) + c$
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-rose-50/60 border border-rose-200 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-black text-rose-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i> MUST MEMORISE (Not on Reference Sheet)
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-2">
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Pythagorean Identities:</strong> $\sin^2\theta + \cos^2\theta = 1$, $1 + \tan^2\theta = \sec^2\theta$.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Tan Derivative:</strong> $\frac{d}{dx}\tan(ax) = a\sec^2(ax)$, $\int \sec^2(ax)\,dx = \frac{1}{a}\tan(ax) + c$.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Sinusoidal Period:</strong> Period $T = \frac{2\pi}{B}$ (for tan: $T = \frac{\pi}{B}$).
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Exact Values:</strong> $\sin(\frac{\pi}{6}) = \frac{1}{2}$, $\cos(\frac{\pi}{4}) = \frac{1}{\sqrt{2}}$, $\tan(\frac{\pi}{3}) = \sqrt{3}$.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 4. Marker Insights & Band 6 Discriminators -->
+      <div class="bg-amber-50/60 border border-amber-200 rounded-2xl p-5 shadow-sm">
+        <h3 class="font-black text-amber-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-2">
+          <i data-lucide="lightbulb" class="w-4 h-4 text-amber-600"></i> HSC Marker Insights & Common Pitfalls
+        </h3>
+        <ul class="text-xs text-slate-700 space-y-1.5 list-disc list-inside">
+          <li><strong>Calculator in Degree Mode:</strong> A huge percentage of marks in calculus questions are forfeit because students leave their calculators in DEGREE mode instead of RADIAN mode. All calculus of trigonometric functions relies exclusively on radian measure.</li>
+          <li><strong>Negative Sign on Cosine Differentiation:</strong> Forgetting that differentiating cosine produces a negative sign ($\frac{d}{dx}\cos x = -\sin x$) while integrating sine produces a negative ($\int \sin x\,dx = -\cos x$).</li>
+          <li><strong>Boundary Conditions on Modeling:</strong> When asked for time intervals where tidal height exceeds a threshold, students frequently forget to check both cycles when the interval spans 24 hours.</li>
+        </ul>
+      </div>
+
+      <!-- 5. High-Yield Exam Questions with Solutions -->
+      <div class="space-y-4">
+        <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
+          <i data-lucide="help-circle" class="w-5 h-5 text-emerald-600"></i> High-Yield Exam Questions (Topic 2)
+        </h3>
+
+        <!-- Question 2.1 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-emerald-100 text-emerald-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 2.1 • Non-linear Radian Equations (Band 5)</span>
+              <span class="text-xs font-bold text-slate-500">[4 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              Find all exact solutions to the trigonometric equation:
+              $$2\sin^2 x - 3\cos x = 0 \quad \text{for } 0 \le x \le 2\pi$$
+            </p>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-emerald-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-emerald-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Step 1: Convert to single variable using Pythagorean identity</p>
+                <p>Substitute $\sin^2 x = 1 - \cos^2 x$:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$2(1 - \cos^2 x) - 3\cos x = 0 \implies 2 - 2\cos^2 x - 3\cos x = 0$$
+                  $$2\cos^2 x + 3\cos x - 2 = 0 \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Step 2: Factorise the quadratic equation</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$(2\cos x - 1)(\cos x + 2) = 0$$
+                  $$\cos x = \frac{1}{2} \quad \text{or} \quad \cos x = -2 \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Step 3: Solve for $x$ in $[0, 2\pi]$</p>
+                <p>$\cos x = -2$ has no real solutions because $-1 \le \cos x \le 1$.</p>
+                <p>For $\cos x = \frac{1}{2}$, cosine is positive in Quadrants 1 and 4:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$\text{Base angle: } \frac{\pi}{3} \implies x = \frac{\pi}{3} \quad \text{or} \quad x = 2\pi - \frac{\pi}{3} = \frac{5\pi}{3} \quad \text{[2 Marks]}$$
+                </div>
+                <p class="font-bold text-emerald-950 mt-1">$$\therefore x = \frac{\pi}{3}, \, \frac{5\pi}{3}$$</p>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Question 2.2 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-emerald-100 text-emerald-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 2.2 • Product Rule & Normal to Trigonometric Curves (Band 5/6)</span>
+              <span class="text-xs font-bold text-slate-500">[4 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              Consider the curve $y = x\sin(2x)$.
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> Show that $\frac{dy}{dx} = \sin(2x) + 2x\cos(2x)$. <span class="text-slate-400">[1 mark]</span></li>
+              <li><strong>(b)</strong> Find the gradient of the tangent to the curve at the point where $x = \frac{\pi}{6}$. <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(c)</strong> Hence state the exact gradient of the normal to the curve at this point. <span class="text-slate-400">[1 mark]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-emerald-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-emerald-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <p>Apply product rule with $u = x, v = \sin(2x) \implies u' = 1, v' = 2\cos(2x)$:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$\frac{dy}{dx} = 1\cdot\sin(2x) + x\cdot(2\cos(2x)) = \sin(2x) + 2x\cos(2x) \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <p>Substitute $x = \frac{\pi}{6}$ into the derivative:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$m_T = \sin\left(2 \cdot \frac{\pi}{6}\right) + 2\left(\frac{\pi}{6}\right)\cos\left(2 \cdot \frac{\pi}{6}\right) = \sin\left(\frac{\pi}{3}\right) + \frac{\pi}{3}\cos\left(\frac{\pi}{3}\right)$$
+                  $$m_T = \frac{\sqrt{3}}{2} + \frac{\pi}{3}\left(\frac{1}{2}\right) = \frac{\sqrt{3}}{2} + \frac{\pi}{6} = \frac{3\sqrt{3} + \pi}{6} \quad \text{[2 Marks]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (c):</p>
+                <p>The normal gradient is the negative reciprocal of tangent gradient:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$m_N = -\frac{1}{m_T} = -\frac{6}{3\sqrt{3} + \pi} \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Question 2.3 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-emerald-100 text-emerald-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 2.3 • Sinusoidal Tide Modeling & Safe Navigation (Band 6)</span>
+              <span class="text-xs font-bold text-slate-500">[5 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              The depth of water $D(t)$ in metres at the entrance of a coastal harbour is modeled by:
+              $$D(t) = 4 + 2\cos\left(\frac{\pi t}{6}\right) \quad \text{for } 0 \le t \le 24$$
+              where $t$ represents elapsed hours after midnight ($t = 0$).
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> State the maximum water depth, minimum water depth, and the tidal period in hours. <span class="text-slate-400">[1 mark]</span></li>
+              <li><strong>(b)</strong> A cargo vessel requires a minimum water depth of $5\text{ m}$ to enter safely. Find all time intervals during the first 12 hours ($0 \le t \le 12$) when the vessel can safely enter. <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(c)</strong> Determine the rate of change of water depth at $4:00\text{ am}$ ($t = 4$). Give exact value in $\text{m/h}$. <span class="text-slate-400">[2 marks]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-emerald-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-emerald-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$\text{Max} = 4 + 2 = 6\text{ m}, \quad \text{Min} = 4 - 2 = 2\text{ m}$$
+                  $$\text{Period } T = \frac{2\pi}{\pi/6} = 12\text{ hours} \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <p>Solve $D(t) \ge 5$ for $0 \le t \le 12$:</p>
+                <div class="font-mono bg-white p-2.5 rounded border border-slate-200 mt-1 space-y-1">
+                  <div>$$4 + 2\cos\left(\frac{\pi t}{6}\right) \ge 5 \implies \cos\left(\frac{\pi t}{6}\right) \ge \frac{1}{2}$$</div>
+                  <div>$$\text{Base angle: } \frac{\pi}{3} \implies 0 \le \frac{\pi t}{6} \le \frac{\pi}{3} \quad \text{or} \quad \frac{5\pi}{3} \le \frac{\pi t}{6} \le 2\pi$$</div>
+                  <div>$$0 \le t \le 2 \quad \text{or} \quad 10 \le t \le 12 \quad \text{[2 Marks]}$$</div>
+                </div>
+                <p class="text-emerald-950 font-bold mt-1">$$\therefore \text{Safe entry: 12:00 am to 2:00 am, and 10:00 am to 12:00 pm.}$$</p>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (c):</p>
+                <div class="font-mono bg-white p-2.5 rounded border border-slate-200 mt-1">
+                  $$D'(t) = 2\left(-\frac{\pi}{6}\sin\left(\frac{\pi t}{6}\right)\right) = -\frac{\pi}{3}\sin\left(\frac{\pi t}{6}\right)$$
+                  $$D'(4) = -\frac{\pi}{3}\sin\left(\frac{2\pi}{3}\right) = -\frac{\pi}{3}\left(\frac{\sqrt{3}}{2}\right) = -\frac{\pi\sqrt{3}}{6}\text{ m/h} \quad \text{[2 Marks]}$$
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- 6. Quick Diagnostic Check (5 Questions) -->
+      <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-md no-print space-y-4">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="p-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg"><i data-lucide="sparkles" class="w-4 h-4"></i></span>
+          <h3 class="text-sm font-black tracking-wide uppercase text-emerald-300">Topic 2 Diagnostic Flash Check</h3>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3 text-xs">
+          <!-- Q1 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">1. What is the fundamental period of the function $f(x) = \tan(3x)$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\frac{2\pi}{3}$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\frac{\pi}{3}$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$3\pi$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q2 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">2. What is the derivative of $y = \cos(x^2)$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$-\sin(x^2)$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$-2x\sin(x^2)$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$2x\cos(x^2)$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q3 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">3. What is the value of $\int_0^{\pi/2} \sin x\,dx$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$0$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$1$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$-1$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q4 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">4. What is the range of $y = 5 - 3\cos(2x)$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$[-3, 3]$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$[2, 8]$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$[-2, 8]$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q5 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">5. Why must calculus of trigonometric functions be carried out in radians?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Because $\lim_{x\to 0}\frac{\sin x}{x} = 1$ is only true in radians</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Because degrees are only for geometric triangles</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Because calculators cannot integrate degrees</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+        </div>
+      </div>
+
+    </article>
+
+    <!-- ========================================================================= -->
+    <!-- TOPIC 3: DIFFERENTIAL CALCULUS & OPTIMIZATION                             -->
+    <!-- ========================================================================= -->
+    <article id="topic-3" class="topic-page topic-container space-y-8">
+      
+      <!-- 1. HSC Exam Presence & Sub-strands -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-100 pb-3 mb-4">
+          <div class="flex items-center gap-3">
+            <span class="p-2.5 bg-purple-100 text-purple-800 rounded-xl font-black text-sm">TOPIC 3</span>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900">Differential Calculus & Optimization</h2>
+              <p class="text-xs text-slate-500 font-medium">Stage 6 Advanced Syllabus: MA-C1, MA-C2 (Year 11) & MA-C3 (Year 12)</p>
+            </div>
+          </div>
+          <div class="bg-purple-50 text-purple-800 text-xs font-black px-3 py-1.5 rounded-xl border border-purple-200">
+            HSC Weighting: ~18% – 22% (18 to 22 Marks)
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="layers" class="w-4 h-4 text-purple-600"></i> Syllabus Sub-strands
+            </h4>
+            <ul class="space-y-1 text-slate-700">
+              <li>• <strong>MA-C1:</strong> First principles $f'(x) = \lim_{h\to 0}\frac{f(x+h)-f(x)}{h}$.</li>
+              <li>• <strong>MA-C2:</strong> Product, quotient, chain rules, tangents & normals.</li>
+              <li>• <strong>MA-C3:</strong> Second derivative, points of inflection, global vs. local extrema, applied optimization problems.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="crosshair" class="w-4 h-4 text-emerald-600"></i> Core Competencies
+            </h4>
+            <ul class="space-y-1 text-slate-700">
+              <li>• Setting up geometric / physical objective functions in one variable.</li>
+              <li>• Rigorous testing of stationary points ($f''(x)$ or gradient neighborhood table).</li>
+              <li>• Verifying change in concavity across potential points of inflection.</li>
+              <li>• Interpreting rates of change from composite displacement / velocity contexts.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="award" class="w-4 h-4 text-rose-600"></i> Examination Role
+            </h4>
+            <p class="text-slate-700 leading-relaxed">
+              Differential calculus forms the central spine of the HSC Advanced exam. Applied optimization (containers, geometry, profits) routinely features as a 4-mark or 5-mark extended response in the second half of the paper.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Breakdown of Topics & Core Theory -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="wrench" class="w-4 h-4 text-purple-600"></i> Rules of Differentiation
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-1 font-mono">
+            <li>• Product Rule: $(uv)' = u'v + uv'$</li>
+            <li>• Quotient Rule: $\left(\frac{u}{v}\right)' = \frac{u'v - uv'}{v^2}$</li>
+            <li>• Chain Rule: $\frac{dy}{dx} = \frac{dy}{du} \cdot \frac{du}{dx}$</li>
+            <li>• Composite: $\frac{d}{dx}[g(x)]^n = n[g(x)]^{n-1}g'(x)$</li>
+            <li>• Tangent: $y - y_1 = m_T(x - x_1)$ where $m_T = f'(x_1)$</li>
+            <li>• Normal: $m_N = -\frac{1}{m_T}$ (if $m_T \neq 0$)</li>
+          </ul>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="trending-up" class="w-4 h-4 text-sky-600"></i> Extrema & Concavity
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            • <strong>Stationary Point:</strong> $f'(x) = 0$.<br>
+            • <strong>Nature by 2nd Derivative:</strong><br>
+            $\quad f''(x) > 0 \implies$ Concave UP $\implies$ Local Minimum.<br>
+            $\quad f''(x) < 0 \implies$ Concave DOWN $\implies$ Local Maximum.<br>
+            $\quad f''(x) = 0 \implies$ Inconclusive! Must use sign-change table.<br>
+            • <strong>Point of Inflection:</strong> Requires $f''(x) = 0$ AND a genuine change in sign of $f''(x)$ across the point.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="target" class="w-4 h-4 text-emerald-600"></i> Optimization Protocol
+          </h3>
+          <ol class="text-xs text-slate-700 space-y-1 list-decimal list-inside">
+            <li>Draw a clear diagram & define all variables.</li>
+            <li>Write down the formula for the quantity to optimize.</li>
+            <li>Use constraint equations to eliminate extra variables.</li>
+            <li>Differentiate and set $\frac{dQ}{dx} = 0$.</li>
+            <li>Solve for the critical value.</li>
+            <li><strong>ALWAYS PROVE NATURE</strong> using $\frac{d^2Q}{dx^2}$ or a neighborhood gradient table.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- 3. Reference Sheet Audit -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-black text-emerald-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i> Provided on NESA Reference Sheet
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-2">
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $\frac{d}{dx}(x^n) = nx^{n-1}$
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $\frac{d}{dx}(uv) = u\frac{dv}{dx} + v\frac{du}{dx}$ (Product Rule)
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $\frac{d}{dx}\left(\frac{u}{v}\right) = \frac{v\frac{du}{dx} - u\frac{dv}{dx}}{v^2}$ (Quotient Rule)
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $\frac{dy}{dx} = \frac{dy}{du}\frac{du}{dx}$ (Chain Rule)
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-rose-50/60 border border-rose-200 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-black text-rose-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i> MUST MEMORISE (Not on Reference Sheet)
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-2">
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>First Principles Formula:</strong> $f'(x) = \lim_{h\to 0}\frac{f(x+h) - f(x)}{h}$.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Point of Inflection Proof:</strong> Just showing $f''(x) = 0$ is NOT sufficient; you must test for a sign change.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Normal gradient formula:</strong> $m_N = -\frac{1}{f'(x)}$.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Second derivative test:</strong> Concave up ($f'' > 0$) $\implies$ minimum; Concave down ($f'' < 0$) $\implies$ maximum.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 4. Marker Insights & Band 6 Discriminators -->
+      <div class="bg-amber-50/60 border border-amber-200 rounded-2xl p-5 shadow-sm">
+        <h3 class="font-black text-amber-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-2">
+          <i data-lucide="lightbulb" class="w-4 h-4 text-amber-600"></i> HSC Marker Insights & Common Pitfalls
+        </h3>
+        <ul class="text-xs text-slate-700 space-y-1.5 list-disc list-inside">
+          <li><strong>Omitting Justification of Extrema:</strong> In optimization questions, finding the stationary point without proving it is a maximum or minimum via $f''(x)$ or a table of values loses the final mark.</li>
+          <li><strong>Quotient Rule Order Error:</strong> In the quotient rule numerator, writing $u'v - v'u$ upside-down or reversing the subtraction order ($uv' - u'v$) destroys the entire derivative.</li>
+          <li><strong>$f''(x) = 0$ is NOT automatically an inflection point:</strong> For $y = x^4$, $f''(0) = 0$, but the curve is concave UP on both sides, so $(0, 0)$ is a minimum, NOT an inflection point!</li>
+        </ul>
+      </div>
+
+      <!-- 5. High-Yield Exam Questions with Solutions -->
+      <div class="space-y-4">
+        <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
+          <i data-lucide="help-circle" class="w-5 h-5 text-purple-600"></i> High-Yield Exam Questions (Topic 3)
+        </h3>
+
+        <!-- Question 3.1 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-purple-100 text-purple-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 3.1 • Quotient Rule & Tangent Equation (Band 5)</span>
+              <span class="text-xs font-bold text-slate-500">[4 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              Consider the curve defined by $y = \frac{2x - 3}{x^2 + 1}$.
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> Show that $\frac{dy}{dx} = \frac{-2x^2 + 6x + 2}{(x^2 + 1)^2}$. <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(b)</strong> Find the equation of the tangent to the curve at the point where it crosses the $y$-axis. Write your answer in general form $ax + by + c = 0$. <span class="text-slate-400">[2 marks]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-purple-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-purple-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <p>Let $u = 2x - 3 \implies u' = 2$, and $v = x^2 + 1 \implies v' = 2x$:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$\frac{dy}{dx} = \frac{u'v - uv'}{v^2} = \frac{2(x^2 + 1) - (2x - 3)(2x)}{(x^2 + 1)^2}$$
+                  $$= \frac{2x^2 + 2 - (4x^2 - 6x)}{(x^2 + 1)^2} = \frac{-2x^2 + 6x + 2}{(x^2 + 1)^2} \quad \text{as required.} \quad \text{[2 Marks]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <p>Crosses $y$-axis when $x = 0 \implies y = \frac{-3}{1} = -3 \implies (0, -3)$.</p>
+                <p>Gradient at $x = 0$:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$m_T = \frac{-2(0) + 6(0) + 2}{(0 + 1)^2} = \frac{2}{1} = 2 \quad \text{[1 Mark]}$$
+                  $$y - (-3) = 2(x - 0) \implies y + 3 = 2x \implies 2x - y - 3 = 0 \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Question 3.2 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-purple-100 text-purple-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 3.2 • Applied Optimization: Cylindrical Can (Band 6)</span>
+              <span class="text-xs font-bold text-slate-500">[5 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              A closed cylindrical container with radius $r\text{ cm}$ and height $h\text{ cm}$ is designed to hold a fixed volume of $500\pi\text{ cm}^3$. The metal used for the circular top and bottom costs $3\text{ cents/cm}^2$, while the metal for the curved side costs $2\text{ cents/cm}^2$.
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> Show that the total cost $C$ in cents is given by $C = 6\pi r^2 + \frac{2000\pi}{r}$. <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(b)</strong> Find the exact value of $r$ that minimises the total cost of materials, and prove that it gives an absolute minimum cost. <span class="text-slate-400">[3 marks]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-purple-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-purple-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <p>Volume: $V = \pi r^2 h = 500\pi \implies h = \frac{500}{r^2}$.</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$\text{Cost } C = 3 \times (2\pi r^2) + 2 \times (2\pi r h) = 6\pi r^2 + 4\pi r\left(\frac{500}{r^2}\right)$$
+                  $$C = 6\pi r^2 + \frac{2000\pi}{r} \quad \text{as required.} \quad \text{[2 Marks]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <p>Differentiate with respect to $r$:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$\frac{dC}{dr} = 12\pi r - \frac{2000\pi}{r^2}$$
+                  $$\text{Set } \frac{dC}{dr} = 0 \implies 12\pi r = \frac{2000\pi}{r^2} \implies r^3 = \frac{2000}{12} = \frac{500}{3}$$
+                  $$r = \sqrt[3]{\frac{500}{3}} \text{ cm} \quad \text{[2 Marks]}$$
+                </div>
+                <p class="font-bold text-slate-900 mt-1">Prove Minimum via Second Derivative:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$\frac{d^2C}{dr^2} = 12\pi + \frac{4000\pi}{r^3}$$
+                  $$\text{Since } r > 0, \quad \frac{d^2C}{dr^2} > 0 \implies \text{Concave UP} \implies \text{Minimum.} \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Question 3.3 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-purple-100 text-purple-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 3.3 • Transcendental Inflection Points & Concavity (Band 6)</span>
+              <span class="text-xs font-bold text-slate-500">[5 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              Consider the function $f(x) = (x^2 - 3)e^x$ defined for all real $x$.
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> Show that $f'(x) = (x^2 + 2x - 3)e^x$ and find the coordinates of all stationary points. <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(b)</strong> Calculate $f''(x)$ and find the exact coordinates of the points of inflection, proving mathematically that concavity changes sign. <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(c)</strong> Describe the behavior of $f(x)$ as $x \to -\infty$. <span class="text-slate-400">[1 mark]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-purple-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-purple-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$f'(x) = 2x e^x + (x^2 - 3)e^x = (x^2 + 2x - 3)e^x$$
+                  $$(x + 3)(x - 1)e^x = 0 \implies x = -3, 1 \quad (\text{since } e^x > 0)$$
+                  $$\text{Points: } \left(-3, \frac{6}{e^3}\right) \text{ and } (1, -2e) \quad \text{[2 Marks]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$f''(x) = (2x + 2)e^x + (x^2 + 2x - 3)e^x = (x^2 + 4x - 1)e^x$$
+                  $$x^2 + 4x - 1 = 0 \implies x = \frac{-4 \pm \sqrt{16 - 4(1)(-1)}}{2} = -2 \pm \sqrt{5}$$
+                </div>
+                <p class="mt-1">Since $x^2 + 4x - 1$ is an upward parabola crossing zero at $-2 \pm \sqrt{5}$, $f''(x)$ strictly changes sign $+ \to - \to +$. True inflection points exist at $x = -2 \pm \sqrt{5}$. <span class="font-sans text-slate-500">[2 Marks]</span></p>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (c):</p>
+                <p>As $x \to -\infty$, $x^2 e^x \to 0$ (exponential decay dominates polynomial growth). Horizontal asymptote at $y = 0$. <span class="font-sans text-slate-500">[1 Mark]</span></p>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- 6. Quick Diagnostic Check (5 Questions) -->
+      <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-md no-print space-y-4">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="p-1.5 bg-purple-500/20 text-purple-400 rounded-lg"><i data-lucide="sparkles" class="w-4 h-4"></i></span>
+          <h3 class="text-sm font-black tracking-wide uppercase text-purple-300">Topic 3 Diagnostic Flash Check</h3>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3 text-xs">
+          <!-- Q1 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">1. If $f'(c) = 0$ and $f''(c) = -7$, what type of point is at $x = c$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Local Maximum (Concave Down)</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Local Minimum (Concave Up)</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Horizontal Point of Inflection</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q2 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">2. What must be true for $(a, f(a))$ to be a true point of inflection?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$f''(a) = 0$ alone</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$f''(a) = 0$ AND $f''(x)$ changes sign across $x = a$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$f'(a) = 0$ and $f''(a) = 0$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q3 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">3. The tangent to $y = f(x)$ at $(1, 4)$ is parallel to $y = 6x - 1$. What is $f'(1)$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$-1/6$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$6$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$4$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q4 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">4. Differentiating $y = \frac{1}{(2x+1)^3}$ gives:</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\frac{-3}{(2x+1)^4}$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\frac{-6}{(2x+1)^4}$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\frac{6}{(2x+1)^2}$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q5 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">5. Why is $f(x) = |x|$ NOT differentiable at $x = 0$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Left gradient ($-1$) does not equal right gradient ($+1$)</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">The function is discontinuous at $x = 0$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Because $f(0) = 0$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+        </div>
+      </div>
+
+    </article>
+
+    <!-- ========================================================================= -->
+    <!-- TOPIC 4: INTEGRAL CALCULUS & AREA                                         -->
+    <!-- ========================================================================= -->
+    <article id="topic-4" class="topic-page topic-container space-y-8">
+      
+      <!-- 1. HSC Exam Presence & Sub-strands -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-100 pb-3 mb-4">
+          <div class="flex items-center gap-3">
+            <span class="p-2.5 bg-amber-100 text-amber-800 rounded-xl font-black text-sm">TOPIC 4</span>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900">Integral Calculus & Area</h2>
+              <p class="text-xs text-slate-500 font-medium">Stage 6 Advanced Syllabus: MA-C4 (Year 12)</p>
+            </div>
+          </div>
+          <div class="bg-amber-50 text-amber-800 text-xs font-black px-3 py-1.5 rounded-xl border border-amber-200">
+            HSC Weighting: ~16% – 20% (16 to 20 Marks)
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="layers" class="w-4 h-4 text-amber-600"></i> Syllabus Sub-strands
+            </h4>
+            <ul class="space-y-1 text-slate-700">
+              <li>• <strong>MA-C4.1:</strong> Indefinite anti-derivatives and initial value boundary problems.</li>
+              <li>• <strong>MA-C4.2:</strong> Definite integrals, Fundamental Theorem $\int_a^b f(x)dx = [F(x)]_a^b$.</li>
+              <li>• <strong>MA-C4.2:</strong> Physical area enclosed between curves & axes, Composite Trapezoidal Rule.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="crosshair" class="w-4 h-4 text-emerald-600"></i> Core Competencies
+            </h4>
+            <ul class="space-y-1 text-slate-700">
+              <li>• Identifying functions above vs. below the $x$-axis to avoid signed cancellation.</li>
+              <li>• Finding curve intersection points algebraically prior to area evaluation.</li>
+              <li>• Reverse chain rule integration: $\int f'(x)[f(x)]^n dx$ and $\int \frac{f'(x)}{f(x)}dx$.</li>
+              <li>• Numerical estimation via the composite Trapezoidal Rule formula.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="award" class="w-4 h-4 text-rose-600"></i> Examination Role
+            </h4>
+            <p class="text-slate-700 leading-relaxed">
+              Integration is tested both directly and in synthesis with probability (continuous PDFs). Exact area between intersecting curves is one of the most reliable multi-mark questions in the HSC exam.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Breakdown of Topics & Core Theory -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="plus" class="w-4 h-4 text-amber-600"></i> Integration Foundations
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-1 font-mono">
+            <li>• $\int x^n\,dx = \frac{x^{n+1}}{n+1} + c \quad (n \neq -1)$</li>
+            <li>• $\int (ax+b)^n\,dx = \frac{(ax+b)^{n+1}}{a(n+1)} + c$</li>
+            <li>• Reverse Chain: $\int f'(x)[f(x)]^n\,dx = \frac{[f(x)]^{n+1}}{n+1} + c$</li>
+            <li>• Log Form: $\int \frac{f'(x)}{f(x)}\,dx = \ln|f(x)| + c$</li>
+          </ul>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="square" class="w-4 h-4 text-sky-600"></i> Geometric Area Calculations
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            • <strong>Area Above $x$-axis:</strong> $\int_a^b f(x)\,dx \ge 0$.<br>
+            • <strong>Area Below $x$-axis:</strong> $\int_a^b f(x)\,dx < 0 \implies \text{Area} = -\int_a^b f(x)\,dx$.<br>
+            • <strong>Split Integrals:</strong> Always split at roots: $\int_{x_1}^{x_2} - \int_{x_2}^{x_3}$.<br>
+            • <strong>Area Between Curves:</strong><br>
+            $$\text{Area} = \int_a^b [\text{Top}(x) - \text{Bottom}(x)]\,dx$$
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="grid" class="w-4 h-4 text-purple-600"></i> Composite Trapezoidal Rule
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            For $n$ subintervals of equal width $h = \frac{b - a}{n}$ with $n + 1$ function values:
+            $$\int_a^b f(x)\,dx \approx \frac{h}{2} \left[ y_0 + y_n + 2(y_1 + y_2 + \dots + y_{n-1}) \right]$$
+            • <strong>Tip:</strong> "5 function values" means $n = 4$ subintervals!
+          </p>
+        </div>
+      </div>
+
+      <!-- 3. Reference Sheet Audit -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-black text-emerald-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i> Provided on NESA Reference Sheet
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-2">
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $\int x^n\,dx = \frac{1}{n+1}x^{n+1} + c$
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $\int (ax+b)^n\,dx = \frac{1}{a(n+1)}(ax+b)^{n+1} + c$
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $\int \frac{1}{x}\,dx = \ln|x| + c, \quad \int \frac{f'(x)}{f(x)}\,dx = \ln|f(x)| + c$
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $\int_a^b f(x)\,dx \approx \frac{b-a}{2n}\left\{ f(a) + f(b) + 2\sum_{i=1}^{n-1} f(x_i) \right\}$
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-rose-50/60 border border-rose-200 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-black text-rose-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i> MUST MEMORISE (Not on Reference Sheet)
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-2">
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Area between two curves:</strong> $\int_a^b [f(x) - g(x)]\,dx$ where $f(x) \ge g(x)$.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Splitting at $x$-axis crossings:</strong> Integrals evaluate to net signed area, not physical area!
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Constant of integration $+c$:</strong> Mandatory for every indefinite anti-derivative.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Odd integrand symmetry:</strong> $\int_{-a}^a f(x)\,dx = 0$ if $f(-x) = -f(x)$.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 4. Marker Insights & Band 6 Discriminators -->
+      <div class="bg-amber-50/60 border border-amber-200 rounded-2xl p-5 shadow-sm">
+        <h3 class="font-black text-amber-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-2">
+          <i data-lucide="lightbulb" class="w-4 h-4 text-amber-600"></i> HSC Marker Insights & Common Pitfalls
+        </h3>
+        <ul class="text-xs text-slate-700 space-y-1.5 list-disc list-inside">
+          <li><strong>Net Signed Area vs. Geometric Area:</strong> Evaluating $\int_0^{2\pi} \sin x\,dx = 0$ when asked for the area enclosed between $y = \sin x$ and the $x$-axis from $0$ to $2\pi$ (correct answer is $2 + 2 = 4\text{ sq. units}$).</li>
+          <li><strong>Strip Width $h$ Confusion:</strong> Miscounting $n$ in the trapezoidal rule. A question giving 3 function values has 2 subintervals ($n=2$), NOT 3!</li>
+          <li><strong>Missing Absolute Value in Log Integrals:</strong> Writing $\ln(x)$ instead of $\ln|x|$, which loses marks when evaluating over intervals where the argument is negative.</li>
+        </ul>
+      </div>
+
+      <!-- 5. High-Yield Exam Questions with Solutions -->
+      <div class="space-y-4">
+        <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
+          <i data-lucide="help-circle" class="w-5 h-5 text-amber-600"></i> High-Yield Exam Questions (Topic 4)
+        </h3>
+
+        <!-- Question 4.1 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-amber-100 text-amber-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 4.1 • Area Between Intersecting Curves (Band 5)</span>
+              <span class="text-xs font-bold text-slate-500">[4 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              Find the exact area of the region fully enclosed between the parabola $y = 4 - x^2$ and the line $y = 2 - x$.
+            </p>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-amber-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-amber-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Step 1: Determine points of intersection</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$4 - x^2 = 2 - x \implies x^2 - x - 2 = 0 \implies (x - 2)(x + 1) = 0 \implies x = -1, \, 2 \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Step 2: Set up definite integral $(\text{Top} - \text{Bottom})$</p>
+                <p>On $[-1, 2]$, the parabola $y = 4 - x^2$ lies above the line $y = 2 - x$:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$\text{Area} = \int_{-1}^2 [(4 - x^2) - (2 - x)]\,dx = \int_{-1}^2 (2 + x - x^2)\,dx \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Step 3: Integrate and evaluate limits</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$= \left[ 2x + \frac{x^2}{2} - \frac{x^3}{3} \right]_{-1}^2 \quad \text{[1 Mark]}$$
+                  $$\text{At } x = 2: \quad 4 + 2 - \frac{8}{3} = 6 - \frac{8}{3} = \frac{10}{3}$$
+                  $$\text{At } x = -1: \quad -2 + \frac{1}{2} + \frac{1}{3} = -\frac{7}{6}$$
+                  $$\text{Area} = \frac{10}{3} - \left(-\frac{7}{6}\right) = \frac{20}{6} + \frac{7}{6} = \frac{27}{6} = \frac{9}{2} = 4.5 \text{ sq. units} \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Question 4.2 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-amber-100 text-amber-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 4.2 • Reverse Chain Rule Logarithmic Integral (Band 5/6)</span>
+              <span class="text-xs font-bold text-slate-500">[3 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              Evaluate the exact definite integral:
+              $$\int_0^1 \frac{4x + 2}{x^2 + x + 1}\,dx$$
+            </p>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-amber-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-amber-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Step 1: Check derivative of denominator</p>
+                <p>Let $f(x) = x^2 + x + 1 \implies f'(x) = 2x + 1$.</p>
+                <p>Factor out $2$ from the numerator:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$I = 2 \int_0^1 \frac{2x + 1}{x^2 + x + 1}\,dx \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Step 2: Apply $\int \frac{f'(x)}{f(x)}dx = \ln|f(x)|$</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$I = 2\left[ \ln(x^2 + x + 1) \right]_0^1 \quad \text{[1 Mark]}$$
+                  $$= 2\left( \ln(1 + 1 + 1) - \ln(0 + 0 + 1) \right) = 2(\ln 3 - \ln 1) = 2\ln 3 \quad (\text{or } \ln 9) \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Question 4.3 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-amber-100 text-amber-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 4.3 • Split Area & Trapezoidal Rule (Band 6)</span>
+              <span class="text-xs font-bold text-slate-500">[5 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              This question tests piecewise geometric area calculations and numerical approximation techniques.
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> Find the total physical geometric area enclosed between the cubic curve $y = x^3 - 3x^2 + 2x$ and the $x$-axis from $x = 0$ to $x = 2$. <span class="text-slate-400">[3 marks]</span></li>
+              <li><strong>(b)</strong> Use the Trapezoidal Rule with 5 function values (4 subintervals) to approximate $\int_1^3 \sqrt{x^2 + 1}\,dx$ to 3 decimal places. <span class="text-slate-400">[2 marks]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-amber-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-amber-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <p>Find intercepts: $x(x - 1)(x - 2) = 0 \implies x = 0, 1, 2$.</p>
+                <p>On $[0, 1]$, $y \ge 0$. On $[1, 2]$, $y \le 0$. Must split integral:</p>
+                <div class="font-mono bg-white p-2.5 rounded border border-slate-200 mt-1 space-y-1">
+                  <div>$$A_1 = \int_0^1 (x^3 - 3x^2 + 2x)\,dx = \left[\frac{x^4}{4} - x^3 + x^2\right]_0^1 = \frac{1}{4} - 1 + 1 = \frac{1}{4} \quad \text{[1 Mark]}$$</div>
+                  <div>$$A_2 = \left|\int_1^2 (x^3 - 3x^2 + 2x)\,dx\right| = \left| \left[\frac{x^4}{4} - x^3 + x^2\right]_1^2 \right| = \left|(4 - 8 + 4) - \frac{1}{4}\right| = \frac{1}{4} \quad \text{[1 Mark]}$$</div>
+                  <div>$$\text{Total Geometric Area} = \frac{1}{4} + \frac{1}{4} = \frac{1}{2} \text{ sq. units} \quad \text{[1 Mark]}$$</div>
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <p>Strip width $h = \frac{3 - 1}{4} = 0.5$. $x$-values: $1.0, 1.5, 2.0, 2.5, 3.0$.</p>
+                <div class="font-mono bg-white p-2.5 rounded border border-slate-200 mt-1 text-[11px]">
+                  $$f(1.0) = \sqrt{2} \approx 1.4142, \quad f(1.5) = \sqrt{3.25} \approx 1.8028, \quad f(2.0) = \sqrt{5} \approx 2.2361$$
+                  $$f(2.5) = \sqrt{7.25} \approx 2.6926, \quad f(3.0) = \sqrt{10} \approx 3.1623$$
+                  $$\int_1^3 \sqrt{x^2 + 1}\,dx \approx \frac{0.5}{2}[1.4142 + 3.1623 + 2(1.8028 + 2.2361 + 2.6926)]$$
+                  $$= 0.25[4.5765 + 13.4630] = 0.25(18.0395) \approx 4.510 \quad \text{[2 Marks]}$$
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- 6. Quick Diagnostic Check (5 Questions) -->
+      <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-md no-print space-y-4">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="p-1.5 bg-amber-500/20 text-amber-400 rounded-lg"><i data-lucide="sparkles" class="w-4 h-4"></i></span>
+          <h3 class="text-sm font-black tracking-wide uppercase text-amber-300">Topic 4 Diagnostic Flash Check</h3>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3 text-xs">
+          <!-- Q1 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">1. What is the value of $\int_{-3}^3 x^5\,dx$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$0$ (Odd integrand over symmetric interval)</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$486$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$-243$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q2 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">2. In the trapezoidal rule, using 5 function values means how many subintervals ($n$)?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$5$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$4$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$6$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q3 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">3. What is the total geometric physical area enclosed between $y = \sin x$ and $x$-axis on $[0, 2\pi]$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$0$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$4$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$2$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q4 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">4. Integrating $\int (3x - 1)^4\,dx$ gives:</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\frac{(3x-1)^5}{5} + c$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\frac{(3x-1)^5}{15} + c$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$4(3x-1)^3 + c$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q5 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">5. What is the derivative of $\int_1^x \sqrt{t^3 + 7}\,dt$ with respect to $x$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\sqrt{x^3 + 7}$ (Fundamental Theorem)</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\frac{3x^2}{2\sqrt{x^3+7}}$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\sqrt{x^3 + 7} - \sqrt{8}$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+        </div>
+      </div>
+
+    </article>
+
+    <!-- ========================================================================= -->
+    <!-- TOPIC 5: EXPONENTIALS, LOGARITHMS & GROWTH/DECAY                          -->
+    <!-- ========================================================================= -->
+    <article id="topic-5" class="topic-page topic-container space-y-8">
+      
+      <!-- 1. HSC Exam Presence & Sub-strands -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-100 pb-3 mb-4">
+          <div class="flex items-center gap-3">
+            <span class="p-2.5 bg-teal-100 text-teal-800 rounded-xl font-black text-sm">TOPIC 5</span>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900">Exponentials, Logarithms & Models</h2>
+              <p class="text-xs text-slate-500 font-medium">Stage 6 Advanced Syllabus: MA-E1 (Year 11), MA-C2, MA-C4 & MA-M2 (Year 12)</p>
+            </div>
+          </div>
+          <div class="bg-teal-50 text-teal-800 text-xs font-black px-3 py-1.5 rounded-xl border border-teal-200">
+            HSC Weighting: ~16% – 20% (16 to 20 Marks)
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="layers" class="w-4 h-4 text-teal-600"></i> Syllabus Sub-strands
+            </h4>
+            <ul class="space-y-1 text-slate-700">
+              <li>• <strong>MA-E1:</strong> Index & Log laws, change of base, exponential/log equations.</li>
+              <li>• <strong>MA-C2.2/C4:</strong> Calculus of $e^{f(x)}$ and $\ln(f(x))$, integrals yielding $\ln|x|$.</li>
+              <li>• <strong>MA-M2:</strong> Exponential Growth & Decay, Newton's Law of Cooling differential models.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="crosshair" class="w-4 h-4 text-emerald-600"></i> Core Competencies
+            </h4>
+            <ul class="space-y-1 text-slate-700">
+              <li>• Manipulating log expressions prior to differentiation to avoid complex chain rules.</li>
+              <li>• Solving $\frac{dN}{dt} = kN \implies N(t) = N_0 e^{kt}$ and evaluating half-lives.</li>
+              <li>• Setting up modified decay equations $\frac{dT}{dt} = -k(T - T_{\text{env}})$.</li>
+              <li>• Curve sketching with horizontal ($y = 0$) and vertical ($x = 0$) asymptotes.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="award" class="w-4 h-4 text-rose-600"></i> Examination Role
+            </h4>
+            <p class="text-slate-700 leading-relaxed">
+              Exponentials and logarithmic modeling feature heavily in every HSC paper. Almost always presents a high-mark differential equation scenario (cooling, radioactive decay, population saturation).
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Breakdown of Topics & Core Theory -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="binary" class="w-4 h-4 text-teal-600"></i> Log Laws & Inversion
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-1 font-mono">
+            <li>• $\log_a(xy) = \log_a x + \log_a y$</li>
+            <li>• $\log_a\left(\frac{x}{y}\right) = \log_a x - \log_a y$</li>
+            <li>• $\log_a(x^p) = p\log_a x$</li>
+            <li>• $\log_b a = \frac{\ln a}{\ln b}$ (Change of Base)</li>
+            <li>• Inverse Pair: $y = e^x \iff x = \ln y$</li>
+            <li>• Domain: $\ln(f(x))$ strictly requires $f(x) > 0$!</li>
+          </ul>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="sparkles" class="w-4 h-4 text-sky-600"></i> Exp & Log Calculus
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-1 font-mono">
+            <li>• $\frac{d}{dx}[e^{f(x)}] = f'(x)e^{f(x)}$</li>
+            <li>• $\frac{d}{dx}[\ln(f(x))] = \frac{f'(x)}{f(x)}$</li>
+            <li>• $\int e^{ax+b}\,dx = \frac{1}{a}e^{ax+b} + c$</li>
+            <li>• $\int \frac{1}{ax+b}\,dx = \frac{1}{a}\ln|ax+b| + c$</li>
+            <li>• Pro-Tip: Expand $\ln\left(\frac{x^3}{\sqrt{x+1}}\right)$ to $3\ln x - \frac{1}{2}\ln(x+1)$ before differentiating!</li>
+          </ul>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="thermometer-snowflake" class="w-4 h-4 text-purple-600"></i> Growth & Cooling Models
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            • <strong>Natural Growth/Decay:</strong><br>
+            $$\frac{dN}{dt} = kN \iff N(t) = N_0 e^{kt}$$
+            • <strong>Newton's Law of Cooling:</strong><br>
+            $$\frac{dT}{dt} = -k(T - T_{\text{env}}) \iff T(t) = T_{\text{env}} + Ae^{-kt}$$
+            • $T(0) = T_{\text{env}} + A \implies A = T(0) - T_{\text{env}}$.<br>
+            • Limiting asymptote: as $t \to \infty$, $T(t) \to T_{\text{env}}$.
+          </p>
+        </div>
+      </div>
+
+      <!-- 3. Reference Sheet Audit -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-black text-emerald-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i> Provided on NESA Reference Sheet
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-2">
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $\frac{d}{dx}(e^{kx}) = ke^{kx}, \quad \frac{d}{dx}(\ln x) = \frac{1}{x}$
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $\int e^{kx}\,dx = \frac{1}{k}e^{kx} + c$
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $\int \frac{1}{x}\,dx = \ln|x| + c, \quad \int \frac{f'(x)}{f(x)}\,dx = \ln|f(x)| + c$
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-rose-50/60 border border-rose-200 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-black text-rose-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i> MUST MEMORISE (Not on Reference Sheet)
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-2">
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>All Log Laws:</strong> Product, quotient, power, and change of base $\log_b a = \frac{\ln a}{\ln b}$.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Chain Rule Generalisations:</strong> $\frac{d}{dx}[e^{f(x)}] = f'(x)e^{f(x)}$, $\frac{d}{dx}[\ln(f(x))] = \frac{f'(x)}{f(x)}$.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Differential Equation Solution:</strong> $\frac{dN}{dt} = kN \iff N = N_0 e^{kt}$.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Half-Life Formula:</strong> $t_{1/2} = \frac{\ln 2}{k}$ (for decay parameter $k > 0$).
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 4. Marker Insights & Band 6 Discriminators -->
+      <div class="bg-amber-50/60 border border-amber-200 rounded-2xl p-5 shadow-sm">
+        <h3 class="font-black text-amber-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-2">
+          <i data-lucide="lightbulb" class="w-4 h-4 text-amber-600"></i> HSC Marker Insights & Common Pitfalls
+        </h3>
+        <ul class="text-xs text-slate-700 space-y-1.5 list-disc list-inside">
+          <li><strong>Negative Log Arguments:</strong> Forgetting that $\ln(u)$ is undefined for $u \le 0$. When solving log equations that reduce to quadratics, students must discard negative or out-of-domain solutions.</li>
+          <li><strong>Missing $+ T_{\text{env}}$ in Cooling Verification:</strong> When asked to verify that $T = 20 + Ae^{-kt}$ satisfies $\frac{dT}{dt} = -k(T - 20)$, students often differentiate incorrectly or substitute $T$ without subtracting the room temperature.</li>
+          <li><strong>Derivative of $\ln(kx)$:</strong> Believing $\frac{d}{dx}\ln(5x) = \frac{5}{5x} \cdot 5 = \frac{5}{x}$. The $5$ cancels: $\frac{d}{dx}\ln(5x) = \frac{5}{5x} = \frac{1}{x}$.</li>
+        </ul>
+      </div>
+
+      <!-- 5. High-Yield Exam Questions with Solutions -->
+      <div class="space-y-4">
+        <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
+          <i data-lucide="help-circle" class="w-5 h-5 text-teal-600"></i> High-Yield Exam Questions (Topic 5)
+        </h3>
+
+        <!-- Question 5.1 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-teal-100 text-teal-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 5.1 • Discarding Extraneous Log Roots (Band 5)</span>
+              <span class="text-xs font-bold text-slate-500">[4 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              Solve the logarithmic equation:
+              $$\ln(x) + \ln(x - 3) = \ln(10)$$
+            </p>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-teal-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-teal-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Step 1: State domain restrictions</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$x > 0 \quad \text{and} \quad x - 3 > 0 \implies x > 3 \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Step 2: Combine using product log law</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$\ln[x(x - 3)] = \ln(10) \implies x^2 - 3x = 10 \implies x^2 - 3x - 10 = 0 \quad \text{[1 Mark]}$$
+                  $$(x - 5)(x + 2) = 0 \implies x = 5 \quad \text{or} \quad x = -2 \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Step 3: Reject invalid roots</p>
+                <p>Since $x > 3$, the root $x = -2$ is extraneous ($\ln(-2)$ is undefined).</p>
+                <p class="font-mono text-teal-950 font-bold mt-1">$$\therefore x = 5 \quad \text{[1 Mark]}$$</p>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Question 5.2 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-teal-100 text-teal-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 5.2 • Newton's Law of Cooling Differential Model (Band 6)</span>
+              <span class="text-xs font-bold text-slate-500">[5 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              A freshly brewed coffee at initial temperature $100^\circ\text{C}$ cools in a room kept at a constant temperature of $20^\circ\text{C}$. The rate of cooling satisfies $\frac{dT}{dt} = -k(T - 20)$, with general solution $T(t) = 20 + Ae^{-kt}$, where $t$ is in minutes.
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> State the value of $A$. <span class="text-slate-400">[1 mark]</span></li>
+              <li><strong>(b)</strong> If the coffee cools to $60^\circ\text{C}$ after $5\text{ minutes}$, show that $k = \frac{1}{5}\ln 2$. <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(c)</strong> How long after brewing will it take for the coffee to reach $30^\circ\text{C}$? <span class="text-slate-400">[2 marks]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-teal-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-teal-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$T(0) = 100 \implies 100 = 20 + Ae^0 \implies A = 80 \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$T(5) = 60 \implies 60 = 20 + 80e^{-5k} \implies 40 = 80e^{-5k} \implies e^{-5k} = \frac{1}{2}$$
+                  $$-5k = \ln(2^{-1}) = -\ln 2 \implies k = \frac{1}{5}\ln 2 \quad \text{as required.} \quad \text{[2 Marks]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (c):</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$30 = 20 + 80e^{-kt} \implies 10 = 80e^{-kt} \implies e^{-kt} = \frac{1}{8} = 2^{-3}$$
+                  $$-kt = -3\ln 2 \implies t = \frac{3\ln 2}{k} = \frac{3\ln 2}{\frac{1}{5}\ln 2} = 15\text{ minutes} \quad \text{[2 Marks]}$$
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Question 5.3 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-teal-100 text-teal-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 5.3 • Bounded Logistic Dynamics & Carrying Capacity (Band 6)</span>
+              <span class="text-xs font-bold text-slate-500">[5 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              The population $P(t)$ of an endangered wildlife reserve $t$ years after 2020 is modeled by:
+              $$P(t) = \frac{800}{1 + 7e^{-0.2t}} \quad \text{for } t \ge 0$$
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> Calculate the initial population in 2020 ($t = 0$). <span class="text-slate-400">[1 mark]</span></li>
+              <li><strong>(b)</strong> Determine the carrying capacity (limiting population as $t \to \infty$). <span class="text-slate-400">[1 mark]</span></li>
+              <li><strong>(c)</strong> In what calendar year will the population first reach 500 animals? <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(d)</strong> Find the rate of growth at $t = 10$. <span class="text-slate-400">[1 mark]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-teal-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-teal-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$P(0) = \frac{800}{1 + 7(1)} = \frac{800}{8} = 100\text{ animals} \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <p>As $t \to \infty$, $e^{-0.2t} \to 0 \implies P(t) \to \frac{800}{1 + 0} = 800\text{ animals}$. <span class="font-sans text-slate-500">[1 Mark]</span></p>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (c):</p>
+                <div class="font-mono bg-white p-2.5 rounded border border-slate-200 mt-1 space-y-1">
+                  <div>$$\frac{800}{1 + 7e^{-0.2t}} = 500 \implies 1 + 7e^{-0.2t} = 1.6 \implies 7e^{-0.2t} = 0.6$$</div>
+                  <div>$$e^{-0.2t} = \frac{0.6}{7} = \frac{3}{35} \implies -0.2t = \ln(3/35) \implies t = -5\ln(3/35) \approx 12.28\text{ years} \quad \text{[1 Mark]}$$</div>
+                </div>
+                <p class="text-teal-950 font-bold mt-1">$$\text{Year } = 2020 + 12.28 \implies \text{During the year } 2032 \quad \text{[1 Mark]}$$</p>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (d):</p>
+                <p>Chain rule: $\frac{dP}{dt} = \frac{1120e^{-0.2t}}{(1 + 7e^{-0.2t})^2}$. At $t = 10$, $\frac{dP}{dt} \approx 40\text{ animals/year}$. <span class="font-sans text-slate-500">[1 Mark]</span></p>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- 6. Quick Diagnostic Check (5 Questions) -->
+      <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-md no-print space-y-4">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="p-1.5 bg-teal-500/20 text-teal-400 rounded-lg"><i data-lucide="sparkles" class="w-4 h-4"></i></span>
+          <h3 class="text-sm font-black tracking-wide uppercase text-teal-300">Topic 5 Diagnostic Flash Check</h3>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3 text-xs">
+          <!-- Q1 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">1. What is the derivative of $y = x\ln x$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$1$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\ln x + 1$ (Product Rule)</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\frac{1}{x}$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q2 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">2. What is the exact domain of $f(x) = \ln(16 - x^2)$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$-4 \le x \le 4$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$-4 < x < 4$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$x \neq \pm 4$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q3 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">3. What is the value of $\log_4(2)$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$2$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\frac{1}{2}$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$-2$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q4 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">4. As $x \to \infty$, what does $y = 5 - 4e^{-0.3x}$ approach?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$1$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$5$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$0$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q5 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">5. If $N(t) = N_0 e^{-kt}$, what is the exact formula for half-life $t_{1/2}$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\frac{\ln 2}{k}$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\frac{k}{\ln 2}$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$e^{-k/2}$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+        </div>
+      </div>
+
+    </article>
+
+    <!-- ========================================================================= -->
+    <!-- TOPIC 6: FINANCIAL MATHEMATICS & SERIES                                   -->
+    <!-- ========================================================================= -->
+    <article id="topic-6" class="topic-page topic-container space-y-8">
+      
+      <!-- 1. HSC Exam Presence & Sub-strands -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-100 pb-3 mb-4">
+          <div class="flex items-center gap-3">
+            <span class="p-2.5 bg-indigo-100 text-indigo-800 rounded-xl font-black text-sm">TOPIC 6</span>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900">Financial Mathematics & Series</h2>
+              <p class="text-xs text-slate-500 font-medium">Stage 6 Advanced Syllabus: MA-M1 (Year 12)</p>
+            </div>
+          </div>
+          <div class="bg-indigo-50 text-indigo-800 text-xs font-black px-3 py-1.5 rounded-xl border border-indigo-200">
+            HSC Weighting: ~12% – 15% (12 to 15 Marks)
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="layers" class="w-4 h-4 text-indigo-600"></i> Syllabus Sub-strands
+            </h4>
+            <ul class="space-y-1 text-slate-700">
+              <li>• <strong>MA-M1.1:</strong> Arithmetic Progressions (AP): $T_n = a + (n-1)d$, $S_n$.</li>
+              <li>• <strong>MA-M1.2:</strong> Geometric Progressions (GP): $T_n = ar^{n-1}$, $S_n$, limiting sum $S_\infty = \frac{a}{1-r}$.</li>
+              <li>• <strong>MA-M1.3:</strong> Financial applications: Compound interest, investments, annuities, reducing-balance loans.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="crosshair" class="w-4 h-4 text-emerald-600"></i> Core Competencies
+            </h4>
+            <ul class="space-y-1 text-slate-700">
+              <li>• Establishing rigorous multi-line financial recurrence relations ($A_1, A_2, \dots, A_n$).</li>
+              <li>• Summing geometric series for regular deposits and loan amortization tables.</li>
+              <li>• Converting annual percentage rates to monthly/quarterly compounding periods.</li>
+              <li>• Solving for installment $M$, balance $A_n$, or number of repayment periods $n$ using logs.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="award" class="w-4 h-4 text-rose-600"></i> Examination Role
+            </h4>
+            <p class="text-slate-700 leading-relaxed">
+              Financial mathematics almost always delivers a guaranteed 4 to 6 mark structured question in Section II (typically Q13, Q14, or Q15), demanding full proof steps without skipping lines.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Breakdown of Topics & Core Theory -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="list-ordered" class="w-4 h-4 text-indigo-600"></i> AP & GP Foundations
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-1 font-mono">
+            <li>• AP: $T_n = a + (n - 1)d$</li>
+            <li>• AP: $S_n = \frac{n}{2}[2a + (n - 1)d]$</li>
+            <li>• GP: $T_n = ar^{n-1}$</li>
+            <li>• GP: $S_n = \frac{a(r^n - 1)}{r - 1} = \frac{a(1 - r^n)}{1 - r}$</li>
+            <li>• Limiting Sum: $S_\infty = \frac{a}{1 - r}$ exists $\iff |r| < 1$</li>
+          </ul>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="piggy-bank" class="w-4 h-4 text-emerald-600"></i> Annuities & Future Value
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Deposit $\$M$ at start of each compounding period with growth factor $R = 1 + r$:<br>
+            • 1st installment grows for $n$ periods: $M R^n$.<br>
+            • Last installment grows for $1$ period: $M R^1$.<br>
+            • Future Value is a GP with first term $a = MR$, ratio $r = R$:<br>
+            $$A_n = MR + MR^2 + \dots + MR^n = \frac{MR(R^n - 1)}{R - 1}$$
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="credit-card" class="w-4 h-4 text-rose-600"></i> Loan Repayments Protocol
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Borrow $\$P$ at rate $r$ per period, repaying $\$M$ at end of each period:<br>
+            • $A_1 = P R - M$<br>
+            • $A_2 = A_1 R - M = P R^2 - M(R + 1)$<br>
+            • $A_n = P R^n - M(R^{n-1} + R^{n-2} + \dots + 1)$<br>
+            • Summing GP inside bracket:<br>
+            $$A_n = P R^n - M \frac{R^n - 1}{R - 1}$$
+            • Fully repaid when $A_n = 0$.
+          </p>
+        </div>
+      </div>
+
+      <!-- 3. Reference Sheet Audit -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-black text-emerald-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i> Provided on NESA Reference Sheet
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-2">
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $T_n = a + (n-1)d, \quad S_n = \frac{n}{2}[2a + (n-1)d] = \frac{n}{2}(a + l)$
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $T_n = ar^{n-1}, \quad S_n = \frac{a(r^n - 1)}{r - 1} = \frac{a(1 - r^n)}{1 - r}$
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $S_\infty = \frac{a}{1 - r} \quad (|r| < 1)$
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-rose-50/60 border border-rose-200 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-black text-rose-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i> MUST MEMORISE (Not on Reference Sheet)
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-2">
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Recurrence line generation:</strong> Must be able to derive $A_1, A_2, \dots, A_n$ step-by-step.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Compounding Period Conversions:</strong> Monthly: $r = \frac{i}{12}$, $n = 12 \times \text{years}$.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Loan payoff condition:</strong> $A_n = 0 \implies PR^n = M\frac{R^n - 1}{R - 1}$.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Limiting sum convergence test:</strong> Stating $|r| < 1$ before computing $S_\infty$.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 4. Marker Insights & Band 6 Discriminators -->
+      <div class="bg-amber-50/60 border border-amber-200 rounded-2xl p-5 shadow-sm">
+        <h3 class="font-black text-amber-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-2">
+          <i data-lucide="lightbulb" class="w-4 h-4 text-amber-600"></i> HSC Marker Insights & Common Pitfalls
+        </h3>
+        <ul class="text-xs text-slate-700 space-y-1.5 list-disc list-inside">
+          <li><strong>Skipping the Recurrence Steps:</strong> In "Show that the amount owing after $n$ months is..." questions, jumping straight to the final GP formula without showing $A_1, A_2$ and the series pattern receives 0 or 1 mark out of 3. Markers demand the algebraic induction steps!</li>
+          <li><strong>Timing of Payments:</strong> Confusing whether money is invested at the *beginning* of each period (annuity in advance, $a = MR$) vs. at the *end* of each period (annuity in arrears, $a = M$).</li>
+          <li><strong>Rounding Prematurely:</strong> Rounding intermediate interest rates (e.g. $1.004166...$) causes substantial dollar compounding discrepancies in the final repayment figure. Keep values in calculator memory.</li>
+        </ul>
+      </div>
+
+      <!-- 5. High-Yield Exam Questions with Solutions -->
+      <div class="space-y-4">
+        <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
+          <i data-lucide="help-circle" class="w-5 h-5 text-indigo-600"></i> High-Yield Exam Questions (Topic 6)
+        </h3>
+
+        <!-- Question 6.1 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-indigo-100 text-indigo-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 6.1 • Superannuation Annuity Investment (Band 5)</span>
+              <span class="text-xs font-bold text-slate-500">[4 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              At the beginning of every month, Alex deposits $\$400$ into a superannuation fund earning interest at $6\%\text{ p.a.}$ compounded monthly.
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> Show that the total value $A_n$ of the investment after $n$ months is given by $A_n = 80\,400(1.005^n - 1)$. <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(b)</strong> Calculate the value of the investment at the end of 20 years. <span class="text-slate-400">[2 marks]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-indigo-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-indigo-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <p>Monthly rate $r = \frac{0.06}{12} = 0.005 \implies R = 1.005$.</p>
+                <div class="font-mono bg-white p-2.5 rounded border border-slate-200 mt-1 space-y-1">
+                  <div>First deposit grows for $n$ months: $400(1.005)^n$</div>
+                  <div>Last deposit grows for 1 month: $400(1.005)^1$</div>
+                  <div>$$A_n = 400(1.005) + 400(1.005)^2 + \dots + 400(1.005)^n \quad \text{[1 Mark]}$$</div>
+                  <div>$$\text{This is a GP with } a = 400(1.005) = 402, \quad r = 1.005:$$</div>
+                  <div>$$A_n = \frac{402(1.005^n - 1)}{1.005 - 1} = \frac{402}{0.005}(1.005^n - 1) = 80\,400(1.005^n - 1) \quad \text{[1 Mark]}$$</div>
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <p>Over 20 years, $n = 20 \times 12 = 240$ monthly periods:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$A_{240} = 80\,400(1.005^{240} - 1) \approx 80\,400(3.310204 - 1) \approx \$185\,740.44 \quad \text{[2 Marks]}$$
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Question 6.2 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-indigo-100 text-indigo-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 6.2 • Home Loan Amortization Proof (Band 6)</span>
+              <span class="text-xs font-bold text-slate-500">[5 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              Liam takes out a mortgage of $\$600\,000$ to purchase a townhouse. Interest is charged at $4.8\%\text{ p.a.}$ compounded monthly. The loan is to be repaid in equal monthly installments of $\$M$ over 30 years ($360\text{ months}$).
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> Write down expressions for the balance $A_1, A_2$ and prove that the balance $A_n$ owing after $n$ months is:
+                $$A_n = 600\,000(1.004)^n - 250M(1.004^n - 1)$$ <span class="text-slate-400">[3 marks]</span>
+              </li>
+              <li><strong>(b)</strong> Calculate the monthly repayment $\$M$ required to completely pay off the loan in 30 years. <span class="text-slate-400">[2 marks]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-indigo-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-indigo-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <p>Monthly rate $r = \frac{0.048}{12} = 0.004 \implies R = 1.004$. Principal $P = 600\,000$.</p>
+                <div class="font-mono bg-white p-2.5 rounded border border-slate-200 mt-1 space-y-1">
+                  <div>$$A_1 = P(1.004) - M \quad \text{[1 Mark]}$$</div>
+                  <div>$$A_2 = A_1(1.004) - M = [P(1.004) - M](1.004) - M = P(1.004)^2 - M(1.004 + 1)$$</div>
+                  <div>$$A_n = P(1.004)^n - M(1 + 1.004 + 1.004^2 + \dots + 1.004^{n-1}) \quad \text{[1 Mark]}$$</div>
+                  <div>$$\text{Summing GP inside: } S = \frac{1(1.004^n - 1)}{1.004 - 1} = \frac{1.004^n - 1}{0.004} = 250(1.004^n - 1)$$</div>
+                  <div>$$A_n = 600\,000(1.004)^n - 250M(1.004^n - 1) \quad \text{as required.} \quad \text{[1 Mark]}$$</div>
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <p>Loan repaid when $A_{360} = 0$:</p>
+                <div class="font-mono bg-white p-2.5 rounded border border-slate-200 mt-1 space-y-1">
+                  <div>$$600\,000(1.004)^{360} - 250M(1.004^{360} - 1) = 0$$</div>
+                  <div>$$M = \frac{600\,000(1.004)^{360}}{250(1.004^{360} - 1)} = \frac{2400(1.004)^{360}}{1.004^{360} - 1} \quad \text{[1 Mark]}$$</div>
+                  <div>$$M \approx \frac{2400(4.20864)}{3.20864} \approx \$3148.06\text{ per month} \quad \text{[1 Mark]}$$</div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Question 6.3 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-indigo-100 text-indigo-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 6.3 • Arithmetic Series & Bouncing Ball Limiting Sum (Band 6)</span>
+              <span class="text-xs font-bold text-slate-500">[5 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              This question assesses both Arithmetic Progressions and Infinite Geometric Series applications.
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> A runner trains for a marathon by running $5\text{ km}$ on Day 1, and increasing daily distance by $0.8\text{ km}$ each subsequent day. On which day will the runner first exceed $25\text{ km}$? What is the total distance completed over the first 30 days? <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(b)</strong> An elastic ball is dropped from a height of $12\text{ m}$. After each bounce, it rebounds to $\frac{2}{3}$ of its preceding height. Prove that the total vertical distance traveled before coming to rest is $60\text{ m}$. <span class="text-slate-400">[3 marks]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-indigo-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-indigo-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$T_n = 5 + (n - 1)(0.8) > 25 \implies 0.8(n - 1) > 20 \implies n - 1 > 25 \implies n > 26 \implies \text{Day 27} \quad \text{[1 Mark]}$$
+                  $$S_{30} = \frac{30}{2}[2(5) + 29(0.8)] = 15[10 + 23.2] = 15(33.2) = 498\text{ km} \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <p>Initial drop: $12\text{ m}$. Every bounce travels up and down:</p>
+                <div class="font-mono bg-white p-2.5 rounded border border-slate-200 mt-1 space-y-1">
+                  <div>$$D = 12 + 2\left[ 12\left(\frac{2}{3}\right) + 12\left(\frac{2}{3}\right)^2 + \dots \right] = 12 + 2\left[ 8 + 8\left(\frac{2}{3}\right) + \dots \right] \quad \text{[1 Mark]}$$</div>
+                  <div>$$\text{Inside is infinite GP with } a = 8, r = \frac{2}{3} < 1: \quad S_\infty = \frac{8}{1 - 2/3} = \frac{8}{1/3} = 24\text{ m} \quad \text{[1 Mark]}$$</div>
+                  <div>$$D = 12 + 2(24) = 12 + 48 = 60\text{ m} \quad \text{as required.} \quad \text{[1 Mark]}$$</div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- 6. Quick Diagnostic Check (5 Questions) -->
+      <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-md no-print space-y-4">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="p-1.5 bg-indigo-500/20 text-indigo-400 rounded-lg"><i data-lucide="sparkles" class="w-4 h-4"></i></span>
+          <h3 class="text-sm font-black tracking-wide uppercase text-indigo-300">Topic 6 Diagnostic Flash Check</h3>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3 text-xs">
+          <!-- Q1 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">1. Under what condition does an infinite Geometric Series have a limiting sum $S_\infty$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$|r| < 1$ (strictly between $-1$ and $1$)</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$r > 1$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">For any real value of $r$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q2 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">2. If an investment earns $7.2\%\text{ p.a.}$ compounded quarterly, what periodic rate $r$ is used?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$0.072$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$0.018$ ($7.2\% \div 4$)</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$0.006$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q3 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">3. What is the sum of the first 20 odd numbers ($1 + 3 + 5 + \dots + 39$)?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$200$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$400$ ($n^2 = 20^2$)</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$380$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q4 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">4. When an annuity deposit is made at the start of each month, what is the first term in the series?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$M(1 + r)$ (it earns 1 month of interest)</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$M$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$M(1 + r)^n$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q5 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">5. In an AP with $T_3 = 10$ and $T_7 = 26$, what is the common difference $d$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$2$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$4$ ($4d = 16$)</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$5$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+        </div>
+      </div>
+
+    </article>
+
+    <!-- ========================================================================= -->
+    <!-- TOPIC 7: STATISTICAL ANALYSIS & PROBABILITY                               -->
+    <!-- ========================================================================= -->
+    <article id="topic-7" class="topic-page topic-container space-y-8">
+      
+      <!-- 1. HSC Exam Presence & Sub-strands -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-100 pb-3 mb-4">
+          <div class="flex items-center gap-3">
+            <span class="p-2.5 bg-rose-100 text-rose-800 rounded-xl font-black text-sm">TOPIC 7</span>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900">Statistical Analysis & Probability</h2>
+              <p class="text-xs text-slate-500 font-medium">Stage 6 Advanced Syllabus: MA-S1 (Year 11), MA-S2 & MA-S3 (Year 12)</p>
+            </div>
+          </div>
+          <div class="bg-rose-50 text-rose-800 text-xs font-black px-3 py-1.5 rounded-xl border border-rose-200">
+            HSC Weighting: ~16% – 20% (16 to 20 Marks)
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="layers" class="w-4 h-4 text-rose-600"></i> Syllabus Sub-strands
+            </h4>
+            <ul class="space-y-1 text-slate-700">
+              <li>• <strong>MA-S1:</strong> Probability axioms, conditional probability $P(A|B) = \frac{P(A \cap B)}{P(B)}$, Venn diagrams.</li>
+              <li>• <strong>MA-S2:</strong> Discrete Random Variables, expected value $E(X)$, variance $\text{Var}(X) = E(X^2) - \mu^2$.</li>
+              <li>• <strong>MA-S3.1/S3.2:</strong> Continuous Random Variables, PDF/CDF, Normal Distribution & $z$-scores.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="crosshair" class="w-4 h-4 text-emerald-600"></i> Core Competencies
+            </h4>
+            <ul class="space-y-1 text-slate-700">
+              <li>• Proving a function is a valid PDF: $f(x) \ge 0$ AND $\int_{-\infty}^\infty f(x)dx = 1$.</li>
+              <li>• Calculating continuous expected value $\int x f(x)dx$ and median $\int_{-\infty}^m f(x)dx = 0.5$.</li>
+              <li>• Connecting CDF and PDF via calculus: $f(x) = F'(x) = \frac{d}{dx}F(x)$.</li>
+              <li>• Applying the 68–95–99.7% empirical rule and interpreting standardized $z$-scores.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <i data-lucide="award" class="w-4 h-4 text-purple-600"></i> Examination Role
+            </h4>
+            <p class="text-slate-700 leading-relaxed">
+              Statistics and probability questions feature across both Multiple Choice and Section II. Continuous distributions synthesized with calculus integrals routinely serve as Band 5–6 discriminators.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Breakdown of Topics & Core Theory -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="dice-5" class="w-4 h-4 text-rose-600"></i> Discrete Random Variables
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-1 font-mono">
+            <li>• $\sum P(X = x) = 1$ and $0 \le P(X = x) \le 1$</li>
+            <li>• Mean / Expected Value: $\mu = E(X) = \sum x P(X = x)$</li>
+            <li>• $E(X^2) = \sum x^2 P(X = x)$</li>
+            <li>• $\text{Var}(X) = E(X^2) - [E(X)]^2$</li>
+            <li>• Standard Deviation: $\sigma = \sqrt{\text{Var}(X)}$</li>
+            <li>• Fair game: Net expected profit $= \$0$</li>
+          </ul>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="waves" class="w-4 h-4 text-purple-600"></i> Continuous RVs & CDF
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            • <strong>PDF Axioms:</strong> $f(x) \ge 0$ and $\int_a^b f(x)\,dx = 1$.<br>
+            • <strong>Point Probability:</strong> $P(X = c) = 0$ for any exact value!<br>
+            • <strong>Probability Interval:</strong> $P(c \le X \le d) = \int_c^d f(x)\,dx$.<br>
+            • <strong>Mean:</strong> $\mu = \int_a^b x f(x)\,dx$.<br>
+            • <strong>Variance:</strong> $\text{Var}(X) = \int_a^b x^2 f(x)\,dx - \mu^2$.<br>
+            • <strong>CDF:</strong> $F(x) = \int_a^x f(t)\,dt \implies f(x) = F'(x)$.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h3 class="font-black text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="bell" class="w-4 h-4 text-sky-600"></i> Normal Distribution & Z-Scores
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            • Standardised $z$-score: $z = \frac{x - \mu}{\sigma}$.<br>
+            • <strong>Empirical Rule (68-95-99.7):</strong><br>
+            $\quad \mu \pm 1\sigma \implies 68\%$ ($34\%$ each side).<br>
+            $\quad \mu \pm 2\sigma \implies 95\%$ ($47.5\%$ each side).<br>
+            $\quad \mu \pm 3\sigma \implies 99.7\%$.<br>
+            • Upper tail $> \mu + 2\sigma$ is $2.5\%$.<br>
+            • Bivariate regression line: $y = mx + c$ with correlation $r$.
+          </p>
+        </div>
+      </div>
+
+      <!-- 3. Reference Sheet Audit -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-black text-emerald-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i> Provided on NESA Reference Sheet
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-2">
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $E(X) = \mu = \sum xP(X=x), \quad \text{Var}(X) = E(X^2) - \mu^2$
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $P(a \le X \le b) = \int_a^b f(x)\,dx$
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $E(X) = \int_{-\infty}^\infty xf(x)\,dx, \quad \text{Var}(X) = \int_{-\infty}^\infty x^2 f(x)\,dx - \mu^2$
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-emerald-100 font-mono">
+              $z = \frac{x - \mu}{\sigma}$
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-rose-50/60 border border-rose-200 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-black text-rose-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i> MUST MEMORISE (Not on Reference Sheet)
+          </h3>
+          <ul class="text-xs text-slate-700 space-y-2">
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>CDF Calculus Link:</strong> $f(x) = \frac{d}{dx}F(x) = F'(x)$ and $F(x) = \int_{-\infty}^x f(t)\,dt$.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Continuous Point Probability:</strong> $P(X = c) = 0 \implies P(a \le X \le b) = P(a < X < b)$.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Empirical 68-95-99.7 Rule:</strong> Exact percentages for $\pm 1\sigma, \pm 2\sigma, \pm 3\sigma$.
+            </li>
+            <li class="bg-white p-2 rounded-xl border border-rose-100">
+              <strong>Conditional Probability Formula:</strong> $P(A|B) = \frac{P(A \cap B)}{P(B)}$.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 4. Marker Insights & Band 6 Discriminators -->
+      <div class="bg-amber-50/60 border border-amber-200 rounded-2xl p-5 shadow-sm">
+        <h3 class="font-black text-amber-950 text-xs uppercase tracking-wider flex items-center gap-2 mb-2">
+          <i data-lucide="lightbulb" class="w-4 h-4 text-amber-600"></i> HSC Marker Insights & Common Pitfalls
+        </h3>
+        <ul class="text-xs text-slate-700 space-y-1.5 list-disc list-inside">
+          <li><strong>PDF Validation Requires TWO Conditions:</strong> If asked to "show that $f(x)$ is a probability density function", students frequently only evaluate $\int f(x)dx = 1$ and fail to state that $f(x) \ge 0$, forfeiting an easy mark.</li>
+          <li><strong>Variance Square Root:</strong> In both discrete and continuous calculations, students frequently calculate $\text{Var}(X)$ and forget to take the square root $\sigma = \sqrt{\text{Var}(X)}$ when asked for standard deviation.</li>
+          <li><strong>Extrapolation Warnings:</strong> In bivariate data, students often substitute an $x$-value far beyond the measured data domain without explaining that the estimate is unreliable due to *extrapolation*.</li>
+        </ul>
+      </div>
+
+      <!-- 5. High-Yield Exam Questions with Solutions -->
+      <div class="space-y-4">
+        <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
+          <i data-lucide="help-circle" class="w-5 h-5 text-rose-600"></i> High-Yield Exam Questions (Topic 7)
+        </h3>
+
+        <!-- Question 7.1 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-rose-100 text-rose-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 7.1 • Continuous Probability Density & Median (Band 5)</span>
+              <span class="text-xs font-bold text-slate-500">[5 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              A continuous random variable $X$ has probability density function:
+              $$f(x) = \begin{cases} k(4x - x^2), & 0 \le x \le 4 \\ 0, & \text{otherwise} \end{cases}$$
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> Show that $k = \frac{3}{32}$. <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(b)</strong> Calculate the expected value $E(X)$. <span class="text-slate-400">[1 mark]</span></li>
+              <li><strong>(c)</strong> Calculate the conditional probability $P(X \ge 3 \mid X \ge 2)$. <span class="text-slate-400">[2 marks]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-rose-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-rose-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <p>For a valid PDF, $\int_0^4 k(4x - x^2)\,dx = 1$ and $f(x) \ge 0$ on $[0, 4]$:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$k \left[ 2x^2 - \frac{x^3}{3} \right]_0^4 = 1 \implies k \left( 32 - \frac{64}{3} \right) = 1 \implies k\left(\frac{32}{3}\right) = 1 \implies k = \frac{3}{32} \quad \text{[2 Marks]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <p>By symmetry of the downward parabola on $[0, 4]$, or by integration:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$E(X) = \frac{3}{32}\int_0^4 (4x^2 - x^3)\,dx = \frac{3}{32}\left[ \frac{4x^3}{3} - \frac{x^4}{4} \right]_0^4 = \frac{3}{32}\left( \frac{256}{3} - 64 \right) = 2 \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (c):</p>
+                <p>Recall $P(A \mid B) = \frac{P(A \cap B)}{P(B)} \implies P(X \ge 3 \mid X \ge 2) = \frac{P(X \ge 3)}{P(X \ge 2)}$.</p>
+                <p>By symmetry, $P(X \ge 2) = 0.5$.</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$P(X \ge 3) = \frac{3}{32}\int_3^4 (4x - x^2)\,dx = \frac{3}{32}\left[ 2x^2 - \frac{x^3}{3} \right]_3^4 = \frac{3}{32}\left( \frac{5}{3} \right) = \frac{5}{32}$$
+                  $$P(X \ge 3 \mid X \ge 2) = \frac{5/32}{1/2} = \frac{5}{16} = 0.3125 \quad \text{[2 Marks]}$$
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Question 7.2 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-rose-100 text-rose-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 7.2 • Cumulative Distribution Function & Probability (Band 6)</span>
+              <span class="text-xs font-bold text-slate-500">[4 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              The cumulative distribution function (CDF) of continuous random variable $Y$ is given by:
+              $$F(y) = \begin{cases} 0, & y < 0 \\ \frac{y^3}{27}, & 0 \le y \le 3 \\ 1, & y > 3 \end{cases}$$
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> Find the probability density function $f(y)$. <span class="text-slate-400">[1 mark]</span></li>
+              <li><strong>(b)</strong> Determine the median value $m$ of the distribution. <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(c)</strong> Find $P(1 \le Y \le 2)$. <span class="text-slate-400">[1 mark]</span></li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-rose-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-rose-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$f(y) = \frac{d}{dy}F(y) = \frac{d}{dy}\left(\frac{y^3}{27}\right) = \frac{3y^2}{27} = \frac{y^2}{9} \quad \text{for } 0 \le y \le 3 \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <p>Median satisfies $F(m) = 0.5$:</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$\frac{m^3}{27} = \frac{1}{2} \implies m^3 = \frac{27}{2} = 13.5 \implies m = \sqrt[3]{13.5} = \frac{3}{\sqrt[3]{2}} \approx 2.381 \quad \text{[2 Marks]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (c):</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$P(1 \le Y \le 2) = F(2) - F(1) = \frac{2^3}{27} - \frac{1^3}{27} = \frac{8 - 1}{27} = \frac{7}{27} \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Question 7.3 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-5 border-b border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-rose-100 text-rose-800 font-bold text-xs px-2.5 py-0.5 rounded-full">Question 7.3 • Normal Standardisation & Bivariate Regression (Band 6)</span>
+              <span class="text-xs font-bold text-slate-500">[5 Marks]</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 font-medium">
+              This question assesses both continuous normal distributions and bivariate regression modeling.
+            </p>
+            <ol class="list-alpha list-inside text-xs text-slate-700 space-y-1 mt-2">
+              <li><strong>(a)</strong> In the HSC Trial exams, Mathematics marks are normally distributed with $\mu_M = 64$ and $\sigma_M = 10$. Physics marks are normally distributed with $\mu_P = 58$ and $\sigma_P = 8$. Sophia scored 82 in Mathematics and 74 in Physics. Calculate both $z$-scores and identify in which subject she achieved a better relative performance. <span class="text-slate-400">[2 marks]</span></li>
+              <li><strong>(b)</strong> If the top $2.5\%$ of students in Mathematics receive a Certificate of Academic Excellence, use the empirical rule to determine the minimum qualifying score. <span class="text-slate-400">[1 mark]</span></li>
+              <li><strong>(c)</strong> A researcher models the relationship between weekly homework hours ($x$) and trial exam score ($y$) using the least-squares regression line $y = 2.5x + 45$.
+                <ul class="pl-2 mt-0.5 space-y-0.5 text-[11px] text-slate-600">
+                  <li>(i) Interpret the gradient $m = 2.5$ in the context of the study. <span class="text-slate-400">[1 mark]</span></li>
+                  <li>(ii) Explain whether this model can reliably predict a student's score if they study $35\text{ hours/week}$. <span class="text-slate-400">[1 mark]</span></li>
+                </ul>
+              </li>
+            </ol>
+          </div>
+
+          <details class="solution-details group">
+            <summary class="cursor-pointer bg-slate-50 hover:bg-slate-100 px-5 py-3 text-xs font-bold text-rose-900 flex items-center justify-between border-t border-slate-100 select-none">
+              <span>View Worked Solution & Marking Rubric</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-5 bg-rose-50/20 text-xs text-slate-800 space-y-3 border-t border-slate-100">
+              <div>
+                <p class="font-bold text-slate-900">Part (a):</p>
+                <div class="font-mono bg-white p-2.5 rounded border border-slate-200 mt-1 space-y-1">
+                  <div>$$z_M = \frac{82 - 64}{10} = \frac{18}{10} = +1.80 \quad \text{[1 Mark]}$$</div>
+                  <div>$$z_P = \frac{74 - 58}{8} = \frac{16}{8} = +2.00 \quad \text{[1 Mark]}$$</div>
+                </div>
+                <p class="mt-1 font-bold text-rose-950">$$\therefore \text{Sophia performed relatively better in Physics ($z = +2.00 > +1.80$).}$$</p>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (b):</p>
+                <p>The top $2.5\%$ cutoff corresponds to $z = +2$ ($\mu + 2\sigma$):</p>
+                <div class="font-mono bg-white p-2 rounded border border-slate-200 mt-1">
+                  $$\text{Cutoff} = 64 + 2(10) = 84 \quad \text{[1 Mark]}$$
+                </div>
+              </div>
+              <div>
+                <p class="font-bold text-slate-900">Part (c):</p>
+                <p><strong>(i) Gradient Interpretation:</strong> For each additional 1 hour spent studying per week, a student's trial exam score is predicted to increase on average by $2.5$ marks. <span class="text-slate-500">[1 Mark]</span></p>
+                <p><strong>(ii) Reliability (Extrapolation):</strong> Predicting for 35 hours/week would yield $y = 2.5(35) + 45 = 132.5$, which exceeds $100\%$. 35 hours per week is far outside the reasonable domain of collected data (an act of extreme <em>extrapolation</em>), making the prediction unreliable and invalid. <span class="text-slate-500">[1 Mark]</span></p>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- 6. Quick Diagnostic Check (5 Questions) -->
+      <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-md no-print space-y-4">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="p-1.5 bg-rose-500/20 text-rose-400 rounded-lg"><i data-lucide="sparkles" class="w-4 h-4"></i></span>
+          <h3 class="text-sm font-black tracking-wide uppercase text-rose-300">Topic 7 Diagnostic Flash Check</h3>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3 text-xs">
+          <!-- Q1 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">1. If $X$ is a continuous random variable, what is $P(X = 5)$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$0$ (Exact point probability is always zero)</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$f(5)$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$0.2$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q2 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">2. Given $F(x)$ is the cumulative distribution function (CDF), how is PDF $f(x)$ calculated?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Differentiate: $f(x) = F'(x)$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Integrate: $f(x) = \int F(x)\,dx$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">Invert: $f(x) = F^{-1}(x)$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q3 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">3. In a normal distribution, what percentage of scores lie between $\mu - 2\sigma$ and $\mu + 2\sigma$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$68\%$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$95\%$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$99.7\%$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q4 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">4. If $E(X) = 5$ and $E(X^2) = 34$, what is the standard deviation $\sigma$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$9$</button>
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$3$ ($\sqrt{34 - 5^2} = \sqrt{9}$)</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$\sqrt{29}$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+
+          <!-- Q5 -->
+          <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-semibold text-slate-200 mb-2">5. If events $A$ and $B$ are independent with $P(A) = 0.4$ and $P(B) = 0.5$, what is $P(A \cap B)$?</p>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="evaluateQuiz(this, true)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$0.20$ ($0.4 \times 0.5$)</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$0.90$</button>
+              <button onclick="evaluateQuiz(this, false)" class="quiz-btn px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded">$0.10$</button>
+            </div>
+            <p class="quiz-feedback hidden mt-1.5 text-[11px]"></p>
+          </div>
+        </div>
+      </div>
+
+    </article>
+
+    <!-- Page-by-Page Bottom Pagination Bar (Interactive View) -->
+    <div id="page-nav-bar" class="no-print bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap justify-between items-center gap-3">
+      <button id="prev-btn" onclick="prevTopic()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+        <i data-lucide="chevron-left" class="w-4 h-4"></i> Previous Topic
+      </button>
+
+      <div class="text-xs font-bold text-slate-600 flex items-center gap-1.5">
+        <span id="topic-indicator-badge" class="bg-sky-100 text-sky-800 px-2.5 py-1 rounded-full">Topic 1 of 7</span>
+        <span id="topic-title-crumb" class="hidden sm:inline text-slate-500 font-medium">• Functions & Graphing Techniques</span>
+      </div>
+
+      <button id="next-btn" onclick="nextTopic()" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl transition flex items-center gap-2 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed">
+        Next Topic <i data-lucide="chevron-right" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="bg-slate-950 text-slate-400 py-8 border-t border-slate-800 text-xs no-print mt-auto">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+      <div>
+        <p class="text-slate-200 font-bold">NESA Stage 6 Mathematics Advanced Master Guide</p>
+        <p class="text-[11px] text-slate-500">Comprehensive Year 11 & Year 12 Syllabus Synthesis • NSW Department of Education & NESA Aligned</p>
+      </div>
+      <div class="text-[11px] text-slate-500">
+        All 7 Core Topics Covered • 21 Worked Questions • 35 Instant Diagnostics
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive JavaScript Engine -->
+  <script>
+    let currentTopicIndex = 1;
+    const totalTopics = 7;
+    let isViewAll = false;
+    let allSolutionsOpen = false;
+
+    const topicTitles = [
+      "",
+      "Functions & Graphing Techniques",
+      "Trigonometric Functions & Calculus",
+      "Differential Calculus & Optimization",
+      "Integral Calculus & Area",
+      "Exponentials, Logarithms & Models",
+      "Financial Mathematics & Series",
+      "Statistical Analysis & Probability"
+    ];
+
+    // Initialize Lucide icons on window load
+    window.onload = function() {
+      lucide.createIcons();
+      updateTopicView();
+    };
+
+    // Switch active topic tab
+    function switchTopic(topicNum) {
+      if (isViewAll) {
+        // Scroll directly to topic in view all mode
+        const el = document.getElementById(`topic-${topicNum}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+      currentTopicIndex = topicNum;
+      updateTopicView();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function prevTopic() {
+      if (currentTopicIndex > 1) {
+        currentTopicIndex--;
+        updateTopicView();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function nextTopic() {
+      if (currentTopicIndex < totalTopics) {
+        currentTopicIndex++;
+        updateTopicView();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function updateTopicView() {
+      // Toggle active classes on article containers
+      for (let i = 1; i <= totalTopics; i++) {
+        const article = document.getElementById(`topic-${i}`);
+        const tab = document.getElementById(`tab-${i}`);
+        if (article) {
+          if (i === currentTopicIndex) {
+            article.classList.add('active-topic');
+          } else {
+            article.classList.remove('active-topic');
+          }
+        }
+        if (tab) {
+          if (i === currentTopicIndex) {
+            tab.className = "topic-tab px-3 py-1.5 rounded-lg transition whitespace-nowrap bg-sky-600 text-white shadow-sm";
+          } else {
+            tab.className = "topic-tab px-3 py-1.5 rounded-lg transition whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800";
+          }
+        }
+      }
+
+      // Update Pagination Buttons
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const badge = document.getElementById('topic-indicator-badge');
+      const crumb = document.getElementById('topic-title-crumb');
+
+      if (prevBtn) prevBtn.disabled = (currentTopicIndex === 1);
+      if (nextBtn) nextBtn.disabled = (currentTopicIndex === totalTopics);
+      if (badge) badge.textContent = `Topic ${currentTopicIndex} of ${totalTopics}`;
+      if (crumb) crumb.textContent = `• ${topicTitles[currentTopicIndex]}`;
+
+      // Refresh MathJax if typeset needed
+      if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    // Toggle between Single Topic Page and View All Topics
+    function toggleViewMode() {
+      isViewAll = !isViewAll;
+      const main = document.getElementById('main-content');
+      const label = document.getElementById('view-mode-label');
+      const pageNavBar = document.getElementById('page-nav-bar');
+
+      if (isViewAll) {
+        main.classList.add('view-all');
+        label.textContent = "View: All Topics (Booklet)";
+        if (pageNavBar) pageNavBar.style.display = 'none';
+      } else {
+        main.classList.remove('view-all');
+        label.textContent = "View: Single Page";
+        if (pageNavBar) pageNavBar.style.display = 'flex';
+        updateTopicView();
+      }
+    }
+
+    // Expand / Collapse all worked solutions
+    function toggleAllGlobalSolutions() {
+      allSolutionsOpen = !allSolutionsOpen;
+      const allDetails = document.querySelectorAll('.solution-details');
+      allDetails.forEach(d => d.open = allSolutionsOpen);
+    }
+
+    // Quiz evaluation engine with feedback
+    function evaluateQuiz(button, isCorrect) {
+      const parent = button.parentElement;
+      const feedback = parent.nextElementSibling;
+      const buttons = parent.querySelectorAll('.quiz-btn');
+
+      buttons.forEach(b => {
+        b.disabled = true;
+        b.classList.remove('bg-slate-700', 'hover:bg-slate-600');
+        b.classList.add('opacity-50');
+      });
+
+      if (isCorrect) {
+        button.classList.remove('opacity-50');
+        button.classList.add('bg-emerald-600', 'text-white');
+        feedback.textContent = "Correct! Well reasoned.";
+        feedback.className = "quiz-feedback mt-1.5 text-[11px] text-emerald-400 font-bold";
+      } else {
+        button.classList.remove('opacity-50');
+        button.classList.add('bg-rose-600', 'text-white');
+        feedback.textContent = "Incorrect. Review the core theory notes above!";
+        feedback.className = "quiz-feedback mt-1.5 text-[11px] text-rose-400 font-bold";
+      }
+      feedback.classList.remove('hidden');
+    }
+
+    // Keyboard navigation (Left / Right Arrow)
+    window.addEventListener('keydown', (e) => {
+      if (!isViewAll) {
+        if (e.key === 'ArrowRight') nextTopic();
+        if (e.key === 'ArrowLeft') prevTopic();
+      }
+    });
+  </script>
+</body>
+</html>
