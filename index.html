@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Year 11 Mathematics Hub</title>
+  <title>Senior Mathematics Hub | meyerball</title>
   <style>
     :root {
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text-main: #0f172a;
-      --text-sub: #64748b;
-      --border: #e2e8f0;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-hover: #334155;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-purple: #c084fc;
+      --border: #334155;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,16 +29,32 @@
     }
 
     header {
-      margin-bottom: 32px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid var(--border);
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-badge {
+      display: inline-block;
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--accent-purple);
+      background: rgba(192, 132, 252, 0.1);
+      border: 1px solid rgba(192, 132, 252, 0.3);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
     }
 
     h1 {
-      font-size: 2.25rem;
-      font-weight: 800;
+      font-size: 2.5rem;
+      font-weight: 900;
       letter-spacing: -0.025em;
-      color: var(--text-main);
+      background: linear-gradient(135deg, #38bdf8 0%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       margin-bottom: 8px;
     }
 
@@ -56,62 +73,96 @@
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 16px;
       padding: 24px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       text-decoration: none;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      transition: all 0.2s ease-in-out;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+      opacity: 0;
+      transition: opacity 0.25s ease;
     }
 
     .card:hover {
-      transform: translateY(-4px);
-      border-color: var(--primary);
-      box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.15);
+      transform: translateY(-5px);
+      background: var(--card-hover);
+      border-color: #475569;
+      box-shadow: 0 12px 24px -10px rgba(56, 189, 248, 0.2);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .icon-box {
+      font-size: 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .badge {
-      align-self: flex-start;
       font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      background: #eff6ff;
-      color: var(--primary);
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent-blue);
       padding: 4px 10px;
       border-radius: 9999px;
-      margin-bottom: 12px;
     }
 
     .card-title {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 700;
       color: var(--text-main);
       margin-bottom: 16px;
-      line-height: 1.35;
+      line-height: 1.4;
     }
 
     .btn-action {
       font-size: 0.9rem;
       font-weight: 600;
-      color: var(--primary);
+      color: var(--accent-blue);
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
     .card:hover .btn-action {
-      color: var(--primary-dark);
+      color: var(--accent-purple);
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Year 11 Mathematics Tools</h1>
-    <p class="subtitle">Select an interactive arcade activity below to launch:</p>
+    <div class="brand-badge">&lt;meyerball /&gt;</div>
+    <h1>Senior Mathematics Hub</h1>
+    <p class="subtitle">Interactive tools & practice arcades for Years 11 & 12.</p>
   </header>
 
   <div id="tool-list" class="grid">Loading activities...</div>
@@ -126,19 +177,26 @@
         files.forEach(file => {
           if (file.name.endsWith('.html') && file.name !== 'index.html') {
             let cleanName = file.name.replace('.html', '').replace(/_/g, ' ');
-            
-            // Capitalize each word nicely
             cleanName = cleanName.replace(/\b\w/g, l => l.toUpperCase());
+
+            // Choose an icon dynamically based on the filename
+            let icon = '🎮';
+            if (file.name.includes('adv')) icon = '⚡';
+            if (file.name.includes('standard')) icon = '🎯';
+            if (file.name.includes('calc')) icon = '🧮';
 
             const card = document.createElement('a');
             card.className = 'card';
             card.href = file.name;
             card.innerHTML = `
               <div>
-                <span class="badge">Interactive Tool</span>
+                <div class="card-header">
+                  <span class="icon-box">${icon}</span>
+                  <span class="badge">Interactive Activity</span>
+                </div>
                 <h2 class="card-title">${cleanName}</h2>
               </div>
-              <div class="btn-action">Launch Activity &rarr;</div>
+              <div class="btn-action">Launch Arcade &rarr;</div>
             `;
             container.appendChild(card);
           }
