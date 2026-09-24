@@ -332,7 +332,7 @@
       {
         id: 1,
         title: "Level 1: The First Slide",
-        desc: "Build a single downward ramp to slide through all 4 stars in one run.",
+        desc: "A gentle starter. Adjust the ramp's slope slightly to slide through all 4 stars.",
         launcher: { x: -8, y: 7.5 },
         stars: [
           { x: -5, y: 4.5 },
@@ -348,7 +348,7 @@
       {
         id: 2,
         title: "Level 2: The Switchback Drop",
-        desc: "Slide right, drop through the gap, and catch the lower ramp to get the remaining stars.",
+        desc: "A small gap drop. Truncate the top ramp so marbles plunge down to catch the lower rail.",
         launcher: { x: -8, y: 8 },
         stars: [
           { x: -4, y: 5 },
@@ -365,110 +365,109 @@
       {
         id: 3,
         title: "Level 3: Steeper Slope Control",
-        desc: "Control steep slopes and smooth out the landing into the goal stars.",
+        desc: "CHALLENGE STARTS: The default line shoots wide! Calculate steep negative slope (m ≈ -1.4) and cut domain xMax short.",
         launcher: { x: -7, y: 9 },
         stars: [
           { x: -5, y: 5 },
           { x: -3, y: 1 },
-          { x: 2, y: -3 },
-          { x: 6, y: -6 }
+          { x: 2, y: -3.5 },
+          { x: 6, y: -6.5 }
         ],
         defaultLines: [
-          { m: -1.5, b: -2, xMin: -8, xMax: -2, enabled: true, color: '#06b6d4' },
-          { m: -0.5, b: -2, xMin: -1, xMax: 8, enabled: true, color: '#a855f7' }
+          { m: -0.5, b: 3, xMin: -8, xMax: 5, enabled: true, color: '#06b6d4' },
+          { m: -0.3, b: 0, xMin: -2, xMax: 8, enabled: true, color: '#a855f7' }
         ],
         maxLines: 3
       },
       {
         id: 4,
         title: "Level 4: Triple Cascades",
-        desc: "Three distinct tiered ramps needed to catch all cascading stars in one continuous fall.",
+        desc: "Three steep drops. You must precisely restrict domain endpoints [xMin, xMax] on each tier so marbles step cleanly downward.",
         launcher: { x: -8, y: 9 },
         stars: [
-          { x: -5, y: 6 },
-          { x: -1, y: 2 },
-          { x: 3, y: -2 },
-          { x: 7, y: -6 }
+          { x: -5, y: 5.5 },
+          { x: -1, y: 1.5 },
+          { x: 3, y: -2.5 },
+          { x: 7, y: -6.5 }
         ],
         defaultLines: [
-          { m: -0.8, b: 2, xMin: -9, xMax: -3, enabled: true, color: '#06b6d4' },
-          { m: -0.8, b: 1, xMin: -2.5, xMax: 1.5, enabled: true, color: '#a855f7' },
-          { m: -0.8, b: 0, xMin: 2, xMax: 8.5, enabled: true, color: '#f59e0b' }
+          { m: -0.6, b: 4, xMin: -9, xMax: 1, enabled: true, color: '#06b6d4' },
+          { m: -0.4, b: 2, xMin: -3, xMax: 6, enabled: true, color: '#a855f7' }
         ],
         maxLines: 4
       },
       {
         id: 5,
-        title: "Level 5: The Funnel Jump",
-        desc: "Gain speed down a steep slope, drop, and roll through a narrow gap of stars.",
+        title: "Level 5: Missing Ramp Reconstruction",
+        desc: "One line is missing! You need to add a 3rd line and tune all three slopes and intercepts to bridge this wide valley.",
         launcher: { x: -8, y: 8.5 },
         stars: [
-          { x: -4, y: 3 },
-          { x: 0, y: -1 },
-          { x: 4, y: -3 },
-          { x: 8, y: -4 }
+          { x: -5, y: 4.5 },
+          { x: -1, y: 0.5 },
+          { x: 3, y: -2.5 },
+          { x: 7, y: -5 }
         ],
         defaultLines: [
-          { m: -1.0, b: -1, xMin: -9, xMax: -1, enabled: true, color: '#06b6d4' },
-          { m: -0.3, b: -2, xMin: 0, xMax: 9, enabled: true, color: '#a855f7' }
+          { m: -1.2, b: -2, xMin: -9, xMax: -3, enabled: true, color: '#06b6d4' },
+          { m: -0.5, b: -1.5, xMin: 2, xMax: 9, enabled: true, color: '#a855f7' }
         ],
-        maxLines: 3
+        maxLines: 4
       },
       {
         id: 6,
-        title: "Level 6: Domain Truncation",
-        desc: "The ramp is too long! Shorten xMax so marbles can fall onto the stars nestled below.",
+        title: "Level 6: Domain Truncation Trap",
+        desc: "The default ramp overshoots everything! Cut xMax on Ramp 1 to let gravity drop the marbles onto lower targets.",
         launcher: { x: -8, y: 8 },
         stars: [
           { x: -5, y: 5 },
           { x: -1, y: 2 },
-          { x: 1, y: -2 },
-          { x: 5, y: -5 }
+          { x: 1, y: -2.5 },
+          { x: 5, y: -5.5 }
         ],
         defaultLines: [
-          { m: -0.7, b: 2, xMin: -9, xMax: 6, enabled: true, color: '#06b6d4' },
+          { m: -0.7, b: 2.5, xMin: -9, xMax: 8, enabled: true, color: '#06b6d4' },
           { m: -0.6, b: -2, xMin: 0, xMax: 8, enabled: true, color: '#a855f7' }
         ],
         maxLines: 3
       },
       {
         id: 7,
-        title: "Level 7: The Gap Bridge",
-        desc: "Bridge a wide canyon by tweaking intercepts so momentum carries across the middle star.",
+        title: "Level 7: Canyon Gap Bridge",
+        desc: "Marbles must launch across a wide open canyon and land smoothly on an angled catch ramp.",
         launcher: { x: -8, y: 9 },
         stars: [
-          { x: -5, y: 6 },
+          { x: -5, y: 5.5 },
           { x: 0, y: 0.5 },
           { x: 4, y: -3 },
-          { x: 8, y: -6 }
+          { x: 8, y: -6.5 }
         ],
         defaultLines: [
-          { m: -0.9, b: 1, xMin: -9, xMax: -2, enabled: true, color: '#06b6d4' },
-          { m: -0.6, b: -1, xMin: 1.5, xMax: 9, enabled: true, color: '#a855f7' }
+          { m: -1.1, b: -1, xMin: -9, xMax: -2, enabled: true, color: '#06b6d4' },
+          { m: -0.4, b: 2, xMin: 2, xMax: 9, enabled: true, color: '#a855f7' }
         ],
         maxLines: 3
       },
       {
         id: 8,
-        title: "Level 8: Reverse Switchback",
-        desc: "Tilt the second ramp to reverse marble direction and sweep through lower stars.",
+        title: "Level 8: Reverse Switchback U-Turn",
+        desc: "Marbles must roll right, hit a tilted positive-slope ramp (m > 0), reverse momentum, and roll left into the lower stars!",
         launcher: { x: -8, y: 8.5 },
         stars: [
           { x: -3, y: 5 },
           { x: 2, y: 2 },
-          { x: -1, y: -2 },
-          { x: -6, y: -5 }
+          { x: 0, y: -2 },
+          { x: -5, y: -5 }
         ],
         defaultLines: [
           { m: -0.6, b: 3.5, xMin: -9, xMax: 4, enabled: true, color: '#06b6d4' },
-          { m: 0.6, b: -1.5, xMin: -8, xMax: 3.5, enabled: true, color: '#f59e0b' }
+          { m: 0.1, b: 0, xMin: -8, xMax: 3.5, enabled: true, color: '#f59e0b' }
         ],
         maxLines: 3
       },
       {
         id: 9,
-        title: "Level 9: Negative Intercept Shift",
-        desc: "Lower the y-intercept (b) so the ramp aligns with the lower string of stars.",
+        title: "Level 9: Precision Intercept Shift",
+        desc: "Both the slope and the y-intercept (b) are misaligned. Calculate the equation y = mx + b that threads every single star.",
         launcher: { x: -8, y: 7 },
         stars: [
           { x: -6, y: 2 },
@@ -477,48 +476,48 @@
           { x: 6, y: -7 }
         ],
         defaultLines: [
-          { m: -0.75, b: 2, xMin: -9, xMax: 8, enabled: true, color: '#06b6d4' }
+          { m: -0.4, b: 3.5, xMin: -9, xMax: 8, enabled: true, color: '#06b6d4' }
         ],
         maxLines: 2
       },
       {
         id: 10,
         title: "Level 10: Twin Parallel Rails",
-        desc: "Two parallel lines with equal slopes (m) but different y-intercepts (b).",
+        desc: "Two distinct tracks. Ensure the slopes are strictly parallel (equal m) while adjusting intercepts to bridge the tier.",
         launcher: { x: -8, y: 8.5 },
         stars: [
           { x: -4, y: 5 },
           { x: 0, y: 2 },
-          { x: 3, y: -3 },
-          { x: 7, y: -6 }
+          { x: 3, y: -2.5 },
+          { x: 7, y: -5.5 }
         ],
         defaultLines: [
-          { m: -0.7, b: 3, xMin: -9, xMax: 1, enabled: true, color: '#06b6d4' },
-          { m: -0.7, b: -1.5, xMin: 1.5, xMax: 9, enabled: true, color: '#a855f7' }
+          { m: -0.5, b: 1, xMin: -9, xMax: 2, enabled: true, color: '#06b6d4' },
+          { m: -0.9, b: -3, xMin: 0.5, xMax: 9, enabled: true, color: '#a855f7' }
         ],
         maxLines: 3
       },
       {
         id: 11,
-        title: "Level 11: The Steep Launch",
-        desc: "Use a steep initial drop to catapult marbles over a flat plateau.",
+        title: "Level 11: The Steep Catapult",
+        desc: "High-speed descent! A steep slope catapults the marbles over a gap onto a flatter deceleration ramp.",
         launcher: { x: -8, y: 9.5 },
         stars: [
           { x: -5, y: 4 },
-          { x: -1, y: 1 },
-          { x: 3, y: 0.5 },
-          { x: 7, y: -2 }
+          { x: -1, y: 0.5 },
+          { x: 3, y: -0.5 },
+          { x: 7, y: -2.5 }
         ],
         defaultLines: [
-          { m: -1.8, b: -4, xMin: -9, xMax: -3, enabled: true, color: '#06b6d4' },
-          { m: -0.25, b: 0.5, xMin: -2, xMax: 9, enabled: true, color: '#10b981' }
+          { m: -0.8, b: 0, xMin: -9, xMax: -1, enabled: true, color: '#06b6d4' },
+          { m: -0.5, b: -2, xMin: 0, xMax: 9, enabled: true, color: '#10b981' }
         ],
         maxLines: 3
       },
       {
         id: 12,
-        title: "Level 12: Precision Needle Gate",
-        desc: "Cut a precise window between two ramps so marbles thread through without overshooting.",
+        title: "Level 12: Needle Gate Threading",
+        desc: "Cut a precise window between two ramps so fast marbles thread through without overshooting or getting blocked.",
         launcher: { x: -8, y: 8 },
         stars: [
           { x: -4, y: 4 },
@@ -527,15 +526,15 @@
           { x: 7, y: -7 }
         ],
         defaultLines: [
-          { m: -0.8, b: 1, xMin: -9, xMax: 0, enabled: true, color: '#06b6d4' },
-          { m: -0.7, b: -2, xMin: 0.8, xMax: 9, enabled: true, color: '#f43f5e' }
+          { m: -0.6, b: 3, xMin: -9, xMax: 2, enabled: true, color: '#06b6d4' },
+          { m: -0.9, b: -1, xMin: -2, xMax: 9, enabled: true, color: '#f43f5e' }
         ],
         maxLines: 3
       },
       {
         id: 13,
         title: "Level 13: Ascending Cushion Catch",
-        desc: "A fast drop catches an uphill cushion ramp to smoothly collect high-hanging stars.",
+        desc: "Marbles drop at high velocity into an uphill cushion (m > 0) to collect high-hanging stars before plunging.",
         launcher: { x: -8, y: 9 },
         stars: [
           { x: -5, y: 4 },
@@ -544,16 +543,16 @@
           { x: 7, y: -2 }
         ],
         defaultLines: [
-          { m: -1.2, b: -2, xMin: -9, xMax: -2, enabled: true, color: '#06b6d4' },
-          { m: 0.35, b: 0, xMin: -1.5, xMax: 4, enabled: true, color: '#a855f7' },
-          { m: -0.6, b: 2.5, xMin: 4.5, xMax: 9, enabled: true, color: '#f59e0b' }
+          { m: -1.6, b: -4, xMin: -9, xMax: -3, enabled: true, color: '#06b6d4' },
+          { m: 0.1, b: -2, xMin: -2, xMax: 3, enabled: true, color: '#a855f7' },
+          { m: -0.3, b: 1, xMin: 3.5, xMax: 9, enabled: true, color: '#f59e0b' }
         ],
         maxLines: 4
       },
       {
         id: 14,
         title: "Level 14: Four-Step Staircase",
-        desc: "Four cascading tiered ramps. Maintain slope symmetry across all steps.",
+        desc: "Four cascading tiered ramps. Maintain slope symmetry across all steps while adjusting each distinct intercept.",
         launcher: { x: -8, y: 9.5 },
         stars: [
           { x: -6, y: 6.5 },
@@ -562,17 +561,17 @@
           { x: 6, y: -5.5 }
         ],
         defaultLines: [
-          { m: -0.8, b: 2, xMin: -9, xMax: -4.5, enabled: true, color: '#06b6d4' },
-          { m: -0.8, b: 1, xMin: -4, xMax: -0.5, enabled: true, color: '#a855f7' },
-          { m: -0.8, b: 0, xMin: 0, xMax: 3.5, enabled: true, color: '#f59e0b' },
-          { m: -0.8, b: -1, xMin: 4, xMax: 8.5, enabled: true, color: '#10b981' }
+          { m: -0.5, b: 4, xMin: -9, xMax: -3, enabled: true, color: '#06b6d4' },
+          { m: -0.6, b: 2, xMin: -4, xMax: 1, enabled: true, color: '#a855f7' },
+          { m: -0.7, b: -1, xMin: 0, xMax: 5, enabled: true, color: '#f59e0b' },
+          { m: -0.8, b: -3, xMin: 3, xMax: 9, enabled: true, color: '#10b981' }
         ],
         maxLines: 5
       },
       {
         id: 15,
         title: "Level 15: Speed Check & Catch",
-        desc: "Brake runaway marble speed using a flatter middle platform before the final plunge.",
+        desc: "Brake runaway marble speed using a flatter middle platform before the final plunge into the goal stars.",
         launcher: { x: -8, y: 9 },
         stars: [
           { x: -5, y: 4 },
@@ -581,16 +580,16 @@
           { x: 8, y: -4 }
         ],
         defaultLines: [
-          { m: -1.4, b: -3, xMin: -9, xMax: -2.5, enabled: true, color: '#06b6d4' },
-          { m: -0.2, b: 1.5, xMin: -2, xMax: 5, enabled: true, color: '#a855f7' },
-          { m: -1.1, b: 5, xMin: 5.5, xMax: 9, enabled: true, color: '#f43f5e' }
+          { m: -1.8, b: -5, xMin: -9, xMax: -3, enabled: true, color: '#06b6d4' },
+          { m: 0.1, b: 0, xMin: -2, xMax: 4, enabled: true, color: '#a855f7' },
+          { m: -0.6, b: 2, xMin: 4.5, xMax: 9, enabled: true, color: '#f43f5e' }
         ],
         maxLines: 4
       },
       {
         id: 16,
         title: "Level 16: The Staggered Slalom",
-        desc: "Stars staggered in elevation require three precisely measured ramps.",
+        desc: "Stars staggered in elevation require three precisely measured ramps with tight domain cutoffs.",
         launcher: { x: -8, y: 8 },
         stars: [
           { x: -5, y: 5 },
@@ -599,16 +598,15 @@
           { x: 7, y: -4 }
         ],
         defaultLines: [
-          { m: -0.6, b: 2.5, xMin: -9, xMax: -2, enabled: true, color: '#06b6d4' },
-          { m: -0.8, b: 1.5, xMin: -1.5, xMax: 4, enabled: true, color: '#a855f7' },
-          { m: -0.7, b: 1, xMin: 4.5, xMax: 9, enabled: true, color: '#10b981' }
+          { m: -0.4, b: 3.5, xMin: -9, xMax: 0, enabled: true, color: '#06b6d4' },
+          { m: -0.5, b: 0.5, xMin: -1, xMax: 6, enabled: true, color: '#a855f7' }
         ],
         maxLines: 4
       },
       {
         id: 17,
         title: "Level 17: Valley of Stars",
-        desc: "Stars nestled deep in a central valley. Guide the marbles down and smoothly out.",
+        desc: "Stars nestled deep in a central valley. Guide the fast marbles into the dip and up the exit ramp.",
         launcher: { x: -8, y: 8.5 },
         stars: [
           { x: -4, y: 3 },
@@ -617,15 +615,15 @@
           { x: 6, y: -5 }
         ],
         defaultLines: [
-          { m: -1.2, b: -2, xMin: -9, xMax: -1.5, enabled: true, color: '#06b6d4' },
-          { m: -0.4, b: -2.5, xMin: -1, xMax: 8.5, enabled: true, color: '#f59e0b' }
+          { m: -0.7, b: 0, xMin: -9, xMax: 1, enabled: true, color: '#06b6d4' },
+          { m: -0.2, b: -4, xMin: -2, xMax: 8, enabled: true, color: '#f59e0b' }
         ],
         maxLines: 3
       },
       {
         id: 18,
         title: "Level 18: High Velocity Ski Jump",
-        desc: "Launch marbles at high speed to clear a wide gap into a distant catch ramp.",
+        desc: "Launch marbles at maximum speed to clear a wide gap into a distant catch ramp.",
         launcher: { x: -8, y: 9.5 },
         stars: [
           { x: -5, y: 5 },
@@ -634,15 +632,15 @@
           { x: 8, y: -6 }
         ],
         defaultLines: [
-          { m: -1.5, b: -2.5, xMin: -9, xMax: -2, enabled: true, color: '#06b6d4' },
-          { m: -0.6, b: 0, xMin: 2, xMax: 9, enabled: true, color: '#a855f7' }
+          { m: -1.0, b: 0, xMin: -9, xMax: 0, enabled: true, color: '#06b6d4' },
+          { m: -0.4, b: 2, xMin: 1, xMax: 9, enabled: true, color: '#a855f7' }
         ],
         maxLines: 3
       },
       {
         id: 19,
         title: "Level 19: The 5-Star Gauntlet",
-        desc: "Five stars spread across the entire coordinate grid. Tune 3 ramps to catch them all.",
+        desc: "Five stars spread across the entire coordinate grid. Tune 3 ramps to catch them all in one drop.",
         launcher: { x: -8, y: 9 },
         stars: [
           { x: -6, y: 6 },
@@ -652,16 +650,16 @@
           { x: 7, y: -6.5 }
         ],
         defaultLines: [
-          { m: -0.9, b: 0.5, xMin: -9, xMax: -3, enabled: true, color: '#06b6d4' },
-          { m: -0.8, b: 0, xMin: -2.5, xMax: 2, enabled: true, color: '#a855f7' },
-          { m: -0.8, b: -0.5, xMin: 2.5, xMax: 8.5, enabled: true, color: '#10b981' }
+          { m: -0.6, b: 2, xMin: -9, xMax: -1, enabled: true, color: '#06b6d4' },
+          { m: -0.5, b: 1, xMin: -3, xMax: 4, enabled: true, color: '#a855f7' },
+          { m: -0.5, b: -2, xMin: 1, xMax: 9, enabled: true, color: '#10b981' }
         ],
         maxLines: 4
       },
       {
         id: 20,
         title: "Level 20: Master Architect",
-        desc: "The ultimate challenge! 6 stars scattered across the canvas requiring four coordinated ramps.",
+        desc: "The ultimate challenge! 6 stars scattered across the canvas requiring four coordinated, high-speed ramps.",
         launcher: { x: -8, y: 9.5 },
         stars: [
           { x: -6, y: 7 },
@@ -672,10 +670,9 @@
           { x: 8, y: -6.5 }
         ],
         defaultLines: [
-          { m: -1.1, b: 0.5, xMin: -9, xMax: -4, enabled: true, color: '#06b6d4' },
-          { m: -0.8, b: 0, xMin: -3.5, xMax: 1, enabled: true, color: '#a855f7' },
-          { m: -0.6, b: 0.5, xMin: 1.5, xMax: 4.5, enabled: true, color: '#f59e0b' },
-          { m: -0.9, b: 0.5, xMin: 4.8, xMax: 9, enabled: true, color: '#10b981' }
+          { m: -0.7, b: 2, xMin: -9, xMax: -2, enabled: true, color: '#06b6d4' },
+          { m: -0.5, b: 1, xMin: -4, xMax: 3, enabled: true, color: '#a855f7' },
+          { m: -0.4, b: -1, xMin: 0, xMax: 6, enabled: true, color: '#f59e0b' }
         ],
         maxLines: 5
       }
@@ -1057,12 +1054,12 @@
 
       if (marblesSpawned < TOTAL_MARBLES) {
         spawnTimer++;
-        if (spawnTimer >= 14) {
+        if (spawnTimer >= 10) {
           marbles.push({
             x: currentLevel.launcher.x + (Math.random() - 0.5) * 0.1,
             y: currentLevel.launcher.y,
-            vx: 0.06,
-            vy: 0,
+            vx: 0.14,
+            vy: -0.05,
             radius: 0.32
           });
           marblesSpawned++;
@@ -1071,9 +1068,9 @@
         }
       }
 
-      const SUB_STEPS = 4;
+      const SUB_STEPS = 6;
       const dt = 1.0 / (60 * SUB_STEPS);
-      const gravity = -18.0;
+      const gravity = -30.0;
 
       for (let step = 0; step < SUB_STEPS; step++) {
         for (let i = marbles.length - 1; i >= 0; i--) {
@@ -1127,13 +1124,13 @@
                 const ty = nx;
                 const dotT = m.vx * tx + m.vy * ty;
 
-                const restitution = 0.28;
-                const friction = 0.985;
+                const restitution = 0.22;
+                const friction = 0.99;
 
                 m.vx = (dotT * tx * friction) - (dotN * nx * restitution);
                 m.vy = (dotT * ty * friction) - (dotN * ny * restitution);
 
-                const slopeFactor = line.m < 0 ? 0.35 : -0.35;
+                const slopeFactor = line.m < 0 ? 0.65 : -0.65;
                 m.vx += tx * slopeFactor * dt;
                 m.vy += ty * slopeFactor * dt;
               }
