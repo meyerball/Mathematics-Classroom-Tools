@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Year 9 Interactive Trig Arcade</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- KaTeX for crisp inline math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between">
+
+  <!-- TOP HEADER & HUD -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">📐</span>
+        <div>
+          <h1 class="font-extrabold text-xl bg-gradient-to-r from-sky-400 via-emerald-400 to-purple-400 bg-clip-text text-transparent">
+            Trigonometry Physics & Interactive Arcade
+          </h1>
+          <p class="text-xs text-slate-400">Classroom Maths Tools &bull; meyerball</p>
+        </div>
+      </div>
+
+      <!-- SCORE HUD -->
+      <div class="flex items-center gap-6 bg-slate-800 px-4 py-1.5 rounded-full border border-slate-700 text-sm font-semibold">
+        <div class="flex items-center gap-2">
+          <span class="text-amber-400">🏆 Score:</span>
+          <span id="global-score" class="mono text-sky-400 text-base">0</span>
+        </div>
+        <div class="w-px h-4 bg-slate-700"></div>
+        <div class="flex items-center gap-2">
+          <span class="text-emerald-400">🔥 Stars:</span>
+          <span id="global-stars" class="mono text-amber-400 text-base">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- GAME SELECTOR TABS -->
+    <nav class="max-w-6xl mx-auto px-4 flex gap-2 overflow-x-auto text-xs sm:text-sm font-bold border-t border-slate-800/50">
+      <button onclick="switchGame('marble')" id="tab-marble" class="px-4 py-2.5 border-b-2 border-sky-400 text-sky-400 flex items-center gap-2 whitespace-nowrap">
+        🔮 1. Trig Marble Ramp
+      </button>
+      <button onclick="switchGame('laser')" id="tab-laser" class="px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+        ⚡ 2. Laser Prism Bouncer
+      </button>
+      <button onclick="switchGame('spotlight')" id="tab-spotlight" class="px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+        🚁 3. Rescue Spotlight
+      </button>
+    </nav>
+  </header>
+
+  <!-- MAIN GAME CONTAINER -->
+  <main class="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
+
+    <!-- GAME 1: TRIG MARBLE RAMP SLIDERS -->
+    <section id="game-marble" class="space-y-6">
+      <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
+          <div>
+            <h2 class="text-xl font-bold text-sky-400 flex items-center gap-2">
+              🔮 Level 1: Trig Marble Launcher
+            </h2>
+            <p class="text-sm text-slate-400">Set the ramp height (Opposite) or base (Adjacent) so $\tan\theta = \frac{\text{Opp}}{\text{Adj}}$ launches the marble through the star rings!</p>
+          </div>
+          <button onclick="initMarbleGame()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs font-semibold">🔄 New Target Rings</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+          <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-2 relative overflow-hidden">
+            <canvas id="marbleCanvas" width="600" height="320" class="w-full h-auto rounded-lg"></canvas>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+            <div id="marble-info" class="bg-slate-800 p-3 rounded-lg border border-slate-700 text-xs space-y-1">
+              <span class="font-bold text-amber-400 uppercase">Mission Objective</span>
+              <p id="marble-q-text">Required Launch Angle: <b>35°</b></p>
+              <p class="text-slate-400">Ramp Base (Adjacent) = <b id="marble-adj-val" class="text-slate-200">12m</b></p>
+            </div>
+
+            <div class="space-y-3">
+              <div>
+                <label class="text-xs font-semibold text-slate-300 flex justify-between">
+                  <span>Ramp Height (Opposite):</span>
+                  <span id="marble-opp-display" class="text-sky-400 mono">6.0m</span>
+                </label>
+                <input type="range" id="marble-opp-slider" min="1" max="20" step="0.1" value="6.0" oninput="updateMarbleRamp()" class="w-full accent-sky-400">
+              </div>
+
+              <div class="bg-slate-800/50 p-2 rounded text-center text-xs mono text-sky-300" id="marble-math-live">
+                $\tan\theta = \frac{6.0}{12} \implies \theta \approx 26.6^\circ$
+              </div>
+
+              <button onclick="releaseMarble()" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold py-3 rounded-xl text-sm transition shadow-lg shadow-sky-500/20">
+                🚀 RELEASE MARBLE
+              </button>
+            </div>
+
+            <div id="marble-feedback" class="text-xs font-bold text-center h-4"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAME 2: LASER PRISM BOUNCER -->
+    <section id="game-laser" class="hidden space-y-6">
+      <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
+          <div>
+            <h2 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
+              ⚡ Level 2: Laser Prism Optics
+            </h2>
+            <p class="text-sm text-slate-400">Calculate the hypotenuse length $H = \frac{\text{Opp}}{\sin\theta}$ or beam angle $\theta$ to align the laser with the sensor pad!</p>
+          </div>
+          <button onclick="initLaserGame()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs font-semibold">🔄 New Sensor Position</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+          <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-2 relative">
+            <canvas id="laserCanvas" width="600" height="320" class="w-full h-auto rounded-lg"></canvas>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+            <div id="laser-info" class="bg-slate-800 p-3 rounded-lg border border-slate-700 text-xs space-y-1">
+              <span class="font-bold text-emerald-400 uppercase">Target Sensor Data</span>
+              <p id="laser-q-text">Height offset: <b>15m</b> | Angle: <b>40°</b></p>
+            </div>
+
+            <div class="space-y-3">
+              <div>
+                <label class="text-xs font-semibold text-slate-300">Enter Laser Beam Length ($H$):</label>
+                <div class="flex gap-2 mt-1">
+                  <input type="number" id="laser-hyp-input" step="0.1" placeholder="Hypotenuse..." 
+                    class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm font-mono focus:outline-none focus:border-emerald-400">
+                  <button onclick="fireLaser()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm transition">
+                    ⚡ PULSE
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div id="laser-feedback" class="text-xs font-bold text-center h-4"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAME 3: RESCUE HELICOPTER SPOTLIGHT -->
+    <section id="game-spotlight" class="hidden space-y-6">
+      <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
+          <div>
+            <h2 class="text-xl font-bold text-purple-400 flex items-center gap-2">
+              🚁 Level 3: Rescue Helicopter Spotlight
+            </h2>
+            <p class="text-sm text-slate-400">The chopper hovers at height $H$. Use $\tan\theta = \frac{\text{Opp}}{\text{Adj}}$ to calculate the beam angle $\theta$ and illuminate stranded survivors!</p>
+          </div>
+          <button onclick="initSpotlightGame()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs font-semibold">🔄 New Rescue Site</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+          <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-2 relative">
+            <canvas id="spotlightCanvas" width="600" height="320" class="w-full h-auto rounded-lg"></canvas>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+            <div id="spotlight-info" class="bg-slate-800 p-3 rounded-lg border border-slate-700 text-xs space-y-1">
+              <span class="font-bold text-purple-400 uppercase">Radar Detection</span>
+              <p id="spotlight-q-text">Chopper Altitude: <b>40m</b> | Survivor Distance: <b>30m</b></p>
+            </div>
+
+            <div class="space-y-3">
+              <div>
+                <label class="text-xs font-semibold text-slate-300">Spotlight Angle ($\theta$):</label>
+                <div class="flex gap-2 mt-1">
+                  <input type="number" id="spotlight-angle-input" placeholder="e.g. 37" 
+                    class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm font-mono focus:outline-none focus:border-purple-400">
+                  <button onclick="sweepSpotlight()" class="bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm transition">
+                    🔦 SWEEP
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div id="spotlight-feedback" class="text-xs font-bold text-center h-4"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-slate-800 py-4 bg-slate-900/50 text-center text-xs text-slate-500">
+    Year 9 Intermediate Mathematics &bull; Interactive Trig Arcade &bull; meyerball
+  </footer>
+
+  <!-- ENGINE LOGIC -->
+  <script>
+    let globalScore = 0;
+    let globalStars = 0;
+
+    function addScore(pts) {
+      globalScore += pts;
+      globalStars += 1;
+      document.getElementById('global-score').innerText = globalScore;
+      document.getElementById('global-stars').innerText = globalStars;
+      confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
+    }
+
+    function switchGame(key) {
+      ['marble', 'laser', 'spotlight'].forEach(k => {
+        document.getElementById(`game-${k}`).classList.add('hidden');
+        document.getElementById(`tab-${k}`).className = "px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap";
+      });
+
+      document.getElementById(`game-${key}`).classList.remove('hidden');
+      const colors = { marble: 'sky', laser: 'emerald', spotlight: 'purple' };
+      const c = colors[key];
+      document.getElementById(`tab-${key}`).className = `px-4 py-2.5 border-b-2 border-${c}-400 text-${c}-400 flex items-center gap-2 whitespace-nowrap`;
+
+      if (key === 'marble') drawMarbleCanvas();
+      if (key === 'laser') drawLaserCanvas();
+      if (key === 'spotlight') drawSpotlightCanvas();
+    }
+
+    /* ----------------------------------------------------------------------
+       1. TRIG MARBLE RAMP LOGIC
+    ---------------------------------------------------------------------- */
+    let marbleTargetAngle = 35;
+    let marbleAdj = 12;
+    let marbleAnimId = null;
+    let marblePos = { x: 50, y: 250, vx: 0, vy: 0, rolling: false };
+
+    function initMarbleGame() {
+      marbleTargetAngle = Math.floor(Math.random() * 25) + 20; // 20 - 45 deg
+      marbleAdj = Math.floor(Math.random() * 6) + 10; // 10 - 15m
+      document.getElementById('marble-q-text').innerHTML = `Target Launch Angle: <b>${marbleTargetAngle}°</b>`;
+      document.getElementById('marble-adj-val').innerText = `${marbleAdj}m`;
+      document.getElementById('marble-feedback').innerText = '';
+      resetMarblePos();
+      updateMarbleRamp();
+    }
+
+    function resetMarblePos() {
+      if (marbleAnimId) cancelAnimationFrame(marbleAnimId);
+      marblePos = { x: 50, y: 250, vx: 0, vy: 0, rolling: false };
+      drawMarbleCanvas();
+    }
+
+    function updateMarbleRamp() {
+      const opp = parseFloat(document.getElementById('marble-opp-slider').value);
+      document.getElementById('marble-opp-display').innerText = `${opp.toFixed(1)}m`;
+      const curAngle = Math.atan2(opp, marbleAdj) * (180 / Math.PI);
+
+      const mathBox = document.getElementById('marble-math-live');
+      mathBox.innerHTML = `$\\tan\\theta = \\frac{${opp.toFixed(1)}}{${marbleAdj}} \\implies \\theta \\approx ${curAngle.toFixed(1)}^\\circ$`;
+      if (window.renderMathInElement) renderMathInElement(mathBox);
+
+      if (!marblePos.rolling) drawMarbleCanvas();
+    }
+
+    function drawMarbleCanvas() {
+      const cvs = document.getElementById('marbleCanvas');
+      const ctx = cvs.getContext('2d');
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+      const opp = parseFloat(document.getElementById('marble-opp-slider').value);
+      const rampWidth = marbleAdj * 18;
+      const rampHeight = opp * 12;
+
+      // Ground
+      ctx.fillStyle = '#1e293b'; ctx.fillRect(0, 270, cvs.width, 50);
+
+      // Ramp Triangle
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(50, 270);
+      ctx.lineTo(50 + rampWidth, 270);
+      ctx.lineTo(50 + rampWidth, 270 - rampHeight);
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+
+      // Target Rings (Suspended based on required angle)
+      const rad = marbleTargetAngle * (Math.PI / 180);
+      const ringX = 50 + rampWidth + 120 * Math.cos(rad);
+      const ringY = (270 - rampHeight) - 120 * Math.sin(rad) + 40;
+
+      ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.arc(ringX, ringY, 20, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = '#f59e0b'; ctx.font = 'bold 12px sans-serif'; ctx.fillText('⭐ Target', ringX - 22, ringY - 26);
+
+      // Marble
+      ctx.fillStyle = '#38bdf8';
+      ctx.beginPath();
+      ctx.arc(marblePos.rolling ? marblePos.x : 50, marblePos.rolling ? marblePos.y : 270 - rampHeight - 8, 8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function releaseMarble() {
+      resetMarblePos();
+      const opp = parseFloat(document.getElementById('marble-opp-slider').value);
+      const curAngle = Math.atan2(opp, marbleAdj) * (180 / Math.PI);
+      const rad = curAngle * (Math.PI / 180);
+
+      const speed = 11;
+      marblePos.rolling = true;
+      marblePos.x = 50 + marbleAdj * 18;
+      marblePos.y = 270 - opp * 12;
+      marblePos.vx = speed * Math.cos(rad);
+      marblePos.vy = -speed * Math.sin(rad);
+
+      function animate() {
+        const cvs = document.getElementById('marbleCanvas');
+        marblePos.x += marblePos.vx;
+        marblePos.y += marblePos.vy;
+        marblePos.vy += 0.35; // Gravity
+
+        drawMarbleCanvas();
+
+        if (marblePos.y < 300 && marblePos.x < cvs.width) {
+          marbleAnimId = requestAnimationFrame(animate);
+        } else {
+          // Verify accuracy
+          const fb = document.getElementById('marble-feedback');
+          if (Math.abs(curAngle - marbleTargetAngle) <= 1.5) {
+            fb.className = "text-emerald-400 font-bold";
+            fb.innerText = "🎯 PERFECT LAUNCH! Star Ring Cleared.";
+            addScore(100);
+            setTimeout(initMarbleGame, 1800);
+          } else {
+            fb.className = "text-rose-400 font-bold";
+            fb.innerText = `❌ MISSED RINGS! Angle was ${curAngle.toFixed(1)}° (Need ${marbleTargetAngle}°).`;
+          }
+        }
+      }
+      animate();
+    }
+
+    /* ----------------------------------------------------------------------
+       2. LASER PRISM OPTICS LOGIC
+    ---------------------------------------------------------------------- */
+    let laserOpp = 15;
+    let laserAngle = 40;
+    let laserHypTarget = 23.3;
+
+    function initLaserGame() {
+      laserOpp = Math.floor(Math.random() * 10) + 12; // 12 to 22m
+      laserAngle = Math.floor(Math.random() * 25) + 30; // 30 to 55 deg
+      const rad = laserAngle * (Math.PI / 180);
+      laserHypTarget = Math.round((laserOpp / Math.sin(rad)) * 10) / 10;
+
+      document.getElementById('laser-q-text').innerHTML = `Target Height ($Opp$) = <b>${laserOpp}m</b> | Beam Angle = <b>${laserAngle}°</b>.<br>Calculate required hypotenuse beam length ($H$).`;
+      document.getElementById('laser-hyp-input').value = '';
+      document.getElementById('laser-feedback').innerText = '';
+      drawLaserCanvas();
+    }
+
+    function drawLaserCanvas() {
+      const cvs = document.getElementById('laserCanvas');
+      const ctx = cvs.getContext('2d');
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+      // Emitter Base
+      ctx.fillStyle = '#10b981'; ctx.fillRect(40, 250, 30, 30);
+
+      // Sensor Wall
+      const wallX = 450;
+      ctx.fillStyle = '#334155'; ctx.fillRect(wallX, 40, 15, 240);
+
+      // Target Sensor Pad
+      const sensorY = 265 - laserOpp * 9;
+      ctx.fillStyle = '#10b981'; ctx.fillRect(wallX - 5, sensorY - 12, 10, 24);
+      ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 10px sans-serif'; ctx.fillText('SENSOR', wallX - 45, sensorY + 4);
+    }
+
+    function fireLaser() {
+      const val = parseFloat(document.getElementById('laser-hyp-input').value);
+      const fb = document.getElementById('laser-feedback');
+
+      const cvs = document.getElementById('laserCanvas');
+      const ctx = cvs.getContext('2d');
+      drawLaserCanvas();
+
+      // Draw Laser Ray based on user input length
+      const rad = laserAngle * (Math.PI / 180);
+      const drawLen = val * 12;
+      const endX = 55 + drawLen * Math.cos(rad);
+      const endY = 265 - drawLen * Math.sin(rad);
+
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 4;
+      ctx.shadowColor = '#10b981'; ctx.shadowBlur = 12;
+      ctx.beginPath(); ctx.moveTo(55, 265); ctx.lineTo(endX, endY); ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      if (Math.abs(val - laserHypTarget) <= 0.4) {
+        fb.className = "text-emerald-400 font-bold";
+        fb.innerText = "⚡ SENSOR ALIGNED! Beam Overload +100 pts";
+        addScore(100);
+        setTimeout(initLaserGame, 1800);
+      } else {
+        fb.className = "text-rose-400 font-bold";
+        fb.innerText = `❌ MISALIGNED! Target length was ${laserHypTarget}m.`;
+      }
+    }
+
+    /* ----------------------------------------------------------------------
+       3. RESCUE SPOTLIGHT LOGIC
+    ---------------------------------------------------------------------- */
+    let spotAlt = 40;
+    let spotDist = 30;
+    let spotAngleTarget = 37;
+
+    function initSpotlightGame() {
+      spotAlt = (Math.floor(Math.random() * 4) + 3) * 10; // 30, 40, 50, 60m
+      spotDist = Math.floor(Math.random() * 30) + 25; // 25 to 55m
+      const rad = Math.atan2(spotDist, spotAlt);
+      spotAngleTarget = Math.round(rad * (180 / Math.PI));
+
+      document.getElementById('spotlight-q-text').innerHTML = `Chopper Height ($Adj$) = <b>${spotAlt}m</b><br>Survivor Distance ($Opp$) = <b>${spotDist}m</b>.<br>Calculate beam angle $\\theta = \\tan^{-1}\\left(\\frac{Opp}{Adj}\\right)$.`;
+      document.getElementById('spotlight-angle-input').value = '';
+      document.getElementById('spotlight-feedback').innerText = '';
+      drawSpotlightCanvas();
+    }
+
+    function drawSpotlightCanvas() {
+      const cvs = document.getElementById('spotlightCanvas');
+      const ctx = cvs.getContext('2d');
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+      // Ocean Ground
+      ctx.fillStyle = '#0284c7'; ctx.fillRect(0, 270, cvs.width, 50);
+
+      // Chopper
+      ctx.fillStyle = '#c084fc'; ctx.font = '28px sans-serif'; ctx.fillText('🚁', 50, 70);
+
+      // Survivor in Water
+      const targetX = 70 + spotDist * 8;
+      ctx.fillStyle = '#f8fafc'; ctx.font = '20px sans-serif'; ctx.fillText('🏊', targetX, 268);
+    }
+
+    function sweepSpotlight() {
+      const val = parseInt(document.getElementById('spotlight-angle-input').value);
+      const fb = document.getElementById('spotlight-feedback');
+
+      const cvs = document.getElementById('marbleCanvas');
+      const ctx = document.getElementById('spotlightCanvas').getContext('2d');
+      drawSpotlightCanvas();
+
+      // Draw Spotlight Cone
+      const rad = val * (Math.PI / 180);
+      const hitX = 70 + (spotAlt * 8) * Math.tan(rad);
+
+      ctx.fillStyle = 'rgba(192, 132, 252, 0.25)';
+      ctx.beginPath();
+      ctx.moveTo(65, 75);
+      ctx.lineTo(hitX - 35, 270);
+      ctx.lineTo(hitX + 35, 270);
+      ctx.closePath(); ctx.fill();
+
+      if (Math.abs(val - spotAngleTarget) <= 1) {
+        fb.className = "text-emerald-400 font-bold";
+        fb.innerText = "🔦 SURVIVOR LOCATED! Rescue team deployed.";
+        addScore(100);
+        setTimeout(initSpotlightGame, 1800);
+      } else {
+        fb.className = "text-rose-400 font-bold";
+        fb.innerText = `❌ OFF TARGET! Needed $\\theta = ${spotAngleTarget}^\\circ$.`;
+        if (window.renderMathInElement) renderMathInElement(fb);
+      }
+    }
+
+    window.onload = function() {
+      initMarbleGame();
+      initLaserGame();
+      initSpotlightGame();
+    };
+  </script>
+</body>
+</html>
