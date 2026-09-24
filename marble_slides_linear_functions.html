@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Marble Slides - Linear Functions & Domains (20 Levels)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX CDN for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            900: '#14532d',
+                        },
+                        neon: {
+                            cyan: '#00f3ff',
+                            purple: '#bc13fe',
+                            pink: '#ff007f',
+                            yellow: '#ffea00',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        @keyframes pulse-glow {
+            0%, 100% { filter: drop-shadow(0 0 12px rgba(0, 243, 255, 0.6)); }
+            50% { filter: drop-shadow(0 0 22px rgba(0, 243, 255, 0.9)); }
+        }
+        .glow-cyan { animation: pulse-glow 3s infinite ease-in-out; }
+
+        @keyframes tutorial-pulse {
+            0%, 100% { border-color: rgba(0, 243, 255, 0.9); box-shadow: 0 0 15px rgba(0, 243, 255, 0.5); }
+            50% { border-color: rgba(188, 19, 254, 0.9); box-shadow: 0 0 25px rgba(188, 19, 254, 0.7); }
+        }
+        .tutorial-highlight {
+            animation: tutorial-pulse 1.8s infinite ease-in-out;
+            position: relative;
+            z-index: 25;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive Range Slider Drag Mechanics Fix */
+        input[type=range].smooth-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #020617;
+            border-radius: 6px;
+            outline: none;
+            border: 1px solid #334155;
+            touch-action: none; /* Prevents page dragging while moving slider on touchscreens */
+            cursor: pointer;
+        }
+
+        input[type=range].smooth-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #00f3ff;
+            border: 2px solid #0f172a;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.8);
+            cursor: grab;
+            transition: background-color 0.15s, transform 0.1s;
+        }
+
+        input[type=range].smooth-slider::-webkit-slider-thumb:active {
+            cursor: grabbing;
+            transform: scale(1.2);
+            background: #38bdf8;
+        }
+
+        input[type=range].smooth-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #00f3ff;
+            border: 2px solid #0f172a;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.8);
+            cursor: grab;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans overflow-hidden select-none bg-slate-950 text-slate-100">
+
+    <div id="startModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="max-w-xl w-full bg-slate-900 border border-cyan-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-cyan-500/20 text-center relative overflow-hidden">
+            <div class="absolute -top-16 -left-16 w-40 h-40 bg-cyan-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-16 -right-16 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl"></div>
+
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center mx-auto mb-5 shadow-xl shadow-cyan-500/30">
+                <i class="fa-solid fa-circle-play text-slate-950 text-4xl font-extrabold"></i>
+            </div>
+
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-wide bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
+                MARBLE SLIDES
+            </h1>
+            <p class="text-xs sm:text-sm font-mono text-cyan-300 uppercase tracking-widest mb-4">Linear Functions & Domain Restrictions</p>
+
+            <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                Master Year 9 linear math! Write linear equations $y = mx + c$ and adjust domain bounds $\{a < x < b\}$ to build slides that guide falling marbles through stars.
+            </p>
+
+            <div class="grid grid-cols-2 gap-3 mb-6 text-xs text-slate-300 bg-slate-950/60 p-3.5 rounded-2xl border border-slate-800/80">
+                <div class="flex flex-col items-center gap-1">
+                    <i class="fa-solid fa-chart-line text-cyan-400 text-lg"></i>
+                    <span class="font-bold text-white">Gradient & Intercept</span>
+                    <span class="text-[11px] text-slate-400">Slope $m$ and Y-Cut $c$</span>
+                </div>
+                <div class="flex flex-col items-center gap-1">
+                    <i class="fa-solid fa-scissors text-purple-400 text-lg"></i>
+                    <span class="font-bold text-white">Domain Restrictions</span>
+                    <span class="text-[11px] text-slate-400">Gap Cuts $\{x > a\}$</span>
+                </div>
+            </div>
+
+            <button id="startAppBtn" class="w-full py-4 px-6 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 hover:from-cyan-300 hover:to-purple-500 text-slate-950 font-black text-lg rounded-2xl shadow-xl shadow-cyan-500/30 hover:scale-[1.02] active:scale-95 transition duration-200 flex items-center justify-center gap-3">
+                <i class="fa-solid fa-play text-xl"></i> START DEMO & LESSON
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="h-14 border-b border-slate-800 bg-slate-900/90 px-4 flex items-center justify-between shrink-0 z-20 glass-panel">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                <i class="fa-solid font-bold text-slate-950 text-lg fa-circle-play"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-lg leading-tight tracking-wide bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                    MARBLE SLIDES <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-mono">20 Levels</span>
+                </h1>
+            </div>
+        </div>
+
+        <!-- Level Selector & Global Stats -->
+        <div class="flex items-center gap-2 md:gap-3">
+            <button id="startDemoBtn" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-md shadow-purple-500/20 flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+                <span class="hidden sm:inline">How to Play (Demo)</span>
+            </button>
+
+            <div class="flex items-center bg-slate-950/80 p-1 rounded-lg border border-slate-800 text-xs">
+                <span class="text-slate-400 px-2 font-medium hidden sm:inline">LEVEL:</span>
+                <select id="levelSelect" class="bg-slate-900 text-cyan-300 font-semibold py-1 px-2.5 rounded-md border border-slate-700/60 focus:outline-none focus:border-cyan-500 cursor-pointer">
+                    <option value="demo">🎓 Level 0: Guided Demo Walkthrough</option>
+                    <option value="1">1. Gentle Slope (Positive $m$)</option>
+                    <option value="2">2. Downhill Slide (Negative $m$)</option>
+                    <option value="3">3. Y-Intercept Shift ($c$)</option>
+                    <option value="4">4. Simple Gap Cut ($\{x > 0\}$)</option>
+                    <option value="5">5. Double Ramp Drop</option>
+                    <option value="6">6. The V-Funnel</option>
+                    <option value="7">7. Steep vs Shallow</option>
+                    <option value="8">8. Steep Drop & Catch</option>
+                    <option value="9">9. The Zig-Zag</option>
+                    <option value="10">10. Step Cascade</option>
+                    <option value="11">11. Narrow Gap Drop</option>
+                    <option value="12">12. Parallel Tracks</option>
+                    <option value="13">13. X-Intercept Target</option>
+                    <option value="14">14. Fractional Slopes</option>
+                    <option value="15">15. Bounce & Slide</option>
+                    <option value="16">16. The Tunnel Drop</option>
+                    <option value="17">17. Double Gap Funnel</option>
+                    <option value="18">18. Speed Ramp Control</option>
+                    <option value="19">19. The Slope Maze</option>
+                    <option value="20">20. Master Marble Circuit</option>
+                    <option value="sandbox">🛠️ Custom Sandbox</option>
+                </select>
+            </div>
+
+            <!-- Stars Tracker -->
+            <div class="flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-lg">
+                <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                <span id="starCounter" class="font-mono font-bold text-amber-300 text-sm">0 / 0</span>
+            </div>
+
+            <button id="guideBtn" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-book-open text-cyan-400"></i>
+                <span class="hidden sm:inline">Math Guide</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Interactive Tutorial Overlay Bar -->
+    <div id="tutorialBanner" class="hidden bg-gradient-to-r from-purple-950/90 via-slate-900/90 to-cyan-950/90 border-b border-purple-500/30 px-4 py-2.5 flex items-center justify-between shrink-0 z-20 text-xs sm:text-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-7 h-7 rounded-full bg-purple-500/20 border border-purple-400 flex items-center justify-center text-purple-300 font-bold shrink-0">
+                <span id="tutorialStepNum">1</span>
+            </div>
+            <div class="text-slate-200">
+                <span id="tutorialStepText" class="font-medium">Welcome to Marble Slides! Click "Next Step" to start the walkthrough.</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+            <button id="tutPrevBtn" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 transition">Back</button>
+            <button id="tutNextBtn" class="px-3 py-1 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded shadow transition">Next Step <i class="fa-solid fa-chevron-right ml-1"></i></button>
+            <button id="tutCloseBtn" class="px-2 py-1 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+
+        <!-- Left Controls Sidebar -->
+        <div id="sidebarContainer" class="w-full md:w-[420px] border-r border-slate-800 bg-slate-900/70 flex flex-col shrink-0 z-10 glass-panel overflow-hidden">
+            
+            <!-- Level Mission Banner -->
+            <div class="p-3.5 border-b border-slate-800/80 bg-slate-950/50">
+                <div class="flex justify-between items-start mb-1">
+                    <h2 id="levelTitle" class="font-bold text-cyan-400 text-base flex items-center gap-2">
+                        <span>1. Gentle Slope</span>
+                    </h2>
+                    <button id="hintBtn" class="text-xs text-amber-400 hover:text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-2 py-0.5 rounded transition">
+                        <i class="fa-regular fa-lightbulb mr-1"></i>Hint
+                    </button>
+                </div>
+                <div id="levelDesc" class="text-xs text-slate-300 leading-relaxed">
+                    Adjust the slope ($m$) and y-intercept ($c$) so the line guides all marbles into the stars!
+                </div>
+                <div id="hintBox" class="hidden mt-2 p-2 bg-amber-950/30 border border-amber-500/40 rounded text-xs text-amber-200 leading-normal">
+                    <i class="fa-solid fa-circle-info mr-1 text-amber-400"></i> <span id="hintText">Try increasing the slope $m$.</span>
+                </div>
+            </div>
+
+            <!-- Equations & Domain List Section -->
+            <div class="flex-1 overflow-y-auto p-3.5 space-y-3">
+                <div class="flex justify-between items-center text-xs text-slate-400 font-medium uppercase tracking-wider">
+                    <span>Linear Equations & Domains</span>
+                    <button id="addEqBtn" class="text-cyan-400 hover:text-cyan-300 flex items-center gap-1 text-xs py-0.5 px-2 bg-cyan-950/50 rounded border border-cyan-800/50 transition">
+                        <i class="fa-solid fa-plus text-xs"></i> Add Line
+                    </button>
+                </div>
+
+                <div id="equationInputsContainer" class="space-y-3">
+                    <!-- Dynamic Cards with Drag-Enabled Domain Controls Inserted via JS -->
+                </div>
+
+                <!-- Sandbox Tools -->
+                <div id="sandboxTools" class="hidden pt-2 border-t border-slate-800 space-y-2">
+                    <span class="text-xs font-semibold text-purple-400 uppercase tracking-wider block">Sandbox Level Designer</span>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="addStarModeBtn" class="py-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-xs rounded border border-slate-700 text-slate-200 flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-star text-amber-400"></i> Add Stars
+                        </button>
+                        <button id="setSpawnModeBtn" class="py-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-xs rounded border border-slate-700 text-slate-200 flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-circle-dot text-cyan-400"></i> Set Spawn
+                        </button>
+                    </div>
+                    <button id="clearSandboxBtn" class="w-full py-1 bg-red-950/40 hover:bg-red-900/50 border border-red-800/50 text-red-300 text-xs rounded transition">
+                        Clear Board Elements
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Launch Controls Bar -->
+            <div id="actionControlsContainer" class="p-3.5 border-t border-slate-800 bg-slate-950/90 space-y-2">
+                <div class="flex gap-2">
+                    <button id="launchBtn" class="flex-1 py-3 px-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold rounded-xl shadow-lg shadow-cyan-500/25 active:scale-95 transition flex items-center justify-center gap-2 text-base tracking-wide">
+                        <i class="fa-solid fa-play"></i> LAUNCH MARBLES
+                    </button>
+                    <button id="resetBtn" class="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl border border-slate-700 active:scale-95 transition flex items-center justify-center" title="Reset Simulation">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Simulation Canvas Area -->
+        <div class="flex-1 relative bg-slate-950 flex flex-col items-center justify-center overflow-hidden">
+            <canvas id="simCanvas" class="w-full h-full cursor-crosshair block"></canvas>
+
+            <!-- Floating Overlay View Controls -->
+            <div class="absolute top-4 right-4 flex flex-col gap-1.5 bg-slate-900/80 p-1.5 rounded-xl border border-slate-800 glass-panel z-10">
+                <button id="zoomInBtn" class="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition" title="Zoom In">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+                <button id="zoomOutBtn" class="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition" title="Zoom Out">
+                    <i class="fa-solid fa-minus"></i>
+                </button>
+                <button id="recenterBtn" class="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition" title="Reset View">
+                    <i class="fa-solid fa-crosshairs"></i>
+                </button>
+            </div>
+
+            <!-- Coordinate Indicator HUD -->
+            <div id="coordHUD" class="absolute bottom-4 right-4 bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-lg text-xs font-mono text-cyan-400 glass-panel z-10">
+                X: 0.00 | Y: 0.00
+            </div>
+
+            <!-- Victory Modal Overlay -->
+            <div id="victoryOverlay" class="hidden absolute inset-0 bg-slate-950/80 backdrop-blur-md z-30 flex flex-col items-center justify-center p-6 text-center">
+                <div class="max-w-md w-full bg-slate-900 border border-cyan-500/40 rounded-2xl p-6 shadow-2xl shadow-cyan-500/20 relative overflow-hidden">
+                    <div class="w-16 h-16 rounded-full bg-amber-500/20 border border-amber-400/50 flex items-center justify-center mx-auto mb-4 text-amber-400 text-3xl shadow-lg">
+                        <i class="fa-solid fa-trophy animate-bounce"></i>
+                    </div>
+
+                    <h3 class="text-2xl font-extrabold text-white mb-1 tracking-wide">LEVEL COMPLETE!</h3>
+                    <p class="text-slate-300 text-sm mb-6">Excellent work! You've successfully completed this linear function challenge.</p>
+
+                    <div class="flex justify-center gap-3">
+                        <button id="replayBtn" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl border border-slate-700 transition text-sm">
+                            Replay Level
+                        </button>
+                        <button id="nextLevelBtn" class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-xl shadow-lg transition text-sm">
+                            Next Level <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Math Reference Guide Modal -->
+    <div id="guideModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="max-w-2xl w-full bg-slate-900 border border-slate-700 rounded-2xl p-6 max-h-[90vh] overflow-y-auto glass-panel">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+                <h3 class="text-xl font-bold text-cyan-400 flex items-center gap-2">
+                    <i class="fa-solid fa-graduation-cap"></i> Year 9 Linear Functions & Domain Guide
+                </h3>
+                <button id="closeGuideBtn" class="text-slate-400 hover:text-white text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
+                    <h4 class="font-bold text-amber-400 text-base mb-1">1. Gradient / Slope ($m$)</h4>
+                    <p>Calculated as $\text{Gradient } m = \frac{\text{Rise}}{\text{Run}} = \frac{y_2 - y_1}{x_2 - x_1}$.</p>
+                    <ul class="list-disc list-inside mt-1 space-y-0.5 text-xs text-slate-400">
+                        <li><strong class="text-cyan-300">Positive slope ($m > 0$):</strong> Line goes UP from left to right (marbles roll right).</li>
+                        <li><strong class="text-cyan-300">Negative slope ($m < 0$):</strong> Line goes DOWN from left to right (marbles roll left).</li>
+                        <li><strong class="text-cyan-300">Steeper line:</strong> Larger $|m|$ magnitude (e.g. $m = -2$ is steeper than $m = -0.5$).</li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
+                    <h4 class="font-bold text-amber-400 text-base mb-1">2. Y-Intercept ($c$)</h4>
+                    <p>The point where the line crosses the vertical y-axis $(0, c)$. Shifting $c$ moves the line up or down without altering its steepness.</p>
+                </div>
+
+                <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
+                    <h4 class="font-bold text-amber-400 text-base mb-1">3. Domain Restrictions $\{x\}$</h4>
+                    <p>Restricts which horizontal interval of the line is drawn. This creates gaps for marbles to drop through onto lower ramps!</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2 text-xs">
+                        <div class="bg-slate-900 p-2 rounded border border-slate-800 font-mono text-cyan-300">
+                            $\{x > 2\}$ : Line starts at $x = 2$ and extends right.
+                        </div>
+                        <div class="bg-slate-900 p-2 rounded border border-slate-800 font-mono text-cyan-300">
+                            $\{x < 5\}$ : Line stops at $x = 5$.
+                        </div>
+                        <div class="bg-slate-900 p-2 rounded border border-slate-800 font-mono text-cyan-300 sm:col-span-2">
+                            $\{-3 < x < 4\}$ : Line segment exists strictly between $x = -3$ and $x = 4$.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sound Engine using Web Audio API
+        class SoundEngine {
+            constructor() {
+                this.ctx = null;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }
+
+            playPop() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1200, this.ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.1);
+            }
+
+            playStar() {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.08);
+                osc.frequency.setValueAtTime(783.99, now + 0.16);
+                osc.frequency.setValueAtTime(1046.50, now + 0.24);
+                gain.gain.setValueAtTime(0.25, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.4);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(now + 0.4);
+            }
+
+            playVictory() {
+                if (!this.ctx) return;
+                const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                notes.forEach((freq, idx) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    const now = this.ctx.currentTime + (idx * 0.1);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                });
+            }
+
+            playBounce() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(180, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(60, this.ctx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.05);
+            }
+        }
+
+        const audio = new SoundEngine();
+
+        // Safe KaTeX Helper Function
+        function refreshMathInDOM() {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        { left: '$$', right: '$$', display: true },
+                        { left: '$', right: '$', display: false }
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        const LEVELS = {
+            'demo': {
+                title: "🎓 Level 0: Interactive Walkthrough",
+                desc: "Welcome! Follow the guided tutorial steps above to learn how linear equations and domain restrictions control marble slides.",
+                hint: "Watch how domain restrictions cut lines to let marbles drop onto lower ramps.",
+                spawn: { x: -7, y: 9 },
+                marblesCount: 8,
+                stars: [
+                    { x: -4, y: 5.5, collected: false },
+                    { x: -1, y: 2, collected: false },
+                    { x: 3, y: -2, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -0.8x + 2 {x < 1}", active: true, domainEnabled: true, domainMin: -15, domainMax: 1 },
+                    { expr: "y = -1x - 1 {x > 1}", active: true, domainEnabled: true, domainMin: 1, domainMax: 15 }
+                ]
+            },
+            '1': {
+                title: "1. Gentle Slope (Positive $m$)",
+                desc: "Adjust the slope ($m$) so the marbles roll smoothly downwards to the right into all stars!",
+                hint: "Change the equation to $y = -0.5x + 3$.",
+                spawn: { x: -6, y: 8 },
+                marblesCount: 6,
+                stars: [
+                    { x: -3, y: 4.5, collected: false },
+                    { x: 0, y: 3, collected: false },
+                    { x: 3, y: 1.5, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = 0x + 6", active: true, domainEnabled: false, domainMin: -15, domainMax: 15 }
+                ]
+            },
+            '2': {
+                title: "2. Downhill Slide (Negative $m$)",
+                desc: "The marbles spawn high up. Create a steep negative slope to catch them!",
+                hint: "Try a steeper line like $y = -1.5x + 4$.",
+                spawn: { x: -8, y: 10 },
+                marblesCount: 8,
+                stars: [
+                    { x: -5, y: 7.5, collected: false },
+                    { x: -2, y: 3, collected: false },
+                    { x: 2, y: -3, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -0.4x + 2", active: true, domainEnabled: false, domainMin: -15, domainMax: 15 }
+                ]
+            },
+            '3': {
+                title: "3. Y-Intercept Shift ($c$)",
+                desc: "The slope is already correct! Shift the y-intercept $c$ up or down to align with stars.",
+                hint: "Shift $c$ upward: try $y = -0.8x + 4$.",
+                spawn: { x: -7, y: 8 },
+                marblesCount: 6,
+                stars: [
+                    { x: -4, y: 7.2, collected: false },
+                    { x: 0, y: 4, collected: false },
+                    { x: 4, y: 0.8, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -0.8x + 0", active: true, domainEnabled: false, domainMin: -15, domainMax: 15 }
+                ]
+            },
+            '4': {
+                title: "4. Simple Gap Cut ($\{x > 0\}$)",
+                desc: "Use your first domain restriction! Cut the top ramp at $x = 0$ so marbles fall to the lower stars.",
+                hint: "Set Max X = 0 on Line 1, or add $\{x < 0\}$ to Line 1.",
+                spawn: { x: -8, y: 8 },
+                marblesCount: 8,
+                stars: [
+                    { x: -4, y: 5, collected: false },
+                    { x: 1, y: -2, collected: false },
+                    { x: 5, y: -4, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -0.75x + 2", active: true, domainEnabled: false, domainMin: -15, domainMax: 15 },
+                    { expr: "y = -0.5x - 1.5 {x > 0}", active: true, domainEnabled: true, domainMin: 0, domainMax: 15 }
+                ]
+            },
+            '5': {
+                title: "5. Double Ramp Drop",
+                desc: "Guide marbles along two bounded line segments so they jump cleanly from upper to lower ramp.",
+                hint: "Restrict Line 1 to $\{x < 0\}$ and Line 2 to $\{x > 0\}$.",
+                spawn: { x: -7, y: 9 },
+                marblesCount: 8,
+                stars: [
+                    { x: -5, y: 6, collected: false },
+                    { x: -2, y: 3, collected: false },
+                    { x: 2, y: -2, collected: false },
+                    { x: 5, y: -5, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -1x + 1 {-15 < x < 0}", active: true, domainEnabled: true, domainMin: -15, domainMax: 0 },
+                    { expr: "y = -1x - 3 {0 < x < 15}", active: true, domainEnabled: true, domainMin: 0, domainMax: 15 }
+                ]
+            },
+            '6': {
+                title: "6. The V-Funnel",
+                desc: "Marbles drop from above into a funnel. Adjust two converging ramps to guide them into the center gap.",
+                hint: "Line 1 needs positive slope ($y = 0.8x - 1$) and Line 2 needs negative slope ($y = -0.8x - 1$).",
+                spawn: { x: 0, y: 10 },
+                marblesCount: 8,
+                stars: [
+                    { x: -4, y: 2, collected: false },
+                    { x: 4, y: 2, collected: false },
+                    { x: 0, y: -4, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = 0.8x + 1 {x < -0.5}", active: true, domainEnabled: true, domainMin: -15, domainMax: -0.5 },
+                    { expr: "y = -0.8x + 1 {x > 0.5}", active: true, domainEnabled: true, domainMin: 0.5, domainMax: 15 },
+                    { expr: "y = 0x - 4", active: true, domainEnabled: false, domainMin: -15, domainMax: 15 }
+                ]
+            },
+            '7': {
+                title: "7. Steep vs Shallow",
+                desc: "Marbles need to speed down a steep slope first, then coast on a gentle shallow slope.",
+                hint: "Line 1: $m = -2$, Line 2: $m = -0.3$. Use domain slider to split at $x = -1$.",
+                spawn: { x: -6, y: 11 },
+                marblesCount: 8,
+                stars: [
+                    { x: -4, y: 7, collected: false },
+                    { x: 1, y: -1, collected: false },
+                    { x: 6, y: -2.5, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -2x - 1 {x < -1}", active: true, domainEnabled: true, domainMin: -15, domainMax: -1 },
+                    { expr: "y = -0.3x - 0.7 {x > -1}", active: true, domainEnabled: true, domainMin: -1, domainMax: 15 }
+                ]
+            },
+            '8': {
+                title: "8. Steep Drop & Catch",
+                desc: "Marbles drop rapidly! Catch them on a low horizontal line at $y = -4$.",
+                hint: "Set Line 2 to a constant horizontal function $y = -4$.",
+                spawn: { x: -8, y: 12 },
+                marblesCount: 10,
+                stars: [
+                    { x: -6, y: 8, collected: false },
+                    { x: -3, y: 2, collected: false },
+                    { x: 2, y: -4, collected: false },
+                    { x: 7, y: -4, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -2x - 4 {x < -2}", active: true, domainEnabled: true, domainMin: -15, domainMax: -2 },
+                    { expr: "y = -1x - 2 {x > -2}", active: true, domainEnabled: true, domainMin: -2, domainMax: 15 }
+                ]
+            },
+            '9': {
+                title: "9. The Zig-Zag",
+                desc: "Bounce marbles back and forth across three distinct slope segments!",
+                hint: "Alternate slopes: negative $\\rightarrow$ positive $\\rightarrow$ negative.",
+                spawn: { x: -8, y: 10 },
+                marblesCount: 10,
+                stars: [
+                    { x: -5, y: 6, collected: false },
+                    { x: -1, y: 1, collected: false },
+                    { x: 3, y: 4, collected: false },
+                    { x: 7, y: -2, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -1.2x + 0.4 {x < -2}", active: true, domainEnabled: true, domainMin: -15, domainMax: -2 },
+                    { expr: "y = 0.8x + 4.4 {-2 < x < 3}", active: true, domainEnabled: true, domainMin: -2, domainMax: 3 },
+                    { expr: "y = -1.5x + 8.5 {x > 3}", active: true, domainEnabled: true, domainMin: 3, domainMax: 15 }
+                ]
+            },
+            '10': {
+                title: "10. Step Cascade",
+                desc: "A series of stepped horizontal platforms ($m = 0$) cut with precise domains.",
+                hint: "Set $m = 0$ for each step and adjust $c$ to heights $y = 6, 2, -2$.",
+                spawn: { x: -8, y: 9 },
+                marblesCount: 8,
+                stars: [
+                    { x: -5, y: 6, collected: false },
+                    { x: 0, y: 2, collected: false },
+                    { x: 5, y: -2, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = 0x + 6 {x < -2}", active: true, domainEnabled: true, domainMin: -15, domainMax: -2 },
+                    { expr: "y = 0x + 2 {-2 < x < 3}", active: true, domainEnabled: true, domainMin: -2, domainMax: 3 },
+                    { expr: "y = 0x - 2 {x > 3}", active: true, domainEnabled: true, domainMin: 3, domainMax: 15 }
+                ]
+            },
+            '11': {
+                title: "11. Narrow Gap Drop",
+                desc: "The middle ramp is restricted to a tight window $\{-2 < x < 2\}$.",
+                hint: "Use domain sliders to restrict Line 2 between $-2$ and $2$.",
+                spawn: { x: -7, y: 9 },
+                marblesCount: 8,
+                stars: [
+                    { x: -4, y: 5, collected: false },
+                    { x: 0, y: 1, collected: false },
+                    { x: 4, y: -4, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -1x + 1 {x < -2}", active: true, domainEnabled: true, domainMin: -15, domainMax: -2 },
+                    { expr: "y = -1x + 1 {-2 < x < 2}", active: true, domainEnabled: true, domainMin: -2, domainMax: 2 },
+                    { expr: "y = -1x - 3 {x > 2}", active: true, domainEnabled: true, domainMin: 2, domainMax: 15 }
+                ]
+            },
+            '12': {
+                title: "12. Parallel Tracks",
+                desc: "Both lines have identical gradient ($m = -0.8$). Adjust intercepts to catch dropped marbles.",
+                hint: "Line 1: $y = -0.8x + 3$, Line 2: $y = -0.8x - 2$.",
+                spawn: { x: -7, y: 9 },
+                marblesCount: 8,
+                stars: [
+                    { x: -4, y: 6.2, collected: false },
+                    { x: -1, y: 3.8, collected: false },
+                    { x: 2, y: -3.6, collected: false },
+                    { x: 5, y: -6, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -0.8x + 3 {x < 0}", active: true, domainEnabled: true, domainMin: -15, domainMax: 0 },
+                    { expr: "y = -0.8x - 2 {x > 0}", active: true, domainEnabled: true, domainMin: 0, domainMax: 15 }
+                ]
+            },
+            '13': {
+                title: "13. X-Intercept Target",
+                desc: "Pass through stars situated right on the x-axis where $y = 0$.",
+                hint: "Find intercept $c$ such that $0 = mx + c$. Try $y = -0.5x + 1$.",
+                spawn: { x: -6, y: 7 },
+                marblesCount: 8,
+                stars: [
+                    { x: -2, y: 2, collected: false },
+                    { x: 2, y: 0, collected: false },
+                    { x: 6, y: -2, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -0.5x + 0", active: true, domainEnabled: false, domainMin: -15, domainMax: 15 }
+                ]
+            },
+            '14': {
+                title: "14. Fractional Slopes",
+                desc: "Use fractional gradients like $m = -0.25$ or $m = -0.75$ for smooth gliding.",
+                hint: "Try $y = -0.25x + 2$ for the main slide.",
+                spawn: { x: -8, y: 7 },
+                marblesCount: 8,
+                stars: [
+                    { x: -4, y: 3, collected: false },
+                    { x: 0, y: 2, collected: false },
+                    { x: 4, y: 1, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -1x + 2", active: true, domainEnabled: false, domainMin: -15, domainMax: 15 }
+                ]
+            },
+            '15': {
+                title: "15. Bounce & Slide",
+                desc: "Drop marbles onto a steep bounce ramp that leads into a long horizontal runway.",
+                hint: "Line 1: $y = -1.5x + 3 \{x < 1\}$, Line 2: $y = -0.2x + 1.3 \{x > 1\}$.",
+                spawn: { x: -7, y: 11 },
+                marblesCount: 10,
+                stars: [
+                    { x: -4, y: 9, collected: false },
+                    { x: 2, y: 0.9, collected: false },
+                    { x: 7, y: -0.1, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -1.5x + 3 {x < 1}", active: true, domainEnabled: true, domainMin: -15, domainMax: 1 },
+                    { expr: "y = -0.2x + 1.3 {x > 1}", active: true, domainEnabled: true, domainMin: 1, domainMax: 15 }
+                ]
+            },
+            '16': {
+                title: "16. The Tunnel Drop",
+                desc: "Drop marbles through a top aperture, down a funnel tube, onto an exit ramp.",
+                hint: "Set top gap $\{x < -1\}$, tube $\{ -1 < x < 1 \}$, and exit $\{ x > 1 \}$.",
+                spawn: { x: -6, y: 10 },
+                marblesCount: 10,
+                stars: [
+                    { x: -4, y: 7, collected: false },
+                    { x: 0, y: 2, collected: false },
+                    { x: 5, y: -3, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -0.8x + 3.8 {x < -1}", active: true, domainEnabled: true, domainMin: -15, domainMax: -1 },
+                    { expr: "y = -2.5x + 2.1 {-1 < x < 1}", active: true, domainEnabled: true, domainMin: -1, domainMax: 1 },
+                    { expr: "y = -0.6x - 0.2 {x > 1}", active: true, domainEnabled: true, domainMin: 1, domainMax: 15 }
+                ]
+            },
+            '17': {
+                title: "17. Double Gap Funnel",
+                desc: "Two distinct domain gaps in series require exact boundary slider tuning.",
+                hint: "Set gaps at $x = -2$ and $x = 3$.",
+                spawn: { x: -8, y: 10 },
+                marblesCount: 10,
+                stars: [
+                    { x: -5, y: 6.5, collected: false },
+                    { x: 0, y: 1, collected: false },
+                    { x: 6, y: -5, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -1x + 1.5 {x < -2}", active: true, domainEnabled: true, domainMin: -15, domainMax: -2 },
+                    { expr: "y = -0.8x - 1 {-2 < x < 3}", active: true, domainEnabled: true, domainMin: -2, domainMax: 3 },
+                    { expr: "y = -1x - 2 {x > 3}", active: true, domainEnabled: true, domainMin: 3, domainMax: 15 }
+                ]
+            },
+            '18': {
+                title: "18. Speed Ramp Control",
+                desc: "Control marble velocity by altering slopes across 3 continuous line segments.",
+                hint: "Use slopes $m = -2$, $m = -0.5$, and $m = -1.2$.",
+                spawn: { x: -8, y: 12 },
+                marblesCount: 10,
+                stars: [
+                    { x: -6, y: 8, collected: false },
+                    { x: -1, y: 2.5, collected: false },
+                    { x: 4, y: -3.5, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -2x - 4 {x < -3}", active: true, domainEnabled: true, domainMin: -15, domainMax: -3 },
+                    { expr: "y = -0.5x + 0.5 {-3 < x < 2}", active: true, domainEnabled: true, domainMin: -3, domainMax: 2 },
+                    { expr: "y = -1.2x + 1.9 {x > 2}", active: true, domainEnabled: true, domainMin: 2, domainMax: 15 }
+                ]
+            },
+            '19': {
+                title: "19. The Slope Maze",
+                desc: "A 4-line maze demanding precise gradients and domain restrictions.",
+                hint: "Construct 4 connected line segments using domains.",
+                spawn: { x: -9, y: 11 },
+                marblesCount: 10,
+                stars: [
+                    { x: -7, y: 8, collected: false },
+                    { x: -3, y: 4, collected: false },
+                    { x: 1, y: 0, collected: false },
+                    { x: 6, y: -5, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -1x + 1 {x < -5}", active: true, domainEnabled: true, domainMin: -15, domainMax: -5 },
+                    { expr: "y = -1x + 1 {-5 < x < -1}", active: true, domainEnabled: true, domainMin: -5, domainMax: -1 },
+                    { expr: "y = -1x + 1 {-1 < x < 3}", active: true, domainEnabled: true, domainMin: -1, domainMax: 3 },
+                    { expr: "y = -1x - 2 {x > 3}", active: true, domainEnabled: true, domainMin: 3, domainMax: 15 }
+                ]
+            },
+            '20': {
+                title: "20. Master Marble Circuit",
+                desc: "The ultimate Year 9 linear challenge! Guide marbles through 5 stars scattered across the board.",
+                hint: "Master all skills: slope gradients, y-intercept shifts, and exact domain boundaries!",
+                spawn: { x: -9, y: 12 },
+                marblesCount: 12,
+                stars: [
+                    { x: -7, y: 9, collected: false },
+                    { x: -3, y: 4, collected: false },
+                    { x: 0, y: 1, collected: false },
+                    { x: 4, y: -2, collected: false },
+                    { x: 8, y: -6, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -1.25x + 0.25 {x < -4}", active: true, domainEnabled: true, domainMin: -15, domainMax: -4 },
+                    { expr: "y = -0.75x + 1.0 {-4 < x < 1}", active: true, domainEnabled: true, domainMin: -4, domainMax: 1 },
+                    { expr: "y = -1x - 1 {x > 1}", active: true, domainEnabled: true, domainMin: 1, domainMax: 15 }
+                ]
+            },
+            'sandbox': {
+                title: "🛠️ Custom Sandbox Mode",
+                desc: "Design your own marble slides! Click 'Add Stars' or 'Set Spawn' to place game elements.",
+                hint: "Experiment with extreme slopes and precise domain intervals!",
+                spawn: { x: -6, y: 8 },
+                marblesCount: 10,
+                stars: [
+                    { x: -2, y: 3, collected: false },
+                    { x: 2, y: 0, collected: false }
+                ],
+                initialEqs: [
+                    { expr: "y = -0.8x + 2", active: true, domainEnabled: false, domainMin: -15, domainMax: 15 }
+                ]
+            }
+        };
+
+        const TUTORIAL_STEPS = [
+            {
+                step: 1,
+                title: "Welcome to Marble Slides!",
+                text: "The goal is to write linear equations ($y = mx + c$) that build ramps to collect all yellow stars.",
+                highlightId: "equationInputsContainer",
+                action: () => {}
+            },
+            {
+                step: 2,
+                title: "Understanding Slope & Intercept",
+                text: "In $y = mx + c$, $m$ controls slope (steepness) and $c$ shifts the ramp up or down.",
+                highlightId: "equationInputsContainer",
+                action: () => {}
+            },
+            {
+                step: 3,
+                title: "Domain Restrictions $\{x\}$",
+                text: "Click 'Domain' below any equation to open visual drag sliders and cut off lines at specific $X$ values!",
+                highlightId: "equationInputsContainer",
+                action: () => {
+                    const drawer = document.querySelector('.domainDrawer');
+                    if (drawer) drawer.classList.remove('hidden');
+                }
+            },
+            {
+                step: 4,
+                title: "Launching Marbles",
+                text: "Click 'LAUNCH MARBLES' to test your ramps in real-time with gravity physics!",
+                highlightId: "launchBtn",
+                action: () => {
+                    document.getElementById('launchBtn').click();
+                }
+            }
+        ];
+
+        let currentTutorialStep = 0;
+
+        function parseLinearEquation(inputStr) {
+            let str = inputStr.replace(/\s+/g, '').toLowerCase();
+            let domain = { min: -Infinity, max: Infinity };
+
+            const domainMatch = str.match(/\{([^}]+)\}/);
+            if (domainMatch) {
+                const domStr = domainMatch[1];
+                str = str.replace(/\{[^}]+\}/, '');
+
+                const compoundMatch = domStr.match(/^([-\d.]+)<x<([-\d.]+)$/);
+                if (compoundMatch) {
+                    domain.min = parseFloat(compoundMatch[1]);
+                    domain.max = parseFloat(compoundMatch[2]);
+                } else {
+                    const gtMatch = domStr.match(/^x>([-\d.]+)$/);
+                    const ltMatch = domStr.match(/^x<([-\d.]+)$/);
+                    const gteMatch = domStr.match(/^x>=([-\d.]+)$/);
+                    const lteMatch = domStr.match(/^x<=([-\d.]+)$/);
+
+                    if (gtMatch || gteMatch) domain.min = parseFloat((gtMatch || gteMatch)[1]);
+                    if (ltMatch || lteMatch) domain.max = parseFloat((ltMatch || lteMatch)[1]);
+                }
+            }
+
+            if (!str.startsWith('y=')) return null;
+            let expr = str.substring(2);
+
+            let m = 0;
+            let c = 0;
+
+            if (expr === 'x') {
+                m = 1; c = 0;
+            } else if (expr === '-x') {
+                m = -1; c = 0;
+            } else if (!expr.includes('x')) {
+                m = 0;
+                c = parseFloat(expr);
+            } else {
+                const parts = expr.split('x');
+                let mStr = parts[0];
+                let cStr = parts[1] || '0';
+
+                if (mStr === '') m = 1;
+                else if (mStr === '-') m = -1;
+                else m = parseFloat(mStr);
+
+                if (cStr.startsWith('+')) cStr = cStr.substring(1);
+                c = parseFloat(cStr);
+            }
+
+            if (isNaN(m) || isNaN(c)) return null;
+
+            return { m, c, domain, raw: inputStr };
+        }
+
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let currentLevelKey = 'demo';
+        let currentLevel = LEVELS['demo'];
+        let activeEquations = [];
+
+        let marbles = [];
+        let stars = [];
+        let spawnPoint = { x: -6, y: 8 };
+        let particles = [];
+
+        let isSimulating = false;
+        let launchTimer = 0;
+        let marblesToLaunch = 0;
+
+        let scale = 40;
+        let panX = 0;
+        let panY = 0;
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
+
+        let sandboxEditMode = null;
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            if (panX === 0 && panY === 0) {
+                panX = canvas.width / 2;
+                panY = canvas.height / 2;
+            }
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function toPixelX(mathX) { return panX + mathX * scale; }
+        function toPixelY(mathY) { return panY - mathY * scale; }
+        function toMathX(pixelX) { return (pixelX - panX) / scale; }
+        function toMathY(pixelY) { return (panY - pixelY) / scale; }
+
+        class Marble {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.vx = 0.05;
+                this.vy = 0;
+                this.radius = 0.35;
+                this.trail = [];
+                this.active = true;
+            }
+
+            update(dt, lines) {
+                if (!this.active) return;
+
+                const gravity = -18;
+                this.vy += gravity * dt;
+
+                this.vx *= 0.995;
+                this.vy *= 0.995;
+
+                let nextX = this.x + this.vx * dt;
+                let nextY = this.y + this.vy * dt;
+
+                for (let line of lines) {
+                    if (!line.parsed) continue;
+                    const { m, c, domain } = line.parsed;
+
+                    if (nextX >= domain.min - this.radius && nextX <= domain.max + this.radius) {
+                        const lineYAtNextX = m * nextX + c;
+                        const distY = nextY - lineYAtNextX;
+
+                        if (distY <= this.radius && distY >= -this.radius * 2 && this.y >= (m * this.x + c) - 0.2) {
+                            const angle = Math.atan(m);
+                            const normalX = -Math.sin(angle);
+                            const normalY = Math.cos(angle);
+
+                            nextY = lineYAtNextX + (this.radius / Math.cos(angle));
+
+                            const vDotN = this.vx * normalX + this.vy * normalY;
+                            
+                            if (vDotN < 0) {
+                                this.vx -= vDotN * normalX;
+                                this.vy -= vDotN * normalY;
+
+                                const slideAcc = gravity * Math.sin(angle);
+                                this.vx += slideAcc * Math.cos(angle) * dt;
+                                this.vy += slideAcc * Math.sin(angle) * dt;
+
+                                this.vx *= 0.985;
+                                this.vy *= 0.985;
+
+                                if (Math.abs(vDotN) > 1) {
+                                    audio.playBounce();
+                                }
+                            }
+                        }
+                    }
+                }
+
+                this.x = nextX;
+                this.y = nextY;
+
+                this.trail.push({ x: this.x, y: this.y });
+                if (this.trail.length > 15) this.trail.shift();
+
+                if (this.y < -30 || Math.abs(this.x) > 40) {
+                    this.active = false;
+                }
+            }
+
+            draw(ctx) {
+                if (!this.active) return;
+
+                if (this.trail.length > 1) {
+                    ctx.beginPath();
+                    ctx.moveTo(toPixelX(this.trail[0].x), toPixelY(this.trail[0].y));
+                    for (let i = 1; i < this.trail.length; i++) {
+                        ctx.lineTo(toPixelX(this.trail[i].x), toPixelY(this.trail[i].y));
+                    }
+                    ctx.strokeStyle = 'rgba(0, 243, 255, 0.35)';
+                    ctx.lineWidth = this.radius * scale * 0.8;
+                    ctx.lineCap = 'round';
+                    ctx.stroke();
+                }
+
+                const px = toPixelX(this.x);
+                const py = toPixelY(this.y);
+                const pr = this.radius * scale;
+
+                const grad = ctx.createRadialGradient(px - pr * 0.3, py - pr * 0.3, pr * 0.1, px, py, pr);
+                grad.addColorStop(0, '#ffffff');
+                grad.addColorStop(0.4, '#00f3ff');
+                grad.addColorStop(1, '#0055ff');
+
+                ctx.beginPath();
+                ctx.arc(px, py, pr, 0, Math.PI * 2);
+                ctx.fillStyle = grad;
+                ctx.shadowColor = '#00f3ff';
+                ctx.shadowBlur = 10;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        function createStarParticles(x, y) {
+            for (let i = 0; i < 18; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 2 + Math.random() * 4;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    color: ['#ffea00', '#ff007f', '#00f3ff'][Math.floor(Math.random() * 3)],
+                    size: 3 + Math.random() * 3,
+                    alpha: 1,
+                    life: 1
+                });
+            }
+        }
+
+        function updateParticles(dt) {
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.vx * dt;
+                p.y += p.vy * dt;
+                p.life -= dt * 2;
+                p.alpha = Math.max(0, p.life);
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+        }
+
+        function drawParticles(ctx) {
+            particles.forEach(p => {
+                ctx.save();
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(toPixelX(p.x), toPixelY(p.y), p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+        }
+
+        function renderEquationInputs() {
+            const container = document.getElementById('equationInputsContainer');
+            container.innerHTML = '';
+
+            activeEquations.forEach((eq, idx) => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex flex-col gap-2.5 transition focus-within:border-cyan-500/80";
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full ${eq.active ? 'bg-cyan-400 shadow-sm shadow-cyan-400' : 'bg-slate-600'} shrink-0"></span>
+                        <input type="text" data-idx="${idx}" class="eqInput flex-1 bg-slate-900 text-cyan-300 font-mono text-sm px-2.5 py-1.5 rounded-lg border border-slate-700/80 focus:outline-none focus:border-cyan-400" value="${eq.expr}" placeholder="y = mx + c {domain}">
+                        <button data-idx="${idx}" class="toggleDomainBtn text-xs text-purple-400 hover:text-purple-300 bg-purple-950/40 hover:bg-purple-900/50 border border-purple-800/50 px-2 py-1 rounded transition flex items-center gap-1 shrink-0" title="Toggle Domain Controls">
+                            <i class="fa-solid fa-sliders"></i> Domain
+                        </button>
+                        <button data-idx="${idx}" class="removeEqBtn text-slate-500 hover:text-red-400 px-1.5 py-1 rounded transition shrink-0">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- Visual Domain Restriction Drag Drawer -->
+                    <div class="domainDrawer hidden bg-slate-900/90 p-2.5 rounded-lg border border-slate-800 text-xs space-y-2">
+                        <div class="flex items-center justify-between">
+                            <label class="flex items-center gap-2 font-semibold text-purple-300 cursor-pointer">
+                                <input type="checkbox" data-idx="${idx}" class="domainToggleCheckbox rounded bg-slate-950 border-slate-700 text-purple-500 focus:ring-0" ${eq.domainEnabled ? 'checked' : ''}>
+                                Enable Domain Restriction $\{x\}$
+                            </label>
+                            <span class="text-[10px] text-slate-400 font-mono">Range: [-15, 15]</span>
+                        </div>
+
+                        <div class="space-y-2 ${eq.domainEnabled ? '' : 'opacity-40 pointer-events-none'}">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-slate-400 w-12 font-mono">Min X:</span>
+                                <input type="range" data-idx="${idx}" class="domainMinSlider smooth-slider flex-1" min="-15" max="15" step="0.5" value="${eq.domainMin}">
+                                <span class="domainMinVal w-8 text-right font-mono text-cyan-300 font-bold">${eq.domainMin}</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-slate-400 w-12 font-mono">Max X:</span>
+                                <input type="range" data-idx="${idx}" class="domainMaxSlider smooth-slider flex-1" min="-15" max="15" step="0.5" value="${eq.domainMax}">
+                                <span class="domainMaxVal w-8 text-right font-mono text-cyan-300 font-bold">${eq.domainMax}</span>
+                            </div>
+
+                            <!-- Domain Quick Presets -->
+                            <div class="flex items-center gap-1 pt-1">
+                                <span class="text-[10px] text-slate-500">Presets:</span>
+                                <button data-idx="${idx}" data-min="-15" data-max="0" class="presetBtn text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700 font-mono">x < 0</button>
+                                <button data-idx="${idx}" data-min="0" data-max="15" class="presetBtn text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700 font-mono">x > 0</button>
+                                <button data-idx="${idx}" data-min="-5" data-max="5" class="presetBtn text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700 font-mono">-5 < x < 5</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-[10px] text-slate-400 flex justify-between px-1">
+                        <span>Parsed: <strong class="text-cyan-300 font-mono">${eq.expr}</strong></span>
+                        <span class="${eq.parsed ? 'text-emerald-400' : 'text-rose-400'} font-semibold">
+                            ${eq.parsed ? '✓ Valid Line' : '⚠ Syntax Error'}
+                        </span>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            // Bind Event Listeners for Smooth Dragging & Inputs
+            document.querySelectorAll('.eqInput').forEach(input => {
+                input.addEventListener('input', (e) => {
+                    const idx = parseInt(e.target.dataset.idx);
+                    activeEquations[idx].expr = e.target.value;
+                    syncDomainFromText(idx);
+                    parseAllEquations();
+                });
+            });
+
+            document.querySelectorAll('.toggleDomainBtn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const card = e.currentTarget.closest('.bg-slate-950\\/80');
+                    const drawer = card.querySelector('.domainDrawer');
+                    drawer.classList.toggle('hidden');
+                });
+            });
+
+            document.querySelectorAll('.domainToggleCheckbox').forEach(chk => {
+                chk.addEventListener('change', (e) => {
+                    const idx = parseInt(e.target.dataset.idx);
+                    activeEquations[idx].domainEnabled = e.target.checked;
+                    updateEquationTextFromDomain(idx);
+                    renderEquationInputs();
+                    parseAllEquations();
+                });
+            });
+
+            // Smooth Real-Time Slider Drag Handlers
+            document.querySelectorAll('.domainMinSlider').forEach(slider => {
+                const updateVal = (e) => {
+                    const idx = parseInt(e.target.dataset.idx);
+                    let val = parseFloat(e.target.value);
+                    if (val >= activeEquations[idx].domainMax) val = activeEquations[idx].domainMax - 0.5;
+                    activeEquations[idx].domainMin = val;
+                    activeEquations[idx].domainEnabled = true;
+                    updateEquationTextFromDomain(idx);
+                    parseAllEquations();
+                    const card = e.target.closest('.domainDrawer');
+                    if (card) card.querySelector('.domainMinVal').innerText = val;
+                };
+                slider.addEventListener('input', updateVal);
+                slider.addEventListener('change', renderEquationInputs);
+            });
+
+            document.querySelectorAll('.domainMaxSlider').forEach(slider => {
+                const updateVal = (e) => {
+                    const idx = parseInt(e.target.dataset.idx);
+                    let val = parseFloat(e.target.value);
+                    if (val <= activeEquations[idx].domainMin) val = activeEquations[idx].domainMin + 0.5;
+                    activeEquations[idx].domainMax = val;
+                    activeEquations[idx].domainEnabled = true;
+                    updateEquationTextFromDomain(idx);
+                    parseAllEquations();
+                    const card = e.target.closest('.domainDrawer');
+                    if (card) card.querySelector('.domainMaxVal').innerText = val;
+                };
+                slider.addEventListener('input', updateVal);
+                slider.addEventListener('change', renderEquationInputs);
+            });
+
+            document.querySelectorAll('.presetBtn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = parseInt(e.currentTarget.dataset.idx);
+                    const minVal = parseFloat(e.currentTarget.dataset.min);
+                    const maxVal = parseFloat(e.currentTarget.dataset.max);
+                    activeEquations[idx].domainMin = minVal;
+                    activeEquations[idx].domainMax = maxVal;
+                    activeEquations[idx].domainEnabled = true;
+                    updateEquationTextFromDomain(idx);
+                    renderEquationInputs();
+                    parseAllEquations();
+                });
+            });
+
+            document.querySelectorAll('.removeEqBtn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = parseInt(e.currentTarget.dataset.idx);
+                    if (activeEquations.length > 1) {
+                        activeEquations.splice(idx, 1);
+                        renderEquationInputs();
+                        parseAllEquations();
+                    }
+                });
+            });
+
+            setTimeout(refreshMathInDOM, 20);
+        }
+
+        function updateEquationTextFromDomain(idx) {
+            const eq = activeEquations[idx];
+            let baseExpr = eq.expr.replace(/\{[^}]+\}/, '').trim();
+
+            if (!eq.domainEnabled) {
+                eq.expr = baseExpr;
+                return;
+            }
+
+            let domStr = "";
+            if (eq.domainMin <= -15 && eq.domainMax < 15) {
+                domStr = `{x < ${eq.domainMax}}`;
+            } else if (eq.domainMin > -15 && eq.domainMax >= 15) {
+                domStr = `{x > ${eq.domainMin}}`;
+            } else if (eq.domainMin > -15 && eq.domainMax < 15) {
+                domStr = `{${eq.domainMin} < x < ${eq.domainMax}}`;
+            } else {
+                eq.expr = baseExpr;
+                return;
+            }
+
+            eq.expr = `${baseExpr} ${domStr}`;
+        }
+
+        function syncDomainFromText(idx) {
+            const eq = activeEquations[idx];
+            const parsed = parseLinearEquation(eq.expr);
+            if (parsed && parsed.domain) {
+                if (parsed.domain.min !== -Infinity || parsed.domain.max !== Infinity) {
+                    eq.domainEnabled = true;
+                    eq.domainMin = parsed.domain.min === -Infinity ? -15 : parsed.domain.min;
+                    eq.domainMax = parsed.domain.max === Infinity ? 15 : parsed.domain.max;
+                } else {
+                    eq.domainEnabled = false;
+                }
+            }
+        }
+
+        function parseAllEquations() {
+            activeEquations.forEach(eq => {
+                eq.parsed = parseLinearEquation(eq.expr);
+            });
+        }
+
+        function updateStarCounter() {
+            const collected = stars.filter(s => s.collected).length;
+            document.getElementById('starCounter').innerText = `${collected} / ${stars.length}`;
+        }
+
+        function drawGrid(ctx) {
+            ctx.save();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+            ctx.lineWidth = 1;
+
+            const minMathX = Math.floor(toMathX(0));
+            const maxMathX = Math.ceil(toMathX(canvas.width));
+            const minMathY = Math.floor(toMathY(canvas.height));
+            const maxMathY = Math.ceil(toMathY(0));
+
+            for (let x = minMathX; x <= maxMathX; x++) {
+                const px = toPixelX(x);
+                ctx.beginPath();
+                ctx.moveTo(px, 0);
+                ctx.lineTo(px, canvas.height);
+                ctx.stroke();
+            }
+
+            for (let y = minMathY; y <= maxMathY; y++) {
+                const py = toPixelY(y);
+                ctx.beginPath();
+                ctx.moveTo(0, py);
+                ctx.lineTo(canvas.width, py);
+                ctx.stroke();
+            }
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = 2;
+
+            const py0 = toPixelY(0);
+            ctx.beginPath();
+            ctx.moveTo(0, py0);
+            ctx.lineTo(canvas.width, py0);
+            ctx.stroke();
+
+            const px0 = toPixelX(0);
+            ctx.beginPath();
+            ctx.moveTo(px0, 0);
+            ctx.lineTo(px0, canvas.height);
+            ctx.stroke();
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.font = '10px JetBrains Mono';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+
+            for (let x = minMathX; x <= maxMathX; x++) {
+                if (x !== 0 && x % 2 === 0) {
+                    ctx.fillText(x.toString(), toPixelX(x), py0 + 4);
+                }
+            }
+
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            for (let y = minMathY; y <= maxMathY; y++) {
+                if (y !== 0 && y % 2 === 0) {
+                    ctx.fillText(y.toString(), px0 - 6, toPixelY(y));
+                }
+            }
+
+            ctx.restore();
+        }
+
+        function drawEquations(ctx) {
+            activeEquations.forEach(eq => {
+                if (!eq.parsed) return;
+
+                const { m, c, domain } = eq.parsed;
+                ctx.save();
+                ctx.strokeStyle = '#00f3ff';
+                ctx.lineWidth = 4;
+                ctx.shadowColor = '#00f3ff';
+                ctx.shadowBlur = 8;
+                ctx.lineCap = 'round';
+
+                const minVisibleX = Math.max(toMathX(0) - 2, domain.min);
+                const maxVisibleX = Math.min(toMathX(canvas.width) + 2, domain.max);
+
+                if (minVisibleX < maxVisibleX) {
+                    const startY = m * minVisibleX + c;
+                    const endY = m * maxVisibleX + c;
+
+                    ctx.beginPath();
+                    ctx.moveTo(toPixelX(minVisibleX), toPixelY(startY));
+                    ctx.lineTo(toPixelX(maxVisibleX), toPixelY(endY));
+                    ctx.stroke();
+
+                    if (domain.min !== -Infinity) {
+                        ctx.fillStyle = '#00f3ff';
+                        ctx.beginPath();
+                        ctx.arc(toPixelX(domain.min), toPixelY(m * domain.min + c), 5, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    if (domain.max !== Infinity) {
+                        ctx.fillStyle = '#00f3ff';
+                        ctx.beginPath();
+                        ctx.arc(toPixelX(domain.max), toPixelY(m * domain.max + c), 5, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+
+                ctx.restore();
+            });
+        }
+
+        function drawSpawnPortal(ctx) {
+            const px = toPixelX(spawnPoint.x);
+            const py = toPixelY(spawnPoint.y);
+
+            ctx.save();
+            ctx.translate(px, py);
+
+            const time = Date.now() * 0.003;
+            ctx.rotate(time);
+
+            ctx.beginPath();
+            ctx.arc(0, 0, 16, 0, Math.PI * 2);
+            ctx.strokeStyle = '#bc13fe';
+            ctx.lineWidth = 4;
+            ctx.shadowColor = '#bc13fe';
+            ctx.shadowBlur = 12;
+            ctx.setLineDash([8, 8]);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(0, 0, 8, 0, Math.PI * 2);
+            ctx.fillStyle = '#ff007f';
+            ctx.shadowColor = '#ff007f';
+            ctx.shadowBlur = 10;
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function drawStars(ctx) {
+            stars.forEach(s => {
+                if (s.collected) return;
+
+                const px = toPixelX(s.x);
+                const py = toPixelY(s.y);
+
+                ctx.save();
+                ctx.translate(px, py);
+
+                const hover = Math.sin(Date.now() * 0.005 + s.x) * 3;
+                ctx.translate(0, hover);
+
+                ctx.shadowColor = '#ffea00';
+                ctx.shadowBlur = 15;
+                ctx.fillStyle = '#ffea00';
+
+                ctx.beginPath();
+                for (let i = 0; i < 5; i++) {
+                    ctx.lineTo(Math.cos((18 + i * 72) * Math.PI / 180) * 12, -Math.sin((18 + i * 72) * Math.PI / 180) * 12);
+                    ctx.lineTo(Math.cos((54 + i * 72) * Math.PI / 180) * 5, -Math.sin((54 + i * 72) * Math.PI / 180) * 5);
+                }
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.restore();
+            });
+        }
+
+        function loadLevel(levelKey) {
+            currentLevelKey = levelKey;
+            currentLevel = LEVELS[levelKey];
+
+            document.getElementById('levelTitle').innerHTML = `<span>${currentLevel.title}</span>`;
+            document.getElementById('levelDesc').innerHTML = currentLevel.desc;
+            document.getElementById('hintText').innerHTML = currentLevel.hint;
+            document.getElementById('hintBox').classList.add('hidden');
+
+            spawnPoint = { ...currentLevel.spawn };
+            stars = currentLevel.stars.map(s => ({ ...s, collected: false }));
+            activeEquations = JSON.parse(JSON.stringify(currentLevel.initialEqs));
+
+            const sandboxTools = document.getElementById('sandboxTools');
+            if (levelKey === 'sandbox') {
+                sandboxTools.classList.remove('hidden');
+            } else {
+                sandboxTools.classList.add('hidden');
+            }
+
+            if (levelKey === 'demo') {
+                startTutorialMode();
+            } else {
+                hideTutorialMode();
+            }
+
+            isSimulating = false;
+            marbles = [];
+            particles = [];
+            updateStarCounter();
+            renderEquationInputs();
+            parseAllEquations();
+            resetView();
+
+            setTimeout(refreshMathInDOM, 50);
+        }
+
+        function startTutorialMode() {
+            currentTutorialStep = 0;
+            document.getElementById('tutorialBanner').classList.remove('hidden');
+            updateTutorialStepUI();
+        }
+
+        function hideTutorialMode() {
+            document.getElementById('tutorialBanner').classList.add('hidden');
+            document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
+        }
+
+        function updateTutorialStepUI() {
+            const stepData = TUTORIAL_STEPS[currentTutorialStep];
+            document.getElementById('tutorialStepNum').innerText = stepData.step;
+            document.getElementById('tutorialStepText').innerHTML = `<strong>${stepData.title}</strong> — ${stepData.text}`;
+            
+            document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
+            if (stepData.highlightId) {
+                const target = document.getElementById(stepData.highlightId);
+                if (target) target.classList.add('tutorial-highlight');
+            }
+
+            stepData.action();
+            refreshMathInDOM();
+        }
+
+        let lastTime = performance.now();
+
+        function gameLoop(now) {
+            const dt = Math.min((now - lastTime) / 1000, 0.033);
+            lastTime = now;
+
+            if (isSimulating && marblesToLaunch > 0) {
+                launchTimer += dt;
+                if (launchTimer >= 0.25) {
+                    marbles.push(new Marble(spawnPoint.x, spawnPoint.y));
+                    marblesToLaunch--;
+                    launchTimer = 0;
+                    audio.playPop();
+                }
+            }
+
+            if (isSimulating) {
+                marbles.forEach(m => m.update(dt, activeEquations));
+
+                marbles.forEach(m => {
+                    if (!m.active) return;
+                    stars.forEach(s => {
+                        if (!s.collected) {
+                            const dx = m.x - s.x;
+                            const dy = m.y - s.y;
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+                            if (dist < m.radius + 0.4) {
+                                s.collected = true;
+                                createStarParticles(s.x, s.y);
+                                audio.playStar();
+                                updateStarCounter();
+
+                                if (stars.every(star => star.collected)) {
+                                    setTimeout(() => {
+                                        audio.playVictory();
+                                        document.getElementById('victoryOverlay').classList.remove('hidden');
+                                    }, 400);
+                                }
+                            }
+                        }
+                    });
+                });
+
+                updateParticles(dt);
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGrid(ctx);
+            drawEquations(ctx);
+            drawSpawnPortal(ctx);
+            drawStars(ctx);
+            marbles.forEach(m => m.draw(ctx));
+            drawParticles(ctx);
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function resetView() {
+            scale = 40;
+            panX = canvas.width / 2;
+            panY = canvas.height / 2;
+        }
+
+        function setupEventListeners() {
+            // Start Landing Page Modal Callout
+            document.getElementById('startAppBtn').addEventListener('click', () => {
+                audio.init();
+                document.getElementById('startModal').classList.add('hidden');
+                document.getElementById('levelSelect').value = 'demo';
+                loadLevel('demo');
+            });
+
+            document.getElementById('launchBtn').addEventListener('click', () => {
+                audio.init();
+                isSimulating = true;
+                marbles = [];
+                marblesToLaunch = currentLevel.marblesCount;
+                launchTimer = 0;
+            });
+
+            document.getElementById('resetBtn').addEventListener('click', () => {
+                isSimulating = false;
+                marbles = [];
+                stars.forEach(s => s.collected = false);
+                updateStarCounter();
+            });
+
+            document.getElementById('addEqBtn').addEventListener('click', () => {
+                if (activeEquations.length < 5) {
+                    activeEquations.push({ expr: "y = 1x + 0", active: true, domainEnabled: false, domainMin: -15, domainMax: 15 });
+                    renderEquationInputs();
+                    parseAllEquations();
+                }
+            });
+
+            document.getElementById('levelSelect').addEventListener('change', (e) => {
+                loadLevel(e.target.value);
+            });
+
+            document.getElementById('startDemoBtn').addEventListener('click', () => {
+                document.getElementById('levelSelect').value = 'demo';
+                loadLevel('demo');
+            });
+
+            document.getElementById('tutNextBtn').addEventListener('click', () => {
+                if (currentTutorialStep < TUTORIAL_STEPS.length - 1) {
+                    currentTutorialStep++;
+                    updateTutorialStepUI();
+                } else {
+                    document.getElementById('levelSelect').value = '1';
+                    loadLevel('1');
+                }
+            });
+
+            document.getElementById('tutPrevBtn').addEventListener('click', () => {
+                if (currentTutorialStep > 0) {
+                    currentTutorialStep--;
+                    updateTutorialStepUI();
+                }
+            });
+
+            document.getElementById('tutCloseBtn').addEventListener('click', hideTutorialMode);
+
+            document.getElementById('hintBtn').addEventListener('click', () => {
+                const hintBox = document.getElementById('hintBox');
+                hintBox.classList.toggle('hidden');
+                refreshMathInDOM();
+            });
+
+            document.getElementById('guideBtn').addEventListener('click', () => {
+                document.getElementById('guideModal').classList.remove('hidden');
+                refreshMathInDOM();
+            });
+            document.getElementById('closeGuideBtn').addEventListener('click', () => {
+                document.getElementById('guideModal').classList.add('hidden');
+            });
+
+            document.getElementById('replayBtn').addEventListener('click', () => {
+                document.getElementById('victoryOverlay').classList.add('hidden');
+                loadLevel(currentLevelKey);
+            });
+
+            document.getElementById('nextLevelBtn').addEventListener('click', () => {
+                document.getElementById('victoryOverlay').classList.add('hidden');
+                const keys = Object.keys(LEVELS);
+                const currIdx = keys.indexOf(currentLevelKey);
+                if (currIdx !== -1 && currIdx < keys.length - 1) {
+                    const nextKey = keys[currIdx + 1];
+                    document.getElementById('levelSelect').value = nextKey;
+                    loadLevel(nextKey);
+                }
+            });
+
+            document.getElementById('addStarModeBtn').addEventListener('click', (e) => {
+                sandboxEditMode = sandboxEditMode === 'star' ? null : 'star';
+                e.currentTarget.classList.toggle('bg-amber-500/20', sandboxEditMode === 'star');
+                document.getElementById('setSpawnModeBtn').classList.remove('bg-cyan-500/20');
+            });
+
+            document.getElementById('setSpawnModeBtn').addEventListener('click', (e) => {
+                sandboxEditMode = sandboxEditMode === 'spawn' ? null : 'spawn';
+                e.currentTarget.classList.toggle('bg-cyan-500/20', sandboxEditMode === 'spawn');
+                document.getElementById('addStarModeBtn').classList.remove('bg-amber-500/20');
+            });
+
+            document.getElementById('clearSandboxBtn').addEventListener('click', () => {
+                stars = [];
+                updateStarCounter();
+            });
+
+            document.getElementById('zoomInBtn').addEventListener('click', () => {
+                scale = Math.min(scale * 1.2, 100);
+            });
+            document.getElementById('zoomOutBtn').addEventListener('click', () => {
+                scale = Math.max(scale / 1.2, 15);
+            });
+            document.getElementById('recenterBtn').addEventListener('click', resetView);
+
+            canvas.addEventListener('mousedown', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const clickY = e.clientY - rect.top;
+
+                if (currentLevelKey === 'sandbox' && sandboxEditMode) {
+                    const mathX = Math.round(toMathX(clickX) * 2) / 2;
+                    const mathY = Math.round(toMathY(clickY) * 2) / 2;
+
+                    if (sandboxEditMode === 'star') {
+                        stars.push({ x: mathX, y: mathY, collected: false });
+                        updateStarCounter();
+                    } else if (sandboxEditMode === 'spawn') {
+                        spawnPoint = { x: mathX, y: mathY };
+                    }
+                    return;
+                }
+
+                isDragging = true;
+                dragStart = { x: e.clientX - panX, y: e.clientY - panY };
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+
+                if (mouseX >= 0 && mouseX <= canvas.width && mouseY >= 0 && mouseY <= canvas.height) {
+                    const mX = toMathX(mouseX).toFixed(2);
+                    const mY = toMathY(mouseY).toFixed(2);
+                    document.getElementById('coordHUD').innerText = `X: ${mX} | Y: ${mY}`;
+                }
+
+                if (isDragging) {
+                    panX = e.clientX - dragStart.x;
+                    panY = e.clientY - dragStart.y;
+                }
+            });
+
+            window.addEventListener('mouseup', () => { isDragging = false; });
+        }
+
+        window.onload = function() {
+            resizeCanvas();
+            setupEventListeners();
+            refreshMathInDOM();
+            requestAnimationFrame(gameLoop);
+        };
+    </script>
+</body>
+</html>
