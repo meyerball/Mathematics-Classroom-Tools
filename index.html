@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Senior Mathematics Hub | meyerball</title>
+  <title>Classroom Maths Tools | meyerball</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -161,8 +161,8 @@
 
   <header>
     <div class="brand-badge">&lt;meyerball /&gt;</div>
-    <h1>Senior Mathematics Hub</h1>
-    <p class="subtitle">Interactive tools & practice arcades for Years 11 & 12.</p>
+    <h1>Classroom Maths Tools</h1>
+    <p class="subtitle">Interactive tools & practice arcades for mathematics activities.</p>
   </header>
 
   <div id="tool-list" class="grid">Loading activities...</div>
@@ -179,10 +179,11 @@
             let cleanName = file.name.replace('.html', '').replace(/_/g, ' ');
             cleanName = cleanName.replace(/\b\w/g, l => l.toUpperCase());
 
-            // Choose an icon dynamically based on the filename
+            // Dynamic icon assignment based on file keywords
             let icon = '🎮';
             if (file.name.includes('adv')) icon = '⚡';
             if (file.name.includes('standard')) icon = '🎯';
+            if (file.name.includes('slide') || file.name.includes('linear')) icon = '📈';
             if (file.name.includes('calc')) icon = '🧮';
 
             const card = document.createElement('a');
@@ -196,7 +197,7 @@
                 </div>
                 <h2 class="card-title">${cleanName}</h2>
               </div>
-              <div class="btn-action">Launch Arcade &rarr;</div>
+              <div class="btn-action">Launch Activity &rarr;</div>
             `;
             container.appendChild(card);
           }
