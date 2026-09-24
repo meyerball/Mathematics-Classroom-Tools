@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Year 9 SOH CAH TOA Arcade</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- KaTeX for math formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between">
+
+  <!-- HEADER -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">📐</span>
+        <div>
+          <h1 class="font-extrabold text-xl bg-gradient-to-r from-sky-400 to-emerald-400 bg-clip-text text-transparent">
+            Year 9 SOH CAH TOA Arcade
+          </h1>
+          <p class="text-xs text-slate-400">Classroom Maths Tools &bull; meyerball</p>
+        </div>
+      </div>
+
+      <!-- SCORE HUD -->
+      <div class="flex items-center gap-6 bg-slate-800 px-4 py-1.5 rounded-full border border-slate-700 text-sm font-semibold">
+        <div class="flex items-center gap-2">
+          <span class="text-amber-400">🏆 Score:</span>
+          <span id="global-score" class="mono text-sky-400 text-base">0</span>
+        </div>
+        <div class="w-px h-4 bg-slate-700"></div>
+        <div class="flex items-center gap-2">
+          <span class="text-emerald-400">🔥 Streak:</span>
+          <span id="global-streak" class="mono text-emerald-400 text-base">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="max-w-5xl mx-auto px-4 flex gap-2 overflow-x-auto text-xs sm:text-sm font-bold border-t border-slate-800/50">
+      <button onclick="switchGame('ratio')" id="tab-ratio" class="px-4 py-2.5 border-b-2 border-sky-400 text-sky-400 flex items-center gap-2 whitespace-nowrap">
+        🔍 1. Ratio Detective
+      </button>
+      <button onclick="switchGame('side')" id="tab-side" class="px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+        📏 2. Find Missing Side
+      </button>
+      <button onclick="switchGame('angle')" id="tab-angle" class="px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+        🎯 3. Find Missing Angle
+      </button>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-5xl mx-auto px-4 py-8 flex-1 w-full">
+
+    <!-- LEVEL 1: RATIO DETECTIVE -->
+    <section id="game-ratio" class="space-y-6">
+      <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <h2 class="text-xl font-bold text-sky-400">Level 1: Which Ratio Do You Use?</h2>
+            <p class="text-sm text-slate-400">Look at the marked sides on the triangle and pick Sin, Cos, or Tan.</p>
+          </div>
+          <button onclick="initRatioGame()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs font-semibold">🔄 Skip</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex justify-center">
+            <canvas id="ratioCanvas" width="300" height="220" class="rounded-lg"></canvas>
+          </div>
+
+          <div class="space-y-4">
+            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+              <span class="text-xs font-bold text-amber-400 uppercase">SOH CAH TOA Hint</span>
+              <p class="text-xs text-slate-300">
+                <b>Sin $\theta$</b> = $\frac{\text{Opp}}{\text{Hyp}}$ &nbsp;|&nbsp; 
+                <b>Cos $\theta$</b> = $\frac{\text{Adj}}{\text{Hyp}}$ &nbsp;|&nbsp; 
+                <b>Tan $\theta$</b> = $\frac{\text{Opp}}{\text{Adj}}$
+              </p>
+            </div>
+
+            <p class="text-sm font-semibold text-slate-200">Which ratio connects the two highlighted sides?</p>
+
+            <div class="grid grid-cols-3 gap-3">
+              <button onclick="checkRatio('sin')" class="py-3 bg-sky-600 hover:bg-sky-500 font-bold rounded-xl text-lg transition">SIN</button>
+              <button onclick="checkRatio('cos')" class="py-3 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl text-lg transition">COS</button>
+              <button onclick="checkRatio('tan')" class="py-3 bg-purple-600 hover:bg-purple-500 font-bold rounded-xl text-lg transition">TAN</button>
+            </div>
+
+            <div id="ratio-feedback" class="text-sm font-bold h-6 text-center"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEVEL 2: FIND MISSING SIDE -->
+    <section id="game-side" class="hidden space-y-6">
+      <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <h2 class="text-xl font-bold text-emerald-400">Level 2: Calculate Missing Side ($x$)</h2>
+            <p class="text-sm text-slate-400">Use your calculator to find side $x$ (round to 1 decimal place).</p>
+          </div>
+          <button onclick="initSideGame()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs font-semibold">🔄 Skip</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex justify-center">
+            <canvas id="sideCanvas" width="300" height="220" class="rounded-lg"></canvas>
+          </div>
+
+          <div class="space-y-4">
+            <div id="side-q-box" class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+              <span class="text-xs font-bold text-emerald-400 uppercase">Triangle Info</span>
+              <p id="side-q-text" class="text-sm">Loading problem...</p>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-slate-300">Enter value for $x$:</label>
+              <div class="flex gap-2">
+                <input type="number" id="side-input" step="0.1" placeholder="e.g. 12.4" 
+                  class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 font-mono text-sm focus:outline-none focus:border-emerald-400">
+                <button onclick="checkSide()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-sm transition">SUBMIT</button>
+              </div>
+            </div>
+
+            <div id="side-feedback" class="text-sm font-bold h-6 text-center"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEVEL 3: FIND MISSING ANGLE -->
+    <section id="game-angle" class="hidden space-y-6">
+      <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <h2 class="text-xl font-bold text-purple-400">Level 3: Find Unknown Angle ($\theta$)</h2>
+            <p class="text-sm text-slate-400">Use inverse trig ($\sin^{-1}$, $\cos^{-1}$, $\tan^{-1}$) to find $\theta$ to the nearest whole degree.</p>
+          </div>
+          <button onclick="initAngleGame()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs font-semibold">🔄 Skip</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex justify-center">
+            <canvas id="angleCanvas" width="300" height="220" class="rounded-lg"></canvas>
+          </div>
+
+          <div class="space-y-4">
+            <div id="angle-q-box" class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+              <span class="text-xs font-bold text-purple-400 uppercase">Triangle Info</span>
+              <p id="angle-q-text" class="text-sm">Loading problem...</p>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-slate-300">Angle $\theta$ ($^\circ$):</label>
+              <div class="flex gap-2">
+                <input type="number" id="angle-input" placeholder="e.g. 35" 
+                  class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 font-mono text-sm focus:outline-none focus:border-purple-400">
+                <button onclick="checkAngle()" class="bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-sm transition">FIRE</button>
+              </div>
+            </div>
+
+            <div id="angle-feedback" class="text-sm font-bold h-6 text-center"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-slate-800 py-4 bg-slate-900/50 text-center text-xs text-slate-500">
+    Year 9 Intermediate Maths &bull; SOH CAH TOA Practice Arcade &bull; meyerball
+  </footer>
+
+  <script>
+    let globalScore = 0;
+    let globalStreak = 0;
+
+    function addScore(pts) {
+      globalScore += pts;
+      globalStreak += 1;
+      document.getElementById('global-score').innerText = globalScore;
+      document.getElementById('global-streak').innerText = globalStreak;
+      confetti({ particleCount: 40, spread: 50, origin: { y: 0.8 } });
+    }
+
+    function resetStreak() {
+      globalStreak = 0;
+      document.getElementById('global-streak').innerText = globalStreak;
+    }
+
+    function switchGame(key) {
+      ['ratio', 'side', 'angle'].forEach(k => {
+        document.getElementById(`game-${k}`).classList.add('hidden');
+        document.getElementById(`tab-${k}`).className = "px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap";
+      });
+
+      document.getElementById(`game-${key}`).classList.remove('hidden');
+      const colors = { ratio: 'sky', side: 'emerald', angle: 'purple' };
+      const c = colors[key];
+      document.getElementById(`tab-${key}`).className = `px-4 py-2.5 border-b-2 border-${c}-400 text-${c}-400 flex items-center gap-2 whitespace-nowrap`;
+
+      if (key === 'ratio') drawRatioTriangle();
+      if (key === 'side') drawSideTriangle();
+      if (key === 'angle') drawAngleTriangle();
+    }
+
+    /* --- LEVEL 1 LOGIC --- */
+    let ratioAnswer = 'sin';
+    function initRatioGame() {
+      const types = ['sin', 'cos', 'tan'];
+      ratioAnswer = types[Math.floor(Math.random() * types.length)];
+      document.getElementById('ratio-feedback').innerText = '';
+      drawRatioTriangle();
+    }
+
+    function drawRatioTriangle() {
+      const cvs = document.getElementById('ratioCanvas');
+      const ctx = cvs.getContext('2d');
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+      // Right Triangle
+      ctx.strokeStyle = '#334155'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(40, 180); ctx.lineTo(240, 180); ctx.lineTo(240, 40); ctx.closePath(); ctx.stroke();
+
+      // Right angle box
+      ctx.strokeRect(220, 160, 20, 20);
+
+      // Angle Theta
+      ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 16px sans-serif'; ctx.fillText('θ', 70, 170);
+
+      // Labels based on ratio
+      ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 14px sans-serif';
+      if (ratioAnswer === 'sin') {
+        ctx.fillText('Opposite', 245, 115);
+        ctx.fillText('Hypotenuse', 120, 100);
+      } else if (ratioAnswer === 'cos') {
+        ctx.fillText('Adjacent', 120, 200);
+        ctx.fillText('Hypotenuse', 120, 100);
+      } else {
+        ctx.fillText('Opposite', 245, 115);
+        ctx.fillText('Adjacent', 120, 200);
+      }
+    }
+
+    function checkRatio(choice) {
+      const fb = document.getElementById('ratio-feedback');
+      if (choice === ratioAnswer) {
+        fb.className = "text-emerald-400 font-bold";
+        fb.innerText = "CORRECT! +50 pts";
+        addScore(50);
+        setTimeout(initRatioGame, 1200);
+      } else {
+        fb.className = "text-rose-400 font-bold";
+        fb.innerText = "Incorrect! Try again.";
+        resetStreak();
+      }
+    }
+
+    /* --- LEVEL 2 LOGIC --- */
+    let sideTarget = 0;
+    let sideType = 'sin';
+    let givenAngle = 30;
+    let givenVal = 10;
+
+    function initSideGame() {
+      givenAngle = Math.floor(Math.random() * 35) + 25; // 25 to 60 deg
+      givenVal = Math.floor(Math.random() * 15) + 8; // 8 to 23
+      const types = ['sin', 'cos', 'tan'];
+      sideType = types[Math.floor(Math.random() * types.length)];
+
+      const rad = givenAngle * (Math.PI / 180);
+      const qText = document.getElementById('side-q-text');
+
+      if (sideType === 'sin') { // sin(deg) = x / Hyp
+        sideTarget = Math.round((givenVal * Math.sin(rad)) * 10) / 10;
+        qText.innerHTML = `Hypotenuse = <b>${givenVal} cm</b>, Angle $\\theta = ${givenAngle}^\\circ$.<br>Calculate Opposite side ($x$).`;
+      } else if (sideType === 'cos') { // cos(deg) = x / Hyp
+        sideTarget = Math.round((givenVal * Math.cos(rad)) * 10) / 10;
+        qText.innerHTML = `Hypotenuse = <b>${givenVal} cm</b>, Angle $\\theta = ${givenAngle}^\\circ$.<br>Calculate Adjacent side ($x$).`;
+      } else { // tan(deg) = x / Adj
+        sideTarget = Math.round((givenVal * Math.tan(rad)) * 10) / 10;
+        qText.innerHTML = `Adjacent = <b>${givenVal} cm</b>, Angle $\\theta = ${givenAngle}^\\circ$.<br>Calculate Opposite side ($x$).`;
+      }
+
+      if (window.renderMathInElement) renderMathInElement(qText);
+      document.getElementById('side-input').value = '';
+      document.getElementById('side-feedback').innerText = '';
+      drawSideTriangle();
+    }
+
+    function drawSideTriangle() {
+      const cvs = document.getElementById('sideCanvas');
+      const ctx = cvs.getContext('2d');
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(40, 180); ctx.lineTo(240, 180); ctx.lineTo(240, 50); ctx.closePath(); ctx.stroke();
+      ctx.strokeRect(220, 160, 20, 20);
+
+      ctx.fillStyle = '#10b981'; ctx.font = 'bold 15px sans-serif'; ctx.fillText(`${givenAngle}°`, 75, 170);
+      ctx.fillStyle = '#f8fafc';
+
+      if (sideType === 'sin') {
+        ctx.fillText('x', 250, 115); ctx.fillText(`${givenVal} cm`, 120, 100);
+      } else if (sideType === 'cos') {
+        ctx.fillText(`${givenVal} cm`, 120, 100); ctx.fillText('x', 130, 200);
+      } else {
+        ctx.fillText('x', 250, 115); ctx.fillText(`${givenVal} cm`, 130, 200);
+      }
+    }
+
+    function checkSide() {
+      const val = parseFloat(document.getElementById('side-input').value);
+      const fb = document.getElementById('side-feedback');
+      if (Math.abs(val - sideTarget) <= 0.2) {
+        fb.className = "text-emerald-400 font-bold";
+        fb.innerText = `SPOT ON! x = ${sideTarget} cm (+100 pts)`;
+        addScore(100);
+        setTimeout(initSideGame, 1500);
+      } else {
+        fb.className = "text-rose-400 font-bold";
+        fb.innerText = `Incorrect! Expected approx ${sideTarget}`;
+        resetStreak();
+      }
+    }
+
+    /* --- LEVEL 3 LOGIC --- */
+    let angleTarget = 35;
+    let oppVal = 10;
+    let adjVal = 14;
+
+    function initAngleGame() {
+      angleTarget = Math.floor(Math.random() * 40) + 25; // 25 to 65 deg
+      adjVal = Math.floor(Math.random() * 12) + 10;
+      const rad = angleTarget * (Math.PI / 180);
+      oppVal = Math.round(adjVal * Math.tan(rad));
+
+      // Recalculate true angle
+      angleTarget = Math.round(Math.atan2(oppVal, adjVal) * (180 / Math.PI));
+
+      const qText = document.getElementById('angle-q-text');
+      qText.innerHTML = `Opposite = <b>${oppVal} cm</b>, Adjacent = <b>${adjVal} cm</b>.<br>Find angle $\\theta$ using $\\tan^{-1}$ (nearest degree).`;
+
+      if (window.renderMathInElement) renderMathInElement(qText);
+      document.getElementById('angle-input').value = '';
+      document.getElementById('angle-feedback').innerText = '';
+      drawAngleTriangle();
+    }
+
+    function drawAngleTriangle() {
+      const cvs = document.getElementById('angleCanvas');
+      const ctx = cvs.getContext('2d');
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+      ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(40, 180); ctx.lineTo(240, 180); ctx.lineTo(240, 50); ctx.closePath(); ctx.stroke();
+      ctx.strokeRect(220, 160, 20, 20);
+
+      ctx.fillStyle = '#c084fc'; ctx.font = 'bold 16px sans-serif'; ctx.fillText('θ', 75, 170);
+      ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 14px sans-serif';
+      ctx.fillText(`${oppVal} cm`, 248, 115);
+      ctx.fillText(`${adjVal} cm`, 130, 200);
+    }
+
+    function checkAngle() {
+      const val = parseInt(document.getElementById('angle-input').value);
+      const fb = document.getElementById('angle-feedback');
+      if (Math.abs(val - angleTarget) <= 1) {
+        fb.className = "text-emerald-400 font-bold";
+        fb.innerText = `BULLSEYE! θ = ${angleTarget}° (+100 pts)`;
+        addScore(100);
+        setTimeout(initAngleGame, 1500);
+      } else {
+        fb.className = "text-rose-400 font-bold";
+        fb.innerText = `Not quite! Expected ${angleTarget}°`;
+        resetStreak();
+      }
+    }
+
+    window.onload = function() {
+      initRatioGame();
+      initSideGame();
+      initAngleGame();
+    };
+  </script>
+</body>
+</html>
