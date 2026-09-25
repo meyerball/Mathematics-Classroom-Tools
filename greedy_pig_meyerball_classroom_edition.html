@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Greedy Pig: MeyerBall Classroom Edition</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canvas Confetti for Game Celebrations -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@600;800&family=Fredoka:wght@600;700;800&display=swap');
+
+    :root {
+      --pig-pink: #f43f5e;
+      --pig-gold: #f59e0b;
+      --board-bg: #090914;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--board-bg);
+      color: #f8fafc;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .fun-font { font-family: 'Fredoka', cursive, sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f1123; }
+    ::-webkit-scrollbar-thumb { background: #312e81; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #4338ca; }
+
+    /* Glow Tokens */
+    .glow-gold { filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.4)); }
+    .glow-pink { filter: drop-shadow(0 0 16px rgba(244, 63, 94, 0.45)); }
+    .glow-card { box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(99, 102, 241, 0.25); }
+
+    /* 3D Dice Wrapper & Faces */
+    .dice-scene {
+      perspective: 800px;
+      width: 100px;
+      height: 100px;
+    }
+    .cube {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .cube.rolling {
+      animation: spin-dice 0.7s infinite linear;
+    }
+
+    @keyframes spin-dice {
+      0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+      100% { transform: rotateX(720deg) rotateY(1080deg) rotateZ(360deg); }
+    }
+
+    .cube__face {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(145deg, #ffffff, #e2e8f0);
+      border: 3px solid #cbd5e1;
+      border-radius: 18px;
+      box-shadow: inset 0 0 12px rgba(0,0,0,0.12), 0 6px 14px rgba(0,0,0,0.3);
+      display: grid;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    /* Standard Dice Dot Placement */
+    .dot {
+      width: 16px;
+      height: 16px;
+      background-color: #0f172a;
+      border-radius: 50%;
+      align-self: center;
+      justify-self: center;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+    }
+    .dot-pig {
+      width: 28px;
+      height: 28px;
+      background: #f43f5e;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 900;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(244, 63, 94, 0.8);
+    }
+
+    .face-1 { transform: rotateY(0deg) translateZ(50px); display: flex; align-items: center; justify-content: center; }
+    .face-2 { transform: rotateY(90deg) translateZ(50px); display: grid; grid-template-columns: 1fr 1fr; }
+    .face-2 .dot:nth-child(1) { align-self: start; justify-self: start; }
+    .face-2 .dot:nth-child(2) { align-self: end; justify-self: end; }
+
+    .face-3 { transform: rotateY(180deg) translateZ(50px); display: grid; grid-template-columns: 1fr 1fr 1fr; }
+    .face-3 .dot:nth-child(1) { align-self: start; justify-self: start; }
+    .face-3 .dot:nth-child(2) { align-self: center; justify-self: center; }
+    .face-3 .dot:nth-child(3) { align-self: end; justify-self: end; }
+
+    .face-4 { transform: rotateY(-90deg) translateZ(50px); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+    .face-5 { transform: rotateX(90deg) translateZ(50px); display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
+    .face-5 .dot:nth-child(1) { grid-area: 1 / 1; }
+    .face-5 .dot:nth-child(2) { grid-area: 1 / 3; }
+    .face-5 .dot:nth-child(3) { grid-area: 2 / 2; }
+    .face-5 .dot:nth-child(4) { grid-area: 3 / 1; }
+    .face-5 .dot:nth-child(5) { grid-area: 3 / 3; }
+
+    .face-6 { transform: rotateX(-90deg) translateZ(50px); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
+
+    /* Keyframe Shake for Pig-Out */
+    @keyframes pig-out-shake {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      15% { transform: translate(-6px, -4px) rotate(-2deg); }
+      30% { transform: translate(6px, 4px) rotate(2deg); }
+      45% { transform: translate(-4px, 2px) rotate(-1deg); }
+      60% { transform: translate(4px, -2px) rotate(1deg); }
+      75% { transform: translate(-2px, 0px) rotate(0deg); }
+    }
+    .shake-alarm { animation: pig-out-shake 0.5s ease-in-out; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+  <!-- TOP BRANDING & HUD HEADER -->
+  <header class="border-b border-indigo-950/80 bg-slate-950/90 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap justify-between items-center gap-3">
+      
+      <!-- Brand Mascot -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500 via-pink-500 to-amber-400 flex items-center justify-center text-2xl shadow-lg shadow-rose-500/20">
+          🐷
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="fun-font text-xl sm:text-2xl font-bold tracking-wide bg-gradient-to-r from-rose-400 via-pink-300 to-amber-300 bg-clip-text text-transparent">
+              Greedy Pig
+            </h1>
+            <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full mono">
+              MeyerBall Edition
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-medium">Whole-Class Probability &amp; Risk Game</p>
+        </div>
+      </div>
+
+      <!-- Controls & Role Selector -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Audio Mute Button -->
+        <button onclick="toggleSound()" id="sound-btn" class="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-xs font-bold text-slate-300 transition flex items-center gap-1.5 shadow-inner">
+          <span id="sound-icon">🔊</span>
+          <span id="sound-label" class="hidden sm:inline">SFX ON</span>
+        </button>
+
+        <!-- Room Key Badge -->
+        <div class="bg-slate-900/90 border border-indigo-900/50 px-3 py-1 rounded-xl flex items-center gap-2 text-xs">
+          <span class="text-slate-400">Class Room:</span>
+          <span id="room-code-badge" class="font-mono font-black text-amber-400 text-sm tracking-wider">MEYER</span>
+        </div>
+
+        <!-- Mode Toggle Pill -->
+        <div class="bg-slate-900 p-1 rounded-xl border border-slate-800 flex items-center text-xs font-bold">
+          <button id="tab-host" onclick="setAppMode('host')" class="px-3 py-1 rounded-lg transition bg-rose-500 text-slate-950 font-black shadow-md">
+            📺 Projector Board
+          </button>
+          <button id="tab-player" onclick="setAppMode('player')" class="px-3 py-1 rounded-lg text-slate-400 hover:text-slate-200 transition">
+            🔗 Link for Students
+          </button>
+        </div>
+
+        <!-- Quick Copy Student Link Button -->
+        <button onclick="copyStudentLink()" title="Copy direct student join link to clipboard" class="px-2.5 py-1.5 bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800/70 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+          <span>📋</span>
+          <span class="hidden sm:inline">Copy Student Link</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 5-ROUND "M-E-Y-E-R" CAMPAIGN RIBBON -->
+  <section class="border-b border-indigo-950/60 bg-slate-950/60 backdrop-blur px-4 py-2">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-black uppercase tracking-wider text-slate-400">Round Progress:</span>
+        <span id="active-round-label" class="bg-rose-500/10 text-rose-300 border border-rose-500/30 text-xs font-mono font-bold px-2 py-0.5 rounded-lg">
+          Round 1 of 5
+        </span>
+      </div>
+
+      <!-- M-E-Y-E-R 5-letter Stamps -->
+      <div class="flex items-center gap-2 sm:gap-3" id="meyer-ribbon">
+        <div data-round="1" class="round-stamp active flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-black border border-rose-500 bg-rose-500/20 text-rose-300 shadow-sm shadow-rose-500/20">
+          <span class="text-base font-extrabold fun-font">M</span>
+          <span class="text-[10px] uppercase text-rose-200 font-bold hidden sm:inline">Round 1</span>
+        </div>
+        <div data-round="2" class="round-stamp flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-black border border-slate-800 bg-slate-900/60 text-slate-500">
+          <span class="text-base font-extrabold fun-font">E</span>
+          <span class="text-[10px] uppercase text-slate-400 font-bold hidden sm:inline">Round 2</span>
+        </div>
+        <div data-round="3" class="round-stamp flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-black border border-slate-800 bg-slate-900/60 text-slate-500">
+          <span class="text-base font-extrabold fun-font">Y</span>
+          <span class="text-[10px] uppercase text-slate-400 font-bold hidden sm:inline">Round 3</span>
+        </div>
+        <div data-round="4" class="round-stamp flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-black border border-slate-800 bg-slate-900/60 text-slate-500">
+          <span class="text-base font-extrabold fun-font">E</span>
+          <span class="text-[10px] uppercase text-slate-400 font-bold hidden sm:inline">Round 4</span>
+        </div>
+        <div data-round="5" class="round-stamp flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-black border border-slate-800 bg-slate-900/60 text-slate-500">
+          <span class="text-base font-extrabold fun-font">R</span>
+          <span class="text-[10px] uppercase text-slate-400 font-bold hidden sm:inline">Round 5</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN VIEWPORT CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 py-5 flex-1 w-full">
+
+    <!-- ====================================================================
+         VIEW A: TEACHER / PROJECTOR DISPLAY (HOST CONSOLE)
+    ==================================================================== -->
+    <div id="view-host" class="space-y-5">
+
+      <!-- TOP STAGE: THE PIG ARENA & 3D DICE ROLLER -->
+      <div id="arena-box" class="bg-gradient-to-b from-slate-900/90 to-indigo-950/40 border border-indigo-900/50 rounded-3xl p-6 glow-card relative overflow-hidden">
+        
+        <!-- Background Ambient Accents -->
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          
+          <!-- Left: Current Pot & Round Telemetry -->
+          <div class="lg:col-span-4 text-center lg:text-left space-y-2">
+            <span class="text-xs font-black uppercase tracking-widest text-amber-400 flex items-center justify-center lg:justify-start gap-1.5">
+              <span>💰</span> Current Round Bank Pot
+            </span>
+            <div class="flex items-baseline justify-center lg:justify-start gap-2">
+              <span id="host-round-pot" class="fun-font text-6xl sm:text-7xl font-black text-amber-300 glow-gold">
+                0
+              </span>
+              <span class="text-sm font-black text-amber-400/80 uppercase">pts</span>
+            </div>
+            <p id="pot-subtext" class="text-xs text-slate-300 font-medium">
+              Accumulates with every roll &ge; 2. Roll a <b>1</b> and everyone still standing gets zero!
+            </p>
+
+            <!-- Probability Stat Meter -->
+            <div class="bg-slate-950/70 p-3 rounded-2xl border border-indigo-950 text-xs space-y-1 mt-3">
+              <div class="flex justify-between text-slate-400 font-semibold">
+                <span>Chance of Rolling a 1:</span>
+                <span class="text-rose-400 font-mono font-black">16.7% (1 in 6)</span>
+              </div>
+              <div class="flex justify-between text-slate-400 font-semibold">
+                <span>Safe Roll Chance:</span>
+                <span class="text-emerald-400 font-mono font-black">83.3% (5 in 6)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Center: 3D Dice Stage & Roll Animation -->
+          <div class="lg:col-span-4 flex flex-col items-center justify-center py-4 space-y-4">
+            
+            <div class="dice-scene">
+              <div id="dice-cube" class="cube">
+                <!-- Face 1 (Pig-Out Face!) -->
+                <div class="cube__face face-1">
+                  <div class="dot-pig">🐷</div>
+                </div>
+                <!-- Face 2 -->
+                <div class="cube__face face-2">
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                </div>
+                <!-- Face 3 -->
+                <div class="cube__face face-3">
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                </div>
+                <!-- Face 4 -->
+                <div class="cube__face face-4">
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                </div>
+                <!-- Face 5 -->
+                <div class="cube__face face-5">
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                </div>
+                <!-- Face 6 -->
+                <div class="cube__face face-6">
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Roll Result Text Callout -->
+            <div id="roll-callout" class="h-8 flex items-center justify-center">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Awaiting Next Roll...</span>
+            </div>
+
+            <!-- Host Action Controls -->
+            <div class="flex flex-wrap items-center justify-center gap-2.5 w-full">
+              <button onclick="hostRollDice()" id="btn-roll" class="flex-1 bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-slate-950 font-black py-3.5 px-6 rounded-2xl text-sm sm:text-base transition shadow-lg shadow-rose-500/30 flex items-center justify-center gap-2 transform active:scale-95">
+                <span>🎲</span> <span>ROLL THE DIE!</span>
+              </button>
+
+              <button onclick="hostNextRound()" id="btn-next-round" class="px-4 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold border border-slate-700 rounded-2xl text-xs sm:text-sm transition flex items-center gap-1.5">
+                <span>Next Round ➔</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Standing vs Banked Live Tally -->
+          <div class="lg:col-span-4 bg-slate-950/80 p-4 rounded-2xl border border-indigo-950/80 space-y-3">
+            <span class="text-xs font-black uppercase tracking-wider text-slate-300 block border-b border-indigo-950 pb-2">
+              Class Stand vs Sit Status
+            </span>
+
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3">
+                <span class="text-2xl">🧍</span>
+                <div id="tally-standing" class="fun-font text-3xl font-black text-emerald-300">0</div>
+                <span class="text-[10px] uppercase font-bold text-emerald-400">Standing (At Risk)</span>
+              </div>
+
+              <div class="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-3">
+                <span class="text-2xl">🪑</span>
+                <div id="tally-banked" class="fun-font text-3xl font-black text-indigo-300">0</div>
+                <span class="text-[10px] uppercase font-bold text-indigo-400">Banked (Safe)</span>
+              </div>
+            </div>
+
+            <!-- Quick Add Player for Offline / Projector Desk Play -->
+            <div class="pt-1">
+              <div class="flex gap-1.5">
+                <input type="text" id="quick-add-input" placeholder="Add student (e.g. Alex)..." 
+                  class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-rose-400">
+                <button onclick="quickAddPlayer()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs transition">
+                  + Add
+                </button>
+              </div>
+              <span class="text-[10px] text-slate-400 block mt-1">Students can also join on their own devices!</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BOTTOM SECTION: LIVE SCOREBOARD & MODERATION BAR -->
+      <div class="bg-slate-950 border border-indigo-950/80 rounded-3xl p-5 glow-card space-y-4">
+        
+        <div class="flex flex-wrap justify-between items-center gap-3 border-b border-indigo-950 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">🏆</span>
+            <h2 class="text-base font-extrabold text-slate-100">Class Scoreboard &amp; Roster</h2>
+            <span id="player-count-badge" class="bg-slate-800 text-slate-300 font-mono text-xs px-2 py-0.5 rounded-lg">
+              0 Players
+            </span>
+          </div>
+
+          <!-- Host Controls -->
+          <div class="flex items-center gap-2">
+            <button onclick="hostBankAllStanding()" class="px-3 py-1.5 bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800/60 rounded-xl text-xs font-bold transition">
+              🪑 Force Bank All
+            </button>
+            <button onclick="hostResetEntireGame()" class="px-3 py-1.5 bg-rose-950/50 hover:bg-rose-900 text-rose-300 border border-rose-800/60 rounded-xl text-xs font-bold transition">
+              🔄 Reset Entire Game
+            </button>
+          </div>
+        </div>
+
+        <!-- Leaderboard Table Container -->
+        <div class="overflow-x-auto max-h-[420px] pr-1">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="text-slate-400 uppercase tracking-wider border-b border-slate-800 font-mono text-[11px]">
+                <th class="py-2 px-3">Rank</th>
+                <th class="py-2 px-3">Student Name</th>
+                <th class="py-2 px-3 text-center">Status</th>
+                <th class="py-2 px-3 text-center">R1 (M)</th>
+                <th class="py-2 px-3 text-center">R2 (E)</th>
+                <th class="py-2 px-3 text-center">R3 (Y)</th>
+                <th class="py-2 px-3 text-center">R4 (E)</th>
+                <th class="py-2 px-3 text-center">R5 (R)</th>
+                <th class="py-2 px-3 text-right">Total Score</th>
+                <th class="py-2 px-3 text-right">Moderate</th>
+              </tr>
+            </thead>
+            <tbody id="scoreboard-tbody" class="divide-y divide-slate-900 font-medium">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ====================================================================
+         VIEW B: STUDENT PLAYER VIEW (DESK / MOBILE CONTROLLER)
+    ==================================================================== -->
+    <div id="view-player" class="hidden max-w-md mx-auto space-y-4">
+
+      <!-- Student Sign-in Card (Shown if not yet signed in) -->
+      <div id="player-signin-card" class="bg-slate-950 border border-indigo-900/60 rounded-3xl p-6 glow-card space-y-4 text-center">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-400 flex items-center justify-center text-3xl mx-auto shadow-lg shadow-rose-500/30">
+          🐷
+        </div>
+        <div>
+          <h2 class="fun-font text-2xl font-bold text-slate-100">Join the Greedy Pig Game</h2>
+          <p class="text-xs text-slate-400 mt-1">Enter your first name and roll with Mr. Meyer's class!</p>
+        </div>
+
+        <div class="space-y-3 pt-2">
+          <input type="text" id="player-name-input" maxlength="15" placeholder="Enter your name..." 
+            class="w-full bg-slate-900 border border-slate-700 focus:border-rose-400 rounded-2xl px-4 py-3 text-center font-bold text-base text-slate-100 focus:outline-none transition shadow-inner">
+          
+          <button onclick="studentJoinGame()" class="w-full bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-slate-950 font-black py-3.5 rounded-2xl text-base transition shadow-lg shadow-rose-500/25">
+            JOIN GAME ➔
+          </button>
+        </div>
+        <p class="text-[11px] text-slate-500">School appropriate names only. Teacher can remove players.</p>
+      </div>
+
+      <!-- Student Live Control Dashboard (Shown once signed in) -->
+      <div id="player-game-card" class="hidden space-y-4">
+        
+        <!-- Player Badge & Rank Card -->
+        <div class="bg-gradient-to-br from-indigo-950/90 to-slate-950 border border-indigo-900/60 rounded-3xl p-5 glow-card">
+          <div class="flex justify-between items-center border-b border-indigo-900/80 pb-3">
+            <div>
+              <span class="text-[11px] text-slate-400 uppercase font-bold tracking-wider">Signed In As:</span>
+              <h3 id="student-hud-name" class="fun-font text-xl font-bold text-rose-300">Alex</h3>
+            </div>
+            <div class="text-right">
+              <span class="text-[11px] text-slate-400 uppercase font-bold tracking-wider">Total Score:</span>
+              <div id="student-hud-total" class="fun-font text-2xl font-black text-amber-300">0 pts</div>
+            </div>
+          </div>
+
+          <!-- Current Round Status Pill -->
+          <div class="pt-3 flex justify-between items-center">
+            <span id="student-round-indicator" class="text-xs font-mono font-bold text-indigo-300">Round 1 (M)</span>
+            <div id="student-status-badge" class="px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+              🧍 Standing (In Risk)
+            </div>
+          </div>
+        </div>
+
+        <!-- Big Pot Display -->
+        <div class="bg-slate-950 border border-indigo-900/60 rounded-3xl p-6 text-center space-y-2 glow-card">
+          <span class="text-xs font-black text-amber-400 uppercase tracking-wider">Current Round Pot</span>
+          <div id="student-pot-val" class="fun-font text-6xl font-black text-amber-300 glow-gold">0</div>
+          <p id="student-pot-instruction" class="text-xs text-slate-400">
+            If you bank now, you securely bank these points!
+          </p>
+        </div>
+
+        <!-- Two Huge Action Buttons -->
+        <div class="space-y-3">
+          <!-- Bank & Sit Down Button -->
+          <button onclick="studentBank()" id="btn-student-bank" 
+            class="w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 hover:from-emerald-400 hover:to-cyan-300 text-slate-950 font-black py-4 rounded-3xl text-lg transition shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transform active:scale-95">
+            <span>🪑</span> <span>BANK &amp; SIT DOWN</span>
+          </button>
+
+          <!-- Stay In Button -->
+          <button onclick="studentStayIn()" id="btn-student-stay" 
+            class="w-full bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white font-black py-3 rounded-2xl text-xs uppercase tracking-wider border border-slate-800 transition">
+            <span>🧍</span> <span>STAY STANDING (RISK THE NEXT ROLL)</span>
+          </button>
+        </div>
+
+        <!-- Student Round History Cards -->
+        <div class="bg-slate-950/80 border border-indigo-950 rounded-2xl p-4 text-xs">
+          <span class="font-bold text-slate-400 block mb-2">Your 5 Rounds of MEYER:</span>
+          <div class="grid grid-cols-5 gap-1.5 text-center font-mono" id="student-rounds-pills">
+            <!-- M E Y E R blocks -->
+            <div class="p-2 bg-slate-900 rounded-xl border border-slate-800"><b class="text-rose-400">M:</b> <span id="sr-1">-</span></div>
+            <div class="p-2 bg-slate-900 rounded-xl border border-slate-800"><b class="text-rose-400">E:</b> <span id="sr-2">-</span></div>
+            <div class="p-2 bg-slate-900 rounded-xl border border-slate-800"><b class="text-rose-400">Y:</b> <span id="sr-3">-</span></div>
+            <div class="p-2 bg-slate-900 rounded-xl border border-slate-800"><b class="text-rose-400">E:</b> <span id="sr-4">-</span></div>
+            <div class="p-2 bg-slate-900 rounded-xl border border-slate-800"><b class="text-rose-400">R:</b> <span id="sr-5">-</span></div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- GAME OVER PODIUM MODAL -->
+    <div id="game-over-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+      <div class="bg-gradient-to-b from-slate-900 to-indigo-950 border border-amber-500/50 rounded-3xl p-6 sm:p-8 max-w-md w-full text-center space-y-4 glow-gold shadow-2xl relative">
+        <span class="text-5xl">👑</span>
+        <h2 class="fun-font text-3xl font-extrabold text-amber-300">Greedy Pig Champions!</h2>
+        <p class="text-xs text-slate-300">The 5 Rounds of M-E-Y-E-R are complete!</p>
+
+        <!-- Top 3 Podium List -->
+        <div id="podium-list" class="space-y-2 py-2">
+          <!-- Dynamically filled -->
+        </div>
+
+        <button onclick="closeGameOverModal()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-3 rounded-2xl text-sm transition shadow-lg shadow-amber-500/30">
+          Close Podium &amp; View Final Board
+        </button>
+      </div>
+    </div>
+
+    <!-- BOOT NOTIFICATION MODAL -->
+    <div id="boot-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+      <div class="bg-slate-900 border border-rose-500/50 rounded-3xl p-6 max-w-sm w-full text-center space-y-3 shadow-2xl">
+        <span class="text-4xl">🥾</span>
+        <h3 class="fun-font text-xl font-bold text-rose-400">Removed from Game</h3>
+        <p class="text-xs text-slate-300">You were removed from the room by the teacher. Please re-enter using an appropriate classroom name.</p>
+        <button onclick="acknowledgeBoot()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 rounded-xl text-xs transition">
+          OK, Join Again
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-indigo-950/80 py-3 bg-slate-950 text-center text-xs text-slate-500">
+    Classroom Maths Tools &bull; Greedy Pig: MeyerBall Classroom Edition &bull; meyerball
+  </footer>
+
+  <!-- ====================================================================
+       WEB AUDIO API SYNTHESIZER (ZERO EXTERNAL SOUND ASSETS)
+  ==================================================================== -->
+  <script>
+    let audioCtx = null;
+    let sfxEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function toggleSound() {
+      sfxEnabled = !sfxEnabled;
+      document.getElementById('sound-icon').innerText = sfxEnabled ? '🔊' : '🔇';
+      document.getElementById('sound-label').innerText = sfxEnabled ? 'SFX ON' : 'SFX OFF';
+    }
+
+    function playSfx(type) {
+      if (!sfxEnabled) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+
+      if (type === 'dice') {
+        // Wooden dice clatter burst
+        for (let i = 0; i < 4; i++) {
+          const t = now + i * 0.06;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(280 + Math.random() * 180, t);
+          gain.gain.setValueAtTime(0.18, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(t);
+          osc.stop(t + 0.04);
+        }
+      }
+      else if (type === 'coin') {
+        // Pleasant metallic bank chime
+        const freqs = [880, 1318.5];
+        freqs.forEach((f, idx) => {
+          const t = now + idx * 0.05;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(f, t);
+          gain.gain.setValueAtTime(0.2, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(t);
+          osc.stop(t + 0.35);
+        });
+      }
+      else if (type === 'pig-out') {
+        // Low comical pig buzzer / oink
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(160, now);
+        osc.frequency.linearRampToValueAtTime(80, now + 0.28);
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      }
+      else if (type === 'fanfare') {
+        // Victory chords
+        const notes = [523.25, 659.25, 783.99, 1046.5];
+        notes.forEach((freq, idx) => {
+          const t = now + idx * 0.09;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, t);
+          gain.gain.setValueAtTime(0.25, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(t);
+          osc.stop(t + 0.45);
+        });
+      }
+    }
+  </script>
+  <script>
+    /* ====================================================================
+       MASTER GAME STATE ENGINE
+    ==================================================================== */
+    const MAX_ROUNDS = 5;
+    const ROUND_NAMES = ["M", "E", "Y", "E", "R"];
+
+    let currentRound = 1;      // 1..5
+    let roundPot = 0;          // points currently at risk
+    let isRolling = false;
+    let currentDieVal = 1;
+    let gameOver = false;
+
+    /* Player Roster: Array of objects
+       { id: string, name: string, status: 'standing' | 'banked', roundScores: [0,0,0,0,0], totalScore: number }
+    */
+    let players = [];
+    let myPlayerId = null;     // for student view
+    let currentMode = 'host';  // 'host' or 'player'
+
+    // Inappropriate Word List (basic classroom filter)
+    const BANNED_WORDS = ['poop', 'crap', 'ass', 'dick', 'cock', 'bitch', 'fuck', 'shit', 'sex', 'penis', 'vagina', 'tit', 'boob', 'nazi', 'hitler'];
+
+    function sanitizeName(str) {
+      if (!str) return '';
+      let clean = str.trim();
+      const lower = clean.toLowerCase();
+      for (let bad of BANNED_WORDS) {
+        if (lower.includes(bad)) {
+          return null; // rejected
+        }
+      }
+      return clean.slice(0, 15);
+    }
+  </script>
+
+  <!-- ====================================================================
+       FIREBASE INTEGRATION (MULTI-DEVICE SYNCHRONIZATION)
+  ==================================================================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    let db = null;
+    let auth = null;
+    let roomDocRef = null;
+    let isOnlineSync = false;
+
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'greedy-pig-meyer';
+    const roomCode = 'MEYER';
+
+    async function setupCloudSync() {
+      try {
+        if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+          console.log("No cloud config detected. Running in high-speed local mode.");
+          return;
+        }
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+
+        // RULE 3: Always authenticate first
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+
+        // RULE 1: Strict collection path
+        roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'greedy_pig_rooms', roomCode);
+
+        // Listen for live updates
+        onSnapshot(roomDocRef, (snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.data();
+            applyCloudState(data);
+          } else {
+            // First time room creation
+            syncToCloud();
+          }
+        }, (err) => {
+          console.warn("Firestore snapshot error, falling back to local state:", err);
+        });
+
+        isOnlineSync = true;
+      } catch (err) {
+        console.warn("Cloud sync initialization error:", err);
+      }
+    }
+
+    function applyCloudState(data) {
+      if (!data) return;
+      currentRound = data.currentRound || 1;
+      roundPot = data.roundPot || 0;
+      currentDieVal = data.currentDieVal || 1;
+      gameOver = data.gameOver || false;
+      players = data.players || [];
+
+      // Check if current student was booted
+      if (myPlayerId) {
+        const found = players.find(p => p.id === myPlayerId);
+        if (!found) {
+          document.getElementById('boot-modal').classList.remove('hidden');
+          myPlayerId = null;
+        }
+      }
+
+      updateUI();
+      orientDiceFace(currentDieVal);
+    }
+
+    async function syncToCloud() {
+      if (!isOnlineSync || !roomDocRef) return;
+      try {
+        await setDoc(roomDocRef, {
+          currentRound,
+          roundPot,
+          currentDieVal,
+          gameOver,
+          players,
+          lastUpdated: Date.now()
+        }, { merge: true });
+      } catch (err) {
+        console.warn("Failed to sync room doc:", err);
+      }
+    }
+
+    // Expose sync helper to global window scope
+    window.pushRoomUpdate = syncToCloud;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setupCloudSync();
+    });
+  </script>
+  <script>
+    /* ====================================================================
+       UI & MODE TOGGLING
+    ==================================================================== */
+    function setAppMode(mode) {
+      currentMode = mode;
+      const viewHost = document.getElementById('view-host');
+      const viewPlayer = document.getElementById('view-player');
+      const tabHost = document.getElementById('tab-host');
+      const tabPlayer = document.getElementById('tab-player');
+
+      if (mode === 'host') {
+        viewHost.classList.remove('hidden');
+        viewPlayer.classList.add('hidden');
+        tabHost.className = "px-3 py-1 rounded-lg transition bg-rose-500 text-slate-950 font-black shadow-md";
+        tabPlayer.className = "px-3 py-1 rounded-lg text-slate-400 hover:text-slate-200 transition";
+      } else {
+        viewHost.classList.add('hidden');
+        viewPlayer.classList.remove('hidden');
+        tabPlayer.className = "px-3 py-1 rounded-lg transition bg-rose-500 text-slate-950 font-black shadow-md";
+        tabHost.className = "px-3 py-1 rounded-lg text-slate-400 hover:text-slate-200 transition";
+
+        // Check if student already signed in
+        if (myPlayerId) {
+          document.getElementById('player-signin-card').classList.add('hidden');
+          document.getElementById('player-game-card').classList.remove('hidden');
+        } else {
+          document.getElementById('player-signin-card').classList.remove('hidden');
+          document.getElementById('player-game-card').classList.add('hidden');
+        }
+      }
+      updateUI();
+    }
+
+    /* 3D Dice Face Rotations */
+    const DICE_ROTATIONS = {
+      1: { x: 0, y: 0 },
+      2: { x: 0, y: -90 },
+      3: { x: 0, y: -180 },
+      4: { x: 0, y: 90 },
+      5: { x: -90, y: 0 },
+      6: { x: 90, y: 0 }
+    };
+
+    function orientDiceFace(num) {
+      const cube = document.getElementById('dice-cube');
+      if (!cube) return;
+      const rot = DICE_ROTATIONS[num] || DICE_ROTATIONS[1];
+      cube.style.transform = `rotateX(${rot.x}deg) rotateY(${rot.y}deg)`;
+    }
+  </script>
+  <script>
+    /* ====================================================================
+       TEACHER / HOST ACTIONS
+    ==================================================================== */
+    function hostRollDice() {
+      if (isRolling || gameOver) return;
+      isRolling = true;
+
+      const cube = document.getElementById('dice-cube');
+      const callout = document.getElementById('roll-callout');
+      const rollBtn = document.getElementById('btn-roll');
+
+      rollBtn.disabled = true;
+      cube.classList.add('rolling');
+      callout.innerHTML = `<span class="text-xs font-black text-rose-400 animate-pulse uppercase tracking-wider">🎲 Rolling MeyerBall Die...</span>`;
+      playSfx('dice');
+
+      setTimeout(() => {
+        cube.classList.remove('rolling');
+        isRolling = false;
+        rollBtn.disabled = false;
+
+        // Roll 1 to 6
+        const roll = Math.floor(Math.random() * 6) + 1;
+        currentDieVal = roll;
+        orientDiceFace(roll);
+
+        handleRollResult(roll);
+      }, 700);
+    }
+
+    function handleRollResult(roll) {
+      const callout = document.getElementById('roll-callout');
+      const arena = document.getElementById('arena-box');
+
+      if (roll === 1) {
+        // PIG OUT!
+        playSfx('pig-out');
+        arena.classList.add('shake-alarm');
+        setTimeout(() => arena.classList.remove('shake-alarm'), 500);
+
+        callout.innerHTML = `
+          <span class="text-sm font-black text-rose-400 bg-rose-500/20 px-3 py-1 rounded-full border border-rose-500/40 uppercase tracking-wide">
+            🐷 OINK! ROLLED A 1 — PIG OUT! Round Lost!
+          </span>
+        `;
+
+        // Anyone still standing gets 0 for this round
+        players.forEach(p => {
+          if (p.status === 'standing') {
+            p.roundScores[currentRound - 1] = 0;
+            p.status = 'banked';
+          }
+        });
+
+        roundPot = 0;
+      } else {
+        // SAFE ROLL (2, 3, 4, 5, 6)
+        playSfx('coin');
+        roundPot += roll;
+
+        callout.innerHTML = `
+          <span class="text-sm font-black text-emerald-400 bg-emerald-500/20 px-3 py-1 rounded-full border border-emerald-500/40 uppercase tracking-wide">
+            ✨ Rolled a ${roll}! +${roll} pts added to pot!
+          </span>
+        `;
+      }
+
+      updateUI();
+      if (window.pushRoomUpdate) window.pushRoomUpdate();
+    }
+
+    function hostNextRound() {
+      if (currentRound < MAX_ROUNDS) {
+        currentRound++;
+        roundPot = 0;
+
+        // Reset all player statuses to standing for the fresh round
+        players.forEach(p => {
+          p.status = 'standing';
+        });
+
+        document.getElementById('roll-callout').innerHTML = `
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">
+            Round ${currentRound} (${ROUND_NAMES[currentRound - 1]}) Started! Everyone is Standing.
+          </span>
+        `;
+      } else {
+        // 5 Rounds Complete!
+        onGameOver();
+      }
+
+      updateUI();
+      if (window.pushRoomUpdate) window.pushRoomUpdate();
+    }
+
+    function hostBankAllStanding() {
+      if (roundPot === 0) return;
+      players.forEach(p => {
+        if (p.status === 'standing') {
+          p.status = 'banked';
+          p.roundScores[currentRound - 1] = roundPot;
+          p.totalScore = p.roundScores.reduce((a, b) => a + b, 0);
+        }
+      });
+      playSfx('coin');
+      updateUI();
+      if (window.pushRoomUpdate) window.pushRoomUpdate();
+    }
+
+    function hostResetEntireGame() {
+      currentRound = 1;
+      roundPot = 0;
+      currentDieVal = 1;
+      gameOver = false;
+
+      players.forEach(p => {
+        p.status = 'standing';
+        p.roundScores = [0, 0, 0, 0, 0];
+        p.totalScore = 0;
+      });
+
+      orientDiceFace(1);
+      document.getElementById('roll-callout').innerHTML = `
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Game Reset! Ready for Round 1 (M).</span>
+      `;
+      document.getElementById('game-over-modal').classList.add('hidden');
+
+      updateUI();
+      if (window.pushRoomUpdate) window.pushRoomUpdate();
+    }
+
+    function quickAddPlayer() {
+      const input = document.getElementById('quick-add-input');
+      const clean = sanitizeName(input.value);
+
+      if (!clean) {
+        showCanvasNotification("⚠️ Please enter an appropriate name!");
+        return;
+      }
+
+      const newP = {
+        id: 'p_' + Math.random().toString(36).substr(2, 9),
+        name: clean,
+        status: 'standing',
+        roundScores: [0, 0, 0, 0, 0],
+        totalScore: 0
+      };
+
+      players.push(newP);
+      input.value = '';
+      updateUI();
+      if (window.pushRoomUpdate) window.pushRoomUpdate();
+    }
+
+    /* Teacher Boot / Kick Player */
+    function bootPlayer(playerId) {
+      const idx = players.findIndex(p => p.id === playerId);
+      if (idx !== -1) {
+        const removed = players.splice(idx, 1)[0];
+        showCanvasNotification(`🥾 Booted "${removed.name}" from the game`);
+        updateUI();
+        if (window.pushRoomUpdate) window.pushRoomUpdate();
+      }
+    }
+  </script>
+  <script>
+    /* ====================================================================
+       STUDENT PLAYER ACTIONS
+    ==================================================================== */
+    function studentJoinGame() {
+      const input = document.getElementById('player-name-input');
+      const clean = sanitizeName(input.value);
+
+      if (!clean) {
+        alertModal("Name Not Allowed", "Please enter a school-appropriate first name!");
+        return;
+      }
+
+      myPlayerId = 'p_' + Math.random().toString(36).substr(2, 9);
+      const newP = {
+        id: myPlayerId,
+        name: clean,
+        status: 'standing',
+        roundScores: [0, 0, 0, 0, 0],
+        totalScore: 0
+      };
+
+      players.push(newP);
+
+      document.getElementById('player-signin-card').classList.add('hidden');
+      document.getElementById('player-game-card').classList.remove('hidden');
+
+      updateUI();
+      if (window.pushRoomUpdate) window.pushRoomUpdate();
+    }
+
+    function studentBank() {
+      if (!myPlayerId || roundPot === 0) return;
+      const me = players.find(p => p.id === myPlayerId);
+      if (!me || me.status === 'banked') return;
+
+      me.status = 'banked';
+      me.roundScores[currentRound - 1] = roundPot;
+      me.totalScore = me.roundScores.reduce((a, b) => a + b, 0);
+
+      playSfx('coin');
+      confetti({ particleCount: 35, spread: 55, origin: { y: 0.8 } });
+
+      updateUI();
+      if (window.pushRoomUpdate) window.pushRoomUpdate();
+    }
+
+    function studentStayIn() {
+      if (!myPlayerId) return;
+      const me = players.find(p => p.id === myPlayerId);
+      if (!me) return;
+
+      // Ensure player remains marked as standing
+      me.status = 'standing';
+      updateUI();
+      if (window.pushRoomUpdate) window.pushRoomUpdate();
+    }
+
+    function acknowledgeBoot() {
+      document.getElementById('boot-modal').classList.add('hidden');
+      setAppMode('player');
+    }
+  </script>
+  <script>
+    /* ====================================================================
+       RENDER & UI SYNCHRONIZATION
+    ==================================================================== */
+    function updateUI() {
+      // 1. Host Round Pot
+      const potEl = document.getElementById('host-round-pot');
+      if (potEl) potEl.innerText = roundPot;
+
+      // 2. Active Round Header & M-E-Y-E-R Ribbon
+      const roundLabel = document.getElementById('active-round-label');
+      if (roundLabel) {
+        roundLabel.innerText = `Round ${currentRound} of 5 (${ROUND_NAMES[currentRound - 1]})`;
+      }
+
+      document.querySelectorAll('#meyer-ribbon .round-stamp').forEach(stamp => {
+        const r = parseInt(stamp.getAttribute('data-round'));
+        if (r === currentRound) {
+          stamp.className = "round-stamp active flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-black border border-rose-500 bg-rose-500/20 text-rose-300 shadow-sm shadow-rose-500/20";
+        } else if (r < currentRound) {
+          stamp.className = "round-stamp flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-black border border-emerald-600 bg-emerald-950/40 text-emerald-300";
+        } else {
+          stamp.className = "round-stamp flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-black border border-slate-800 bg-slate-900/60 text-slate-500";
+        }
+      });
+
+      // 3. Tally Counters (Standing vs Banked)
+      let standingCount = 0;
+      let bankedCount = 0;
+      players.forEach(p => {
+        if (p.status === 'standing') standingCount++;
+        else bankedCount++;
+      });
+
+      document.getElementById('tally-standing').innerText = standingCount;
+      document.getElementById('tally-banked').innerText = bankedCount;
+      document.getElementById('player-count-badge').innerText = `${players.length} Players`;
+
+      // 4. Render Host Leaderboard Table
+      renderScoreboard();
+
+      // 5. Update Student View if Active
+      if (myPlayerId) {
+        const me = players.find(p => p.id === myPlayerId);
+        if (me) {
+          document.getElementById('student-hud-name').innerText = me.name;
+          document.getElementById('student-hud-total').innerText = `${me.totalScore} pts`;
+          document.getElementById('student-round-indicator').innerText = `Round ${currentRound} (${ROUND_NAMES[currentRound - 1]})`;
+          document.getElementById('student-pot-val').innerText = roundPot;
+
+          const badge = document.getElementById('student-status-badge');
+          const bankBtn = document.getElementById('btn-student-bank');
+
+          if (me.status === 'banked') {
+            badge.className = "px-3 py-1 rounded-full text-xs font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/40";
+            badge.innerText = "🪑 Banked (Safe)";
+            bankBtn.disabled = true;
+            bankBtn.className = "w-full bg-slate-800 text-slate-500 font-extrabold py-4 rounded-3xl text-sm cursor-not-allowed opacity-60";
+          } else {
+            badge.className = "px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+            badge.innerText = "🧍 Standing (In Risk)";
+            bankBtn.disabled = false;
+            bankBtn.className = "w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 hover:from-emerald-400 text-slate-950 font-black py-4 rounded-3xl text-lg transition shadow-lg shadow-emerald-500/25 active:scale-95 cursor-pointer";
+          }
+
+          // Update student 5-round mini cards
+          for (let r = 1; r <= 5; r++) {
+            const pill = document.getElementById(`sr-${r}`);
+            if (pill) {
+              pill.innerText = me.roundScores[r - 1] > 0 ? `${me.roundScores[r - 1]}` : (r < currentRound ? '0' : '-');
+            }
+          }
+        }
+      }
+    }
+
+    function renderScoreboard() {
+      const tbody = document.getElementById('scoreboard-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      if (players.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="10" class="py-8 text-center text-slate-500 text-xs italic">
+              No students joined yet. Use <b>+ Add</b> above or have students join on their devices!
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      // Sort by Total Score descending
+      const sorted = [...players].sort((a, b) => b.totalScore - a.totalScore);
+
+      sorted.forEach((p, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-900/60 transition";
+
+        // Rank Badge
+        let rankDisplay = `#${idx + 1}`;
+        if (idx === 0) rankDisplay = `🥇 1st`;
+        else if (idx === 1) rankDisplay = `🥈 2nd`;
+        else if (idx === 2) rankDisplay = `🥉 3rd`;
+
+        const isStanding = p.status === 'standing';
+        const statusBadge = isStanding 
+          ? `<span class="bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full text-[10px] font-black">🧍 Standing</span>`
+          : `<span class="bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full text-[10px] font-black">🪑 Banked</span>`;
+
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-mono font-bold text-amber-400">${rankDisplay}</td>
+          <td class="py-2.5 px-3 font-bold text-slate-200">
+            ${p.name}
+            ${p.id === myPlayerId ? '<span class="ml-1 text-[10px] text-cyan-400 font-mono">(You)</span>' : ''}
+          </td>
+          <td class="py-2.5 px-3 text-center">${statusBadge}</td>
+          <td class="py-2.5 px-3 text-center font-mono ${p.roundScores[0] > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${p.roundScores[0]}</td>
+          <td class="py-2.5 px-3 text-center font-mono ${p.roundScores[1] > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${p.roundScores[1]}</td>
+          <td class="py-2.5 px-3 text-center font-mono ${p.roundScores[2] > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${p.roundScores[2]}</td>
+          <td class="py-2.5 px-3 text-center font-mono ${p.roundScores[3] > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${p.roundScores[3]}</td>
+          <td class="py-2.5 px-3 text-center font-mono ${p.roundScores[4] > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${p.roundScores[4]}</td>
+          <td class="py-2.5 px-3 text-right font-mono font-extrabold text-sm text-amber-300">${p.totalScore}</td>
+          <td class="py-2.5 px-3 text-right">
+            <button onclick="bootPlayer('${p.id}')" title="Boot Player" class="px-2 py-1 bg-rose-950/40 hover:bg-rose-900 border border-rose-800/40 text-rose-300 rounded-lg text-[10px] font-bold transition">
+              🥾 Boot
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function onGameOver() {
+      gameOver = true;
+      playSfx('fanfare');
+      confetti({ particleCount: 120, spread: 90, origin: { y: 0.6 } });
+
+      const sorted = [...players].sort((a, b) => b.totalScore - a.totalScore);
+      const podium = document.getElementById('podium-list');
+      podium.innerHTML = '';
+
+      if (sorted.length > 0) {
+        const medals = ['🥇 1st Place', '🥈 2nd Place', '🥉 3rd Place'];
+        for (let i = 0; i < Math.min(3, sorted.length); i++) {
+          const item = document.createElement('div');
+          item.className = "bg-slate-900 p-3 rounded-2xl border border-amber-500/30 flex justify-between items-center text-xs font-bold";
+          item.innerHTML = `
+            <span class="text-amber-400 font-mono">${medals[i]}: <b class="text-slate-100">${sorted[i].name}</b></span>
+            <span class="font-mono text-amber-300 text-sm font-black">${sorted[i].totalScore} pts</span>
+          `;
+          podium.appendChild(item);
+        }
+      }
+
+      document.getElementById('game-over-modal').classList.remove('hidden');
+    }
+
+    function closeGameOverModal() {
+      document.getElementById('game-over-modal').classList.add('hidden');
+    }
+
+    function showCanvasNotification(msg) {
+      const notice = document.createElement('div');
+      notice.className = "fixed bottom-5 right-5 z-50 bg-indigo-950 border border-indigo-600 text-indigo-200 px-4 py-2.5 rounded-2xl text-xs font-bold shadow-2xl transition-all";
+      notice.innerText = msg;
+      document.body.appendChild(notice);
+      setTimeout(() => notice.remove(), 2800);
+    }
+
+    function copyStudentLink() {
+      const studentUrl = window.location.origin + window.location.pathname + '#student';
+      const tempInput = document.createElement('input');
+      tempInput.value = studentUrl;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      showCanvasNotification('📋 Direct Student Join Link copied to clipboard!');
+    }
+
+    function alertModal(title, text) {
+      showCanvasNotification(`⚠️ ${title}: ${text}`);
+    }
+
+    window.onload = function() {
+      orientDiceFace(1);
+      if (window.location.hash === '#student') {
+        setAppMode('player');
+      } else {
+        updateUI();
+      }
+    };
+  </script>
+</body>
+</html>
