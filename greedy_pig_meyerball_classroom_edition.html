@@ -9,6 +9,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Canvas Confetti for Game Celebrations -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- PeerJS for Direct Multi-Device WebRTC Sync on Static GitHub Pages -->
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@600;800&family=Fredoka:wght@600;700;800&display=swap');
@@ -87,14 +89,14 @@
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
     }
     .dot-pig {
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       background: #f43f5e;
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 900;
       border-radius: 50%;
       box-shadow: 0 0 10px rgba(244, 63, 94, 0.8);
@@ -120,7 +122,7 @@
 
     .face-6 { transform: rotateX(-90deg) translateZ(50px); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
 
-    /* Keyframe Shake for Pig-Out */
+    /* Shake for Pig-Out */
     @keyframes pig-out-shake {
       0%, 100% { transform: translate(0, 0) rotate(0deg); }
       15% { transform: translate(-6px, -4px) rotate(-2deg); }
@@ -140,23 +142,23 @@
       
       <!-- Brand Mascot -->
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500 via-pink-500 to-amber-400 flex items-center justify-center text-2xl shadow-lg shadow-rose-500/20">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-500 via-pink-500 to-amber-400 flex items-center justify-center text-xl shadow-lg shadow-rose-500/20">
           🐷
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="fun-font text-xl sm:text-2xl font-bold tracking-wide bg-gradient-to-r from-rose-400 via-pink-300 to-amber-300 bg-clip-text text-transparent">
+            <h1 class="fun-font text-lg sm:text-xl font-bold tracking-wide bg-gradient-to-r from-rose-400 via-pink-300 to-amber-300 bg-clip-text text-transparent">
               Greedy Pig
             </h1>
             <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full mono">
               MeyerBall Edition
             </span>
           </div>
-          <p class="text-[11px] text-slate-400 font-medium">Whole-Class Probability &amp; Risk Game</p>
+          <p class="text-[10px] text-slate-400 font-medium">Whole-Class Probability &amp; Risk Game</p>
         </div>
       </div>
 
-      <!-- Controls & Role Selector -->
+      <!-- Controls, Room & Sync Status HUD -->
       <div class="flex items-center gap-2 sm:gap-3">
         <!-- Audio Mute Button -->
         <button onclick="toggleSound()" id="sound-btn" class="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-xs font-bold text-slate-300 transition flex items-center gap-1.5 shadow-inner">
@@ -164,27 +166,35 @@
           <span id="sound-label" class="hidden sm:inline">SFX ON</span>
         </button>
 
+        <!-- Live Sync Status Indicator -->
+        <div id="net-status-badge" class="bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-xl flex items-center gap-1.5 text-xs font-mono font-bold text-amber-400">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+          <span id="net-status-text">Connecting...</span>
+        </div>
+
         <!-- Room Key Badge -->
-        <div class="bg-slate-900/90 border border-indigo-900/50 px-3 py-1 rounded-xl flex items-center gap-2 text-xs">
-          <span class="text-slate-400">Class Room:</span>
+        <div class="bg-slate-900/90 border border-indigo-900/50 px-3 py-1 rounded-xl flex items-center gap-1.5 text-xs">
+          <span class="text-slate-400 font-semibold">Room:</span>
           <span id="room-code-badge" class="font-mono font-black text-amber-400 text-sm tracking-wider">MEYER</span>
         </div>
 
-        <!-- Mode Toggle Pill -->
-        <div class="bg-slate-900 p-1 rounded-xl border border-slate-800 flex items-center text-xs font-bold">
-          <button id="tab-host" onclick="setAppMode('host')" class="px-3 py-1 rounded-lg transition bg-rose-500 text-slate-950 font-black shadow-md">
-            📺 Projector Board
+        <!-- Teacher-Only Tools: Copy Link, Teacher Guide & Quick Room Switch -->
+        <div id="teacher-tools" class="flex items-center gap-2">
+          <button onclick="promptBulkStudents()" title="Paste class roster list" class="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold border border-slate-800 rounded-xl text-xs transition flex items-center gap-1">
+            <span>👥</span>
+            <span class="hidden sm:inline">Bulk Add</span>
           </button>
-          <button id="tab-player" onclick="setAppMode('player')" class="px-3 py-1 rounded-lg text-slate-400 hover:text-slate-200 transition">
-            🔗 Link for Students
+          <button onclick="toggleTeacherInstructions()" title="Classroom instructions & pedagogy guide" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-amber-300 font-bold border border-amber-500/30 rounded-xl text-xs transition flex items-center gap-1.5 shadow-sm shadow-amber-500/10">
+            <span>📖</span>
+            <span class="hidden sm:inline">Teacher Guide</span>
+            <span class="sm:hidden">Guide</span>
+          </button>
+          <button onclick="copyStudentLink()" title="Copy direct student join link to clipboard" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs transition flex items-center gap-1.5 shadow-sm shadow-indigo-600/30">
+            <span>📋</span>
+            <span>Copy Student Link</span>
           </button>
         </div>
 
-        <!-- Quick Copy Student Link Button -->
-        <button onclick="copyStudentLink()" title="Copy direct student join link to clipboard" class="px-2.5 py-1.5 bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800/70 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
-          <span>📋</span>
-          <span class="hidden sm:inline">Copy Student Link</span>
-        </button>
       </div>
     </div>
   </header>
@@ -336,8 +346,9 @@
 
           <!-- Right: Standing vs Banked Live Tally -->
           <div class="lg:col-span-4 bg-slate-950/80 p-4 rounded-2xl border border-indigo-950/80 space-y-3">
-            <span class="text-xs font-black uppercase tracking-wider text-slate-300 block border-b border-indigo-950 pb-2">
-              Class Stand vs Sit Status
+            <span class="text-xs font-black uppercase tracking-wider text-slate-300 block border-b border-indigo-950 pb-2 flex justify-between items-center">
+              <span>Live Student Tally</span>
+              <span id="connected-count-badge" class="text-emerald-400 font-mono text-[11px] font-bold">0 Connected</span>
             </span>
 
             <div class="grid grid-cols-2 gap-2 text-center">
@@ -354,16 +365,16 @@
               </div>
             </div>
 
-            <!-- Quick Add Player for Offline / Projector Desk Play -->
+            <!-- Manual Add Player for Teacher Desk Entry -->
             <div class="pt-1">
               <div class="flex gap-1.5">
-                <input type="text" id="quick-add-input" placeholder="Add student (e.g. Alex)..." 
+                <input type="text" id="quick-add-input" placeholder="Add student manually..." 
                   class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-rose-400">
                 <button onclick="quickAddPlayer()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs transition">
                   + Add
                 </button>
               </div>
-              <span class="text-[10px] text-slate-400 block mt-1">Students can also join on their own devices!</span>
+              <span class="text-[10px] text-slate-500 block mt-1">Students can join using the link above!</span>
             </div>
           </div>
 
@@ -376,7 +387,7 @@
         <div class="flex flex-wrap justify-between items-center gap-3 border-b border-indigo-950 pb-3">
           <div class="flex items-center gap-2">
             <span class="text-lg">🏆</span>
-            <h2 class="text-base font-extrabold text-slate-100">Class Scoreboard &amp; Roster</h2>
+            <h2 class="text-base font-extrabold text-slate-100">Live Class Scoreboard</h2>
             <span id="player-count-badge" class="bg-slate-800 text-slate-300 font-mono text-xs px-2 py-0.5 rounded-lg">
               0 Players
             </span>
@@ -388,7 +399,7 @@
               🪑 Force Bank All
             </button>
             <button onclick="hostResetEntireGame()" class="px-3 py-1.5 bg-rose-950/50 hover:bg-rose-900 text-rose-300 border border-rose-800/60 rounded-xl text-xs font-bold transition">
-              🔄 Reset Entire Game
+              🔄 Reset Game
             </button>
           </div>
         </div>
@@ -421,7 +432,7 @@
     </div>
 
     <!-- ====================================================================
-         VIEW B: STUDENT PLAYER VIEW (DESK / MOBILE CONTROLLER)
+         VIEW B: STUDENT PLAYER VIEW (STRICT MOBILE CONTROLLER)
     ==================================================================== -->
     <div id="view-player" class="hidden max-w-md mx-auto space-y-4">
 
@@ -431,19 +442,19 @@
           🐷
         </div>
         <div>
-          <h2 class="fun-font text-2xl font-bold text-slate-100">Join the Greedy Pig Game</h2>
-          <p class="text-xs text-slate-400 mt-1">Enter your first name and roll with Mr. Meyer's class!</p>
+          <h2 class="fun-font text-2xl font-bold text-slate-100">Join Greedy Pig</h2>
+          <p class="text-xs text-slate-400 mt-1">Enter your first name to connect to the class projector!</p>
         </div>
 
         <div class="space-y-3 pt-2">
-          <input type="text" id="player-name-input" maxlength="15" placeholder="Enter your name..." 
-            class="w-full bg-slate-900 border border-slate-700 focus:border-rose-400 rounded-2xl px-4 py-3 text-center font-bold text-base text-slate-100 focus:outline-none transition shadow-inner">
+          <input type="text" id="player-name-input" maxlength="15" placeholder="Enter your first name..." 
+            class="w-full bg-slate-900 border border-slate-700 focus:border-rose-400 rounded-2xl px-4 py-3.5 text-center font-bold text-base text-slate-100 focus:outline-none transition shadow-inner">
           
-          <button onclick="studentJoinGame()" class="w-full bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-slate-950 font-black py-3.5 rounded-2xl text-base transition shadow-lg shadow-rose-500/25">
+          <button onclick="studentJoinGame()" id="btn-student-join" class="w-full bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-slate-950 font-black py-4 rounded-2xl text-base transition shadow-lg shadow-rose-500/25">
             JOIN GAME ➔
           </button>
         </div>
-        <p class="text-[11px] text-slate-500">School appropriate names only. Teacher can remove players.</p>
+        <p class="text-[11px] text-slate-500">School-appropriate names only. Teacher can boot inappropriate entries.</p>
       </div>
 
       <!-- Student Live Control Dashboard (Shown once signed in) -->
@@ -453,11 +464,11 @@
         <div class="bg-gradient-to-br from-indigo-950/90 to-slate-950 border border-indigo-900/60 rounded-3xl p-5 glow-card">
           <div class="flex justify-between items-center border-b border-indigo-900/80 pb-3">
             <div>
-              <span class="text-[11px] text-slate-400 uppercase font-bold tracking-wider">Signed In As:</span>
+              <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Student Name:</span>
               <h3 id="student-hud-name" class="fun-font text-xl font-bold text-rose-300">Alex</h3>
             </div>
             <div class="text-right">
-              <span class="text-[11px] text-slate-400 uppercase font-bold tracking-wider">Total Score:</span>
+              <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Total Score:</span>
               <div id="student-hud-total" class="fun-font text-2xl font-black text-amber-300">0 pts</div>
             </div>
           </div>
@@ -475,8 +486,8 @@
         <div class="bg-slate-950 border border-indigo-900/60 rounded-3xl p-6 text-center space-y-2 glow-card">
           <span class="text-xs font-black text-amber-400 uppercase tracking-wider">Current Round Pot</span>
           <div id="student-pot-val" class="fun-font text-6xl font-black text-amber-300 glow-gold">0</div>
-          <p id="student-pot-instruction" class="text-xs text-slate-400">
-            If you bank now, you securely bank these points!
+          <p id="student-pot-instruction" class="text-xs text-slate-400 font-medium">
+            Tap <b>Bank &amp; Sit Down</b> to lock in these points safely!
           </p>
         </div>
 
@@ -490,8 +501,8 @@
 
           <!-- Stay In Button -->
           <button onclick="studentStayIn()" id="btn-student-stay" 
-            class="w-full bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white font-black py-3 rounded-2xl text-xs uppercase tracking-wider border border-slate-800 transition">
-            <span>🧍</span> <span>STAY STANDING (RISK THE NEXT ROLL)</span>
+            class="w-full bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white font-black py-3.5 rounded-2xl text-xs uppercase tracking-wider border border-slate-800 transition">
+            <span>🧍</span> <span>STAY STANDING (RISK NEXT ROLL)</span>
           </button>
         </div>
 
@@ -499,7 +510,6 @@
         <div class="bg-slate-950/80 border border-indigo-950 rounded-2xl p-4 text-xs">
           <span class="font-bold text-slate-400 block mb-2">Your 5 Rounds of MEYER:</span>
           <div class="grid grid-cols-5 gap-1.5 text-center font-mono" id="student-rounds-pills">
-            <!-- M E Y E R blocks -->
             <div class="p-2 bg-slate-900 rounded-xl border border-slate-800"><b class="text-rose-400">M:</b> <span id="sr-1">-</span></div>
             <div class="p-2 bg-slate-900 rounded-xl border border-slate-800"><b class="text-rose-400">E:</b> <span id="sr-2">-</span></div>
             <div class="p-2 bg-slate-900 rounded-xl border border-slate-800"><b class="text-rose-400">Y:</b> <span id="sr-3">-</span></div>
@@ -542,6 +552,128 @@
       </div>
     </div>
 
+    <!-- TEACHER INSTRUCTIONS & PEDAGOGY MODAL -->
+    <div id="teacher-instructions-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+      <div class="bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-950 border border-indigo-500/40 rounded-3xl p-6 sm:p-7 max-w-2xl w-full text-left space-y-5 glow-card shadow-2xl relative my-8 max-h-[90vh] overflow-y-auto">
+        
+        <!-- Header & Close Button -->
+        <div class="flex justify-between items-start border-b border-indigo-900/80 pb-4">
+          <div class="flex items-center gap-3">
+            <span class="text-3xl p-2 bg-amber-500/10 border border-amber-500/30 rounded-2xl">📖</span>
+            <div>
+              <h2 class="fun-font text-xl sm:text-2xl font-black text-amber-300">
+                Teacher Guide: Greedy Pig (MeyerBall)
+              </h2>
+              <p class="text-xs text-slate-400 font-medium">Whole-Class Probability, Risk &amp; Expected Value Lesson</p>
+            </div>
+          </div>
+          <button onclick="toggleTeacherInstructions()" class="text-slate-400 hover:text-white p-1.5 rounded-xl bg-slate-800/80 border border-slate-700 transition">
+            ✕
+          </button>
+        </div>
+
+        <!-- Section 1: Quick 60-Second Setup -->
+        <div class="bg-slate-950/70 border border-indigo-950 rounded-2xl p-4 space-y-2">
+          <div class="flex items-center gap-2 text-xs font-bold text-emerald-400 uppercase tracking-wider">
+            <span>🚀</span> <span>1. How to Connect Your Class in 60 Seconds</span>
+          </div>
+          <ol class="text-xs text-slate-300 space-y-1.5 list-decimal list-inside leading-relaxed">
+            <li>Keep this main screen on your <b>front-of-room projector</b>.</li>
+            <li>Click <b>📋 Copy Student Link</b> at the top right and share it via Google Classroom, Teams, or write the URL on the whiteboard.</li>
+            <li>Students open the link on their phone, iPad, or laptop, type their first name, and tap <b>JOIN GAME</b>.</li>
+            <li>Their names will instantly populate the <b>Live Class Scoreboard</b> on your projector!</li>
+          </ol>
+        </div>
+
+        <!-- Section 2: Step-by-Step Gameplay Loop -->
+        <div class="bg-slate-950/70 border border-indigo-950 rounded-2xl p-4 space-y-2">
+          <div class="flex items-center gap-2 text-xs font-bold text-amber-400 uppercase tracking-wider">
+            <span>🎲</span> <span>2. The 5-Round Game Loop (M-E-Y-E-R)</span>
+          </div>
+          <div class="text-xs text-slate-300 space-y-2 leading-relaxed">
+            <p>
+              The game is played across <b>5 rounds</b> matching the letters <b>M - E - Y - E - R</b>. At the start of each round, all students start <b>Standing (At Risk)</b>.
+            </p>
+            <ul class="list-disc list-inside space-y-1.5 pl-1 text-slate-300">
+              <li>
+                <b>The Teacher Rolls:</b> Click <b>🎲 ROLL THE DIE!</b> on the projector.
+              </li>
+              <li>
+                <b>Rolls 2, 3, 4, 5, or 6:</b> That number is added to the <b>Round Pot</b>.
+              </li>
+              <li>
+                <b>The Choice (5-Second Pause):</b> Before the next roll, students choose on their devices to either:
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 my-2 text-[11px]">
+                  <div class="bg-emerald-950/40 border border-emerald-500/40 rounded-xl p-2.5">
+                    <b class="text-emerald-300">🪑 Bank &amp; Sit Down:</b>
+                    <p class="text-slate-400 mt-0.5">Locks in the current pot permanently into their round score. They are safe for the rest of this round.</p>
+                  </div>
+                  <div class="bg-rose-950/40 border border-rose-500/40 rounded-xl p-2.5">
+                    <b class="text-rose-300">🧍 Stay Standing:</b>
+                    <p class="text-slate-400 mt-0.5">Stays in the round hoping the pot gets even higher on the next roll.</p>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <b>Roll a 1 (Pig-Out 🐷):</b> The round ends immediately! Everyone who was still standing scores <b>0 points</b> for that round. Banked students keep their points!
+              </li>
+              <li>
+                Click <b>Next Round ➔</b> to advance to the next letter. After Round 5 (R), the top 3 champions are crowned on the podium!
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Section 3: The Maths & Discussion Prompts -->
+        <div class="bg-slate-950/70 border border-indigo-950 rounded-2xl p-4 space-y-2">
+          <div class="flex items-center gap-2 text-xs font-bold text-sky-400 uppercase tracking-wider">
+            <span>🧠</span> <span>3. Mathematics &amp; Discussion Prompts</span>
+          </div>
+          <div class="text-xs text-slate-300 space-y-2 leading-relaxed">
+            <p>
+              Greedy Pig is an engaging way to explore <b>probability</b>, <b>sample spaces</b>, and <b>expected value</b>:
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono">
+              <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                <span class="text-slate-400 block font-bold text-[10px] uppercase">Probability of Rolling 1:</span>
+                <span class="text-rose-400 text-sm font-extrabold">1/6 ≈ 16.7%</span>
+                <span class="text-slate-500 block text-[10px] mt-0.5">Independent on every single roll</span>
+              </div>
+              <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                <span class="text-slate-400 block font-bold text-[10px] uppercase">Expected Value per Safe Roll:</span>
+                <span class="text-emerald-400 text-sm font-extrabold">+3.33 pts</span>
+                <span class="text-slate-500 block text-[10px] mt-0.5">(2 + 3 + 4 + 5 + 6) / 6 = 20/6</span>
+              </div>
+            </div>
+            <div class="space-y-1 pt-1 text-slate-300">
+              <p><b>Great Questions to Ask Students:</b></p>
+              <p>&bull; <i>"If we just rolled three 5s in a row, is a 1 more likely to happen next?"</i> (Gambler's fallacy / independent events).</p>
+              <p>&bull; <i>"At what pot value does the risk of losing everything outweigh the expected gain of +3.33 points?"</i> (Theoretical banking threshold is typically around 20 points!).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: Teacher Moderation & Classroom Controls -->
+        <div class="bg-slate-950/70 border border-indigo-950 rounded-2xl p-4 space-y-2">
+          <div class="flex items-center gap-2 text-xs font-bold text-rose-400 uppercase tracking-wider">
+            <span>🛡️</span> <span>4. Host Controls &amp; Moderation</span>
+          </div>
+          <div class="text-xs text-slate-300 space-y-1.5 leading-relaxed">
+            <p>&bull; <b>Inappropriate Names:</b> Click the red <b>🥾 Boot</b> button next to any student's name on the scoreboard. They are instantly kicked back to the sign-in screen to re-enter a sensible name.</p>
+            <p>&bull; <b>No Devices Today?</b> You can play physically! Have students stand by their chairs and sit down when they want to bank. You can enter names manually with <b>+ Add</b>, or use the <b>🪑 Force Bank All</b> button.</p>
+          </div>
+        </div>
+
+        <!-- Dismiss Button -->
+        <div class="pt-2">
+          <button onclick="toggleTeacherInstructions()" class="w-full bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 text-slate-950 font-black py-3 rounded-2xl text-sm transition shadow-lg shadow-amber-500/20">
+            Got It! Close Guide &amp; Start Playing ➔
+          </button>
+        </div>
+
+      </div>
+    </div>
+
   </main>
 
   <!-- FOOTER -->
@@ -549,9 +681,6 @@
     Classroom Maths Tools &bull; Greedy Pig: MeyerBall Classroom Edition &bull; meyerball
   </footer>
 
-  <!-- ====================================================================
-       WEB AUDIO API SYNTHESIZER (ZERO EXTERNAL SOUND ASSETS)
-  ==================================================================== -->
   <script>
     let audioCtx = null;
     let sfxEnabled = true;
@@ -576,7 +705,6 @@
       const now = audioCtx.currentTime;
 
       if (type === 'dice') {
-        // Wooden dice clatter burst
         for (let i = 0; i < 4; i++) {
           const t = now + i * 0.06;
           const osc = audioCtx.createOscillator();
@@ -592,7 +720,6 @@
         }
       }
       else if (type === 'coin') {
-        // Pleasant metallic bank chime
         const freqs = [880, 1318.5];
         freqs.forEach((f, idx) => {
           const t = now + idx * 0.05;
@@ -609,7 +736,6 @@
         });
       }
       else if (type === 'pig-out') {
-        // Low comical pig buzzer / oink
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sawtooth';
@@ -623,7 +749,6 @@
         osc.stop(now + 0.3);
       }
       else if (type === 'fanfare') {
-        // Victory chords
         const notes = [523.25, 659.25, 783.99, 1046.5];
         notes.forEach((freq, idx) => {
           const t = now + idx * 0.09;
@@ -641,6 +766,7 @@
       }
     }
   </script>
+
   <script>
     /* ====================================================================
        MASTER GAME STATE ENGINE
@@ -648,20 +774,17 @@
     const MAX_ROUNDS = 5;
     const ROUND_NAMES = ["M", "E", "Y", "E", "R"];
 
-    let currentRound = 1;      // 1..5
-    let roundPot = 0;          // points currently at risk
+    let currentRound = 1;
+    let roundPot = 0;
     let isRolling = false;
     let currentDieVal = 1;
     let gameOver = false;
 
-    /* Player Roster: Array of objects
-       { id: string, name: string, status: 'standing' | 'banked', roundScores: [0,0,0,0,0], totalScore: number }
-    */
     let players = [];
-    let myPlayerId = null;     // for student view
-    let currentMode = 'host';  // 'host' or 'player'
+    let myPlayerId = null;
+    let isHost = true; // True for teacher projector, false for student mobile
+    let activeRoomCode = 'MEYER';
 
-    // Inappropriate Word List (basic classroom filter)
     const BANNED_WORDS = ['poop', 'crap', 'ass', 'dick', 'cock', 'bitch', 'fuck', 'shit', 'sex', 'penis', 'vagina', 'tit', 'boob', 'nazi', 'hitler'];
 
     function sanitizeName(str) {
@@ -669,149 +792,377 @@
       let clean = str.trim();
       const lower = clean.toLowerCase();
       for (let bad of BANNED_WORDS) {
-        if (lower.includes(bad)) {
-          return null; // rejected
-        }
+        if (lower.includes(bad)) return null;
       }
       return clean.slice(0, 15);
     }
   </script>
 
-  <!-- ====================================================================
-       FIREBASE INTEGRATION (MULTI-DEVICE SYNCHRONIZATION)
-  ==================================================================== -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    let db = null;
-    let auth = null;
-    let roomDocRef = null;
-    let isOnlineSync = false;
-
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'greedy-pig-meyer';
-    const roomCode = 'MEYER';
-
-    async function setupCloudSync() {
-      try {
-        if (typeof __firebase_config === 'undefined' || !__firebase_config) {
-          console.log("No cloud config detected. Running in high-speed local mode.");
-          return;
-        }
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
-        auth = getAuth(app);
-
-        // RULE 3: Always authenticate first
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
-          await signInAnonymously(auth);
-        }
-
-        // RULE 1: Strict collection path
-        roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'greedy_pig_rooms', roomCode);
-
-        // Listen for live updates
-        onSnapshot(roomDocRef, (snapshot) => {
-          if (snapshot.exists()) {
-            const data = snapshot.data();
-            applyCloudState(data);
-          } else {
-            // First time room creation
-            syncToCloud();
-          }
-        }, (err) => {
-          console.warn("Firestore snapshot error, falling back to local state:", err);
-        });
-
-        isOnlineSync = true;
-      } catch (err) {
-        console.warn("Cloud sync initialization error:", err);
-      }
-    }
-
-    function applyCloudState(data) {
-      if (!data) return;
-      currentRound = data.currentRound || 1;
-      roundPot = data.roundPot || 0;
-      currentDieVal = data.currentDieVal || 1;
-      gameOver = data.gameOver || false;
-      players = data.players || [];
-
-      // Check if current student was booted
-      if (myPlayerId) {
-        const found = players.find(p => p.id === myPlayerId);
-        if (!found) {
-          document.getElementById('boot-modal').classList.remove('hidden');
-          myPlayerId = null;
-        }
-      }
-
-      updateUI();
-      orientDiceFace(currentDieVal);
-    }
-
-    async function syncToCloud() {
-      if (!isOnlineSync || !roomDocRef) return;
-      try {
-        await setDoc(roomDocRef, {
-          currentRound,
-          roundPot,
-          currentDieVal,
-          gameOver,
-          players,
-          lastUpdated: Date.now()
-        }, { merge: true });
-      } catch (err) {
-        console.warn("Failed to sync room doc:", err);
-      }
-    }
-
-    // Expose sync helper to global window scope
-    window.pushRoomUpdate = syncToCloud;
-
-    window.addEventListener('DOMContentLoaded', () => {
-      setupCloudSync();
-    });
-  </script>
   <script>
     /* ====================================================================
-       UI & MODE TOGGLING
+       ZERO-CONFIG WEBRTC NETWORKING (PEERJS) WITH LOCAL FALLBACK
     ==================================================================== */
-    function setAppMode(mode) {
-      currentMode = mode;
-      const viewHost = document.getElementById('view-host');
-      const viewPlayer = document.getElementById('view-player');
-      const tabHost = document.getElementById('tab-host');
-      const tabPlayer = document.getElementById('tab-player');
+    let myPeer = null;
+    let hostConnection = null;       // Student's connection to host
+    let studentConnections = new Map(); // Host's active connections to students
+    let syncChannel = null;          // Local BroadcastChannel for sandboxed environments (Canvas LMS)
 
-      if (mode === 'host') {
-        viewHost.classList.remove('hidden');
-        viewPlayer.classList.add('hidden');
-        tabHost.className = "px-3 py-1 rounded-lg transition bg-rose-500 text-slate-950 font-black shadow-md";
-        tabPlayer.className = "px-3 py-1 rounded-lg text-slate-400 hover:text-slate-200 transition";
+    const PEER_PREFIX = 'gp-meyer-room-';
+
+    function initNetworking() {
+      // 1. Detect if this device is student or host
+      const urlParams = new URLSearchParams(window.location.search);
+      const isStudentMode = window.location.hash.includes('student') || urlParams.get('mode') === 'student';
+      isHost = !isStudentMode;
+
+      // Extract room code if provided in query ?room=XYZ
+      if (urlParams.get('room')) {
+        activeRoomCode = urlParams.get('room').toUpperCase().replace(/[^A-Z0-9]/g, '');
+      }
+
+      document.getElementById('room-code-badge').innerText = activeRoomCode;
+
+      // 2. Initialize sandbox-friendly BroadcastChannel & LocalStorage sync
+      initLocalSyncChannel();
+
+      if (isHost) {
+        setupHostNetworking();
       } else {
-        viewHost.classList.add('hidden');
-        viewPlayer.classList.remove('hidden');
-        tabPlayer.className = "px-3 py-1 rounded-lg transition bg-rose-500 text-slate-950 font-black shadow-md";
-        tabHost.className = "px-3 py-1 rounded-lg text-slate-400 hover:text-slate-200 transition";
+        setupStudentNetworking();
+      }
+    }
 
-        // Check if student already signed in
-        if (myPlayerId) {
-          document.getElementById('player-signin-card').classList.add('hidden');
-          document.getElementById('player-game-card').classList.remove('hidden');
+    function initLocalSyncChannel() {
+      try {
+        if ('BroadcastChannel' in window) {
+          syncChannel = new BroadcastChannel('gp_room_' + activeRoomCode.toLowerCase());
+          syncChannel.onmessage = (event) => {
+            const msg = event.data;
+            if (!msg) return;
+            if (isHost) {
+              handleHostIncomingMessage({ peer: 'local_tab' }, msg);
+            } else {
+              handleStudentIncomingMessage(msg);
+            }
+          };
+        }
+      } catch (err) {
+        console.warn('BroadcastChannel not supported in this frame:', err);
+      }
+
+      // Storage event fallback for cross-tab iframe messaging
+      window.addEventListener('storage', (e) => {
+        if (!e.newValue) return;
+        try {
+          if (isHost && e.key === 'gp_client_msg_' + activeRoomCode.toLowerCase()) {
+            const data = JSON.parse(e.newValue);
+            if (data && data.msg) handleHostIncomingMessage({ peer: 'storage_sync' }, data.msg);
+          } else if (!isHost && e.key === 'gp_sync_' + activeRoomCode.toLowerCase()) {
+            const data = JSON.parse(e.newValue);
+            if (data && data.payload) handleStudentIncomingMessage(data.payload);
+          }
+        } catch (err) {}
+      });
+    }
+
+    /* HOST NETWORKING (TEACHER) */
+    function setupHostNetworking() {
+      document.getElementById('view-host').classList.remove('hidden');
+      document.getElementById('view-player').classList.add('hidden');
+      document.getElementById('teacher-tools').classList.remove('hidden');
+
+      updateNetStatus('Initializing...', 'yellow');
+
+      // Check if WebSockets/PeerJS are allowed in the current frame
+      try {
+        if (typeof Peer === 'undefined') {
+          throw new Error('PeerJS not loaded');
+        }
+
+        const hostPeerId = PEER_PREFIX + activeRoomCode.toLowerCase();
+        
+        myPeer = new Peer(hostPeerId, {
+          config: {
+            iceServers: [
+              { urls: 'stun:stun.l.google.com:19302' },
+              { urls: 'stun:global.stun.twilio.com:3478' }
+            ]
+          }
+        });
+
+        myPeer.on('open', () => {
+          updateNetStatus('🟢 Online & Synced', 'emerald');
+        });
+
+        myPeer.on('connection', (conn) => {
+          conn.on('open', () => {
+            studentConnections.set(conn.peer, conn);
+            updateConnectedCounter();
+
+            conn.send({
+              type: 'SYNC_STATE',
+              currentRound,
+              roundPot,
+              currentDieVal,
+              gameOver,
+              players
+            });
+          });
+
+          conn.on('data', (msg) => {
+            handleHostIncomingMessage(conn, msg);
+          });
+
+          conn.on('close', () => {
+            studentConnections.delete(conn.peer);
+            updateConnectedCounter();
+          });
+
+          conn.on('error', () => {
+            studentConnections.delete(conn.peer);
+            updateConnectedCounter();
+          });
+        });
+
+        myPeer.on('error', (err) => {
+          console.warn('Host Peer error:', err);
+          if (err.type === 'unavailable-id') {
+            activeRoomCode = 'MEYER' + Math.floor(Math.random() * 89 + 10);
+            document.getElementById('room-code-badge').innerText = activeRoomCode;
+            setupHostNetworking();
+          } else {
+            // Graceful fallback to sandbox/local mode without throwing SecurityError
+            updateNetStatus('🟢 Canvas / Local Active', 'emerald');
+          }
+        });
+
+      } catch (err) {
+        // Sandboxed iframe / Canvas LMS security restriction gracefully caught
+        console.warn('WebSockets restricted in Canvas iframe. Running in Local/Desk Mode:', err);
+        updateNetStatus('🟢 Canvas / Local Active', 'emerald');
+      }
+    }
+
+    function handleHostIncomingMessage(conn, msg) {
+      if (!msg || !msg.type) return;
+
+      if (msg.type === 'JOIN_REQUEST') {
+        const clean = sanitizeName(msg.name);
+        if (!clean) return;
+
+        let player = players.find(p => p.id === msg.playerId);
+        if (!player) {
+          player = {
+            id: msg.playerId,
+            peerId: conn.peer,
+            name: clean,
+            status: 'standing',
+            roundScores: [0, 0, 0, 0, 0],
+            totalScore: 0
+          };
+          players.push(player);
         } else {
+          player.peerId = conn.peer;
+          player.name = clean;
+        }
+
+        updateUI();
+        broadcastState();
+      }
+      else if (msg.type === 'PLAYER_BANK') {
+        const player = players.find(p => p.id === msg.playerId);
+        if (player && player.status === 'standing' && roundPot > 0) {
+          player.status = 'banked';
+          player.roundScores[currentRound - 1] = roundPot;
+          player.totalScore = player.roundScores.reduce((a, b) => a + b, 0);
+
+          playSfx('coin');
+          updateUI();
+          broadcastState();
+        }
+      }
+      else if (msg.type === 'PLAYER_STAY') {
+        const player = players.find(p => p.id === msg.playerId);
+        if (player) {
+          player.status = 'standing';
+          updateUI();
+          broadcastState();
+        }
+      }
+    }
+
+    function broadcastState() {
+      const payload = {
+        type: 'SYNC_STATE',
+        currentRound,
+        roundPot,
+        currentDieVal,
+        gameOver,
+        players
+      };
+
+      // 1. Broadcast via local sync channel (works in Canvas LMS & local tabs)
+      if (syncChannel) {
+        try { syncChannel.postMessage(payload); } catch(e){}
+      }
+      try {
+        localStorage.setItem('gp_sync_' + activeRoomCode.toLowerCase(), JSON.stringify({ t: Date.now(), payload }));
+      } catch (e) {}
+
+      // 2. Broadcast via WebRTC connections if available
+      studentConnections.forEach((conn) => {
+        if (conn && conn.open) {
+          try { conn.send(payload); } catch(e){}
+        }
+      });
+    }
+
+    function updateConnectedCounter() {
+      const counter = document.getElementById('connected-count-badge');
+      if (counter) {
+        const count = Math.max(studentConnections.size, players.filter(p => p.peerId).length);
+        counter.innerText = `${count} Connected`;
+      }
+    }
+
+    /* STUDENT NETWORKING (MOBILE / DESK) */
+    function setupStudentNetworking() {
+      document.getElementById('view-host').classList.add('hidden');
+      document.getElementById('view-player').classList.remove('hidden');
+      document.getElementById('teacher-tools').classList.add('hidden');
+
+      updateNetStatus('Syncing...', 'yellow');
+
+      try {
+        if (typeof Peer === 'undefined') {
+          throw new Error('PeerJS not loaded');
+        }
+
+        myPeer = new Peer(null, {
+          config: {
+            iceServers: [
+              { urls: 'stun:stun.l.google.com:19302' },
+              { urls: 'stun:global.stun.twilio.com:3478' }
+            ]
+          }
+        });
+
+        myPeer.on('open', () => {
+          connectToHost();
+        });
+
+        myPeer.on('error', (err) => {
+          console.warn('Student Peer error:', err);
+          updateNetStatus('🟢 Local Synced', 'emerald');
+        });
+      } catch (err) {
+        console.warn('WebSockets restricted in frame. Running via local sync:', err);
+        updateNetStatus('🟢 Local Synced', 'emerald');
+      }
+    }
+
+    function connectToHost() {
+      if (!myPeer) return;
+      const hostPeerId = PEER_PREFIX + activeRoomCode.toLowerCase();
+      
+      try {
+        hostConnection = myPeer.connect(hostPeerId, { reliable: true });
+
+        hostConnection.on('open', () => {
+          updateNetStatus('🟢 Connected to Board', 'emerald');
+          
+          if (myPlayerId) {
+            const name = document.getElementById('student-hud-name').innerText;
+            sendMsgToHost({
+              type: 'JOIN_REQUEST',
+              playerId: myPlayerId,
+              name: name
+            });
+          }
+        });
+
+        hostConnection.on('data', (data) => {
+          handleStudentIncomingMessage(data);
+        });
+
+        hostConnection.on('close', () => {
+          updateNetStatus('🟢 Local Active', 'emerald');
+        });
+
+        hostConnection.on('error', () => {
+          updateNetStatus('🟢 Local Active', 'emerald');
+        });
+      } catch (err) {
+        console.warn('Direct WebRTC connect error:', err);
+        updateNetStatus('🟢 Local Active', 'emerald');
+      }
+    }
+
+    function sendMsgToHost(msg) {
+      if (hostConnection && hostConnection.open) {
+        try { hostConnection.send(msg); } catch(e){}
+      }
+      if (syncChannel) {
+        try { syncChannel.postMessage(msg); } catch(e){}
+      }
+      try {
+        localStorage.setItem('gp_client_msg_' + activeRoomCode.toLowerCase(), JSON.stringify({ t: Date.now(), msg }));
+      } catch (e) {}
+    }
+
+    function handleStudentIncomingMessage(data) {
+      if (!data) return;
+
+      if (data.type === 'SYNC_STATE') {
+        currentRound = data.currentRound || 1;
+        roundPot = data.roundPot || 0;
+        currentDieVal = data.currentDieVal || 1;
+        gameOver = data.gameOver || false;
+        players = data.players || [];
+
+        if (myPlayerId) {
+          const me = players.find(p => p.id === myPlayerId);
+          if (!me) {
+            document.getElementById('boot-modal').classList.remove('hidden');
+            myPlayerId = null;
+            document.getElementById('player-signin-card').classList.remove('hidden');
+            document.getElementById('player-game-card').classList.add('hidden');
+          }
+        }
+
+        updateUI();
+        orientDiceFace(currentDieVal);
+      }
+      else if (data.type === 'BOOT') {
+        if (data.playerId === myPlayerId) {
+          document.getElementById('boot-modal').classList.remove('hidden');
+          myPlayerId = null;
           document.getElementById('player-signin-card').classList.remove('hidden');
           document.getElementById('player-game-card').classList.add('hidden');
         }
       }
-      updateUI();
     }
 
-    /* 3D Dice Face Rotations */
+    function updateNetStatus(text, color) {
+      const badge = document.getElementById('net-status-badge');
+      const textEl = document.getElementById('net-status-text');
+      if (!badge || !textEl) return;
+
+      textEl.innerText = text;
+      if (color === 'emerald') {
+        badge.className = "bg-emerald-950/70 border border-emerald-500/40 px-2.5 py-1 rounded-xl flex items-center gap-1.5 text-xs font-mono font-bold text-emerald-300";
+      } else if (color === 'rose') {
+        badge.className = "bg-rose-950/70 border border-rose-500/40 px-2.5 py-1 rounded-xl flex items-center gap-1.5 text-xs font-mono font-bold text-rose-300";
+      } else {
+        badge.className = "bg-amber-950/70 border border-amber-500/40 px-2.5 py-1 rounded-xl flex items-center gap-1.5 text-xs font-mono font-bold text-amber-300";
+      }
+    }
+  </script>
+
+  <script>
+    /* ====================================================================
+       TEACHER / HOST ACTIONS
+    ==================================================================== */
     const DICE_ROTATIONS = {
       1: { x: 0, y: 0 },
       2: { x: 0, y: -90 },
@@ -827,11 +1178,7 @@
       const rot = DICE_ROTATIONS[num] || DICE_ROTATIONS[1];
       cube.style.transform = `rotateX(${rot.x}deg) rotateY(${rot.y}deg)`;
     }
-  </script>
-  <script>
-    /* ====================================================================
-       TEACHER / HOST ACTIONS
-    ==================================================================== */
+
     function hostRollDice() {
       if (isRolling || gameOver) return;
       isRolling = true;
@@ -850,7 +1197,6 @@
         isRolling = false;
         rollBtn.disabled = false;
 
-        // Roll 1 to 6
         const roll = Math.floor(Math.random() * 6) + 1;
         currentDieVal = roll;
         orientDiceFace(roll);
@@ -864,7 +1210,6 @@
       const arena = document.getElementById('arena-box');
 
       if (roll === 1) {
-        // PIG OUT!
         playSfx('pig-out');
         arena.classList.add('shake-alarm');
         setTimeout(() => arena.classList.remove('shake-alarm'), 500);
@@ -875,7 +1220,6 @@
           </span>
         `;
 
-        // Anyone still standing gets 0 for this round
         players.forEach(p => {
           if (p.status === 'standing') {
             p.roundScores[currentRound - 1] = 0;
@@ -885,7 +1229,6 @@
 
         roundPot = 0;
       } else {
-        // SAFE ROLL (2, 3, 4, 5, 6)
         playSfx('coin');
         roundPot += roll;
 
@@ -897,7 +1240,7 @@
       }
 
       updateUI();
-      if (window.pushRoomUpdate) window.pushRoomUpdate();
+      broadcastState();
     }
 
     function hostNextRound() {
@@ -905,7 +1248,6 @@
         currentRound++;
         roundPot = 0;
 
-        // Reset all player statuses to standing for the fresh round
         players.forEach(p => {
           p.status = 'standing';
         });
@@ -916,12 +1258,11 @@
           </span>
         `;
       } else {
-        // 5 Rounds Complete!
         onGameOver();
       }
 
       updateUI();
-      if (window.pushRoomUpdate) window.pushRoomUpdate();
+      broadcastState();
     }
 
     function hostBankAllStanding() {
@@ -935,7 +1276,7 @@
       });
       playSfx('coin');
       updateUI();
-      if (window.pushRoomUpdate) window.pushRoomUpdate();
+      broadcastState();
     }
 
     function hostResetEntireGame() {
@@ -957,7 +1298,7 @@
       document.getElementById('game-over-modal').classList.add('hidden');
 
       updateUI();
-      if (window.pushRoomUpdate) window.pushRoomUpdate();
+      broadcastState();
     }
 
     function quickAddPlayer() {
@@ -970,7 +1311,8 @@
       }
 
       const newP = {
-        id: 'p_' + Math.random().toString(36).substr(2, 9),
+        id: 'manual_' + Math.random().toString(36).substr(2, 9),
+        peerId: null,
         name: clean,
         status: 'standing',
         roundScores: [0, 0, 0, 0, 0],
@@ -980,20 +1322,29 @@
       players.push(newP);
       input.value = '';
       updateUI();
-      if (window.pushRoomUpdate) window.pushRoomUpdate();
+      broadcastState();
     }
 
-    /* Teacher Boot / Kick Player */
     function bootPlayer(playerId) {
       const idx = players.findIndex(p => p.id === playerId);
       if (idx !== -1) {
         const removed = players.splice(idx, 1)[0];
-        showCanvasNotification(`🥾 Booted "${removed.name}" from the game`);
+        showCanvasNotification(`🥾 Booted "${removed.name}" from the room`);
+
+        // Send boot notification directly to student
+        if (removed.peerId && studentConnections.has(removed.peerId)) {
+          const conn = studentConnections.get(removed.peerId);
+          if (conn.open) {
+            conn.send({ type: 'BOOT', playerId: playerId });
+          }
+        }
+
         updateUI();
-        if (window.pushRoomUpdate) window.pushRoomUpdate();
+        broadcastState();
       }
     }
   </script>
+
   <script>
     /* ====================================================================
        STUDENT PLAYER ACTIONS
@@ -1003,60 +1354,63 @@
       const clean = sanitizeName(input.value);
 
       if (!clean) {
-        alertModal("Name Not Allowed", "Please enter a school-appropriate first name!");
+        showCanvasNotification("⚠️ Please enter an appropriate first name!");
         return;
       }
 
-      myPlayerId = 'p_' + Math.random().toString(36).substr(2, 9);
-      const newP = {
-        id: myPlayerId,
-        name: clean,
-        status: 'standing',
-        roundScores: [0, 0, 0, 0, 0],
-        totalScore: 0
-      };
+      myPlayerId = 'stu_' + Math.random().toString(36).substr(2, 9);
+      document.getElementById('student-hud-name').innerText = clean;
 
-      players.push(newP);
+      sendMsgToHost({
+        type: 'JOIN_REQUEST',
+        playerId: myPlayerId,
+        name: clean
+      });
 
       document.getElementById('player-signin-card').classList.add('hidden');
       document.getElementById('player-game-card').classList.remove('hidden');
 
       updateUI();
-      if (window.pushRoomUpdate) window.pushRoomUpdate();
     }
 
     function studentBank() {
       if (!myPlayerId || roundPot === 0) return;
+      
       const me = players.find(p => p.id === myPlayerId);
-      if (!me || me.status === 'banked') return;
-
-      me.status = 'banked';
-      me.roundScores[currentRound - 1] = roundPot;
-      me.totalScore = me.roundScores.reduce((a, b) => a + b, 0);
+      if (me && me.status === 'banked') return;
 
       playSfx('coin');
       confetti({ particleCount: 35, spread: 55, origin: { y: 0.8 } });
 
-      updateUI();
-      if (window.pushRoomUpdate) window.pushRoomUpdate();
+      sendMsgToHost({
+        type: 'PLAYER_BANK',
+        playerId: myPlayerId
+      });
     }
 
     function studentStayIn() {
       if (!myPlayerId) return;
-      const me = players.find(p => p.id === myPlayerId);
-      if (!me) return;
-
-      // Ensure player remains marked as standing
-      me.status = 'standing';
-      updateUI();
-      if (window.pushRoomUpdate) window.pushRoomUpdate();
+      
+      sendMsgToHost({
+        type: 'PLAYER_STAY',
+        playerId: myPlayerId
+      });
+      showCanvasNotification('🧍 Staying standing for next roll!');
     }
 
     function acknowledgeBoot() {
       document.getElementById('boot-modal').classList.add('hidden');
-      setAppMode('player');
+      document.getElementById('player-signin-card').classList.remove('hidden');
+      document.getElementById('player-game-card').classList.add('hidden');
+    }
+
+    function toggleTeacherInstructions() {
+      const modal = document.getElementById('teacher-instructions-modal');
+      if (!modal) return;
+      modal.classList.toggle('hidden');
     }
   </script>
+
   <script>
     /* ====================================================================
        RENDER & UI SYNCHRONIZATION
@@ -1083,7 +1437,7 @@
         }
       });
 
-      // 3. Tally Counters (Standing vs Banked)
+      // 3. Tally Counters
       let standingCount = 0;
       let bankedCount = 0;
       players.forEach(p => {
@@ -1091,46 +1445,105 @@
         else bankedCount++;
       });
 
-      document.getElementById('tally-standing').innerText = standingCount;
-      document.getElementById('tally-banked').innerText = bankedCount;
-      document.getElementById('player-count-badge').innerText = `${players.length} Players`;
+      const standingEl = document.getElementById('tally-standing');
+      if (standingEl) standingEl.innerText = standingCount;
+      const bankedEl = document.getElementById('tally-banked');
+      if (bankedEl) bankedEl.innerText = bankedCount;
+      const pCountBadge = document.getElementById('player-count-badge');
+      if (pCountBadge) pCountBadge.innerText = `${players.length} Players`;
+      updateConnectedCounter();
 
-      // 4. Render Host Leaderboard Table
-      renderScoreboard();
-
-      // 5. Update Student View if Active
+      // 4. Student View HUD Synchronization
       if (myPlayerId) {
         const me = players.find(p => p.id === myPlayerId);
         if (me) {
-          document.getElementById('student-hud-name').innerText = me.name;
-          document.getElementById('student-hud-total').innerText = `${me.totalScore} pts`;
-          document.getElementById('student-round-indicator').innerText = `Round ${currentRound} (${ROUND_NAMES[currentRound - 1]})`;
-          document.getElementById('student-pot-val').innerText = roundPot;
+          const sTotal = document.getElementById('student-hud-total');
+          if (sTotal) sTotal.innerText = `${me.totalScore} pts`;
 
-          const badge = document.getElementById('student-status-badge');
-          const bankBtn = document.getElementById('btn-student-bank');
+          const sRoundInd = document.getElementById('student-round-indicator');
+          if (sRoundInd) sRoundInd.innerText = `Round ${currentRound} (${ROUND_NAMES[currentRound - 1]})`;
 
-          if (me.status === 'banked') {
-            badge.className = "px-3 py-1 rounded-full text-xs font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/40";
-            badge.innerText = "🪑 Banked (Safe)";
-            bankBtn.disabled = true;
-            bankBtn.className = "w-full bg-slate-800 text-slate-500 font-extrabold py-4 rounded-3xl text-sm cursor-not-allowed opacity-60";
-          } else {
-            badge.className = "px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
-            badge.innerText = "🧍 Standing (In Risk)";
-            bankBtn.disabled = false;
-            bankBtn.className = "w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 hover:from-emerald-400 text-slate-950 font-black py-4 rounded-3xl text-lg transition shadow-lg shadow-emerald-500/25 active:scale-95 cursor-pointer";
+          const sStatusBadge = document.getElementById('student-status-badge');
+          if (sStatusBadge) {
+            if (me.status === 'standing') {
+              sStatusBadge.className = "px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+              sStatusBadge.innerText = "🧍 Standing (In Risk)";
+            } else {
+              sStatusBadge.className = "px-3 py-1 rounded-full text-xs font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/40";
+              sStatusBadge.innerText = "🪑 Banked (Safe)";
+            }
           }
 
-          // Update student 5-round mini cards
-          for (let r = 1; r <= 5; r++) {
-            const pill = document.getElementById(`sr-${r}`);
+          const sPot = document.getElementById('student-pot-val');
+          if (sPot) sPot.innerText = roundPot;
+
+          const sBtnBank = document.getElementById('btn-student-bank');
+          if (sBtnBank) {
+            if (me.status === 'banked' || roundPot === 0) {
+              sBtnBank.disabled = true;
+              sBtnBank.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+              sBtnBank.disabled = false;
+              sBtnBank.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+          }
+
+          for (let i = 1; i <= 5; i++) {
+            const pill = document.getElementById(`sr-${i}`);
             if (pill) {
-              pill.innerText = me.roundScores[r - 1] > 0 ? `${me.roundScores[r - 1]}` : (r < currentRound ? '0' : '-');
+              pill.innerText = me.roundScores[i - 1] > 0 ? me.roundScores[i - 1] : (i === currentRound && me.status === 'banked' ? me.roundScores[i - 1] : '-');
             }
           }
         }
       }
+
+      renderScoreboard();
+    }
+
+    function promptBulkStudents() {
+      const input = prompt("Enter student names (separated by commas or new lines):");
+      if (!input) return;
+
+      const rawNames = input.split(/[\n,]+/);
+      let added = 0;
+      rawNames.forEach(raw => {
+        const clean = sanitizeName(raw);
+        if (clean && !players.some(p => p.name.toLowerCase() === clean.toLowerCase())) {
+          players.push({
+            id: 'bulk_' + Math.random().toString(36).substr(2, 9),
+            peerId: null,
+            name: clean,
+            status: 'standing',
+            roundScores: [0, 0, 0, 0, 0],
+            totalScore: 0
+          });
+          added++;
+        }
+      });
+
+      if (added > 0) {
+        showCanvasNotification(`👥 Added ${added} students to roster!`);
+        updateUI();
+        broadcastState();
+      }
+    }
+
+    function toggleStudentStatus(playerId) {
+      const p = players.find(x => x.id === playerId);
+      if (!p) return;
+
+      if (p.status === 'standing') {
+        p.status = 'banked';
+        p.roundScores[currentRound - 1] = roundPot;
+        p.totalScore = p.roundScores.reduce((a, b) => a + b, 0);
+        playSfx('coin');
+      } else {
+        p.status = 'standing';
+        p.roundScores[currentRound - 1] = 0;
+        p.totalScore = p.roundScores.reduce((a, b) => a + b, 0);
+      }
+      updateUI();
+      broadcastState();
     }
 
     function renderScoreboard() {
@@ -1142,21 +1555,20 @@
         tbody.innerHTML = `
           <tr>
             <td colspan="10" class="py-8 text-center text-slate-500 text-xs italic">
-              No students joined yet. Use <b>+ Add</b> above or have students join on their devices!
+              No students joined yet. Share the <b>Student Link</b>, use <b>+ Add</b>, or click <b>👥 Bulk Add</b> above!
             </td>
           </tr>
         `;
         return;
       }
 
-      // Sort by Total Score descending
       const sorted = [...players].sort((a, b) => b.totalScore - a.totalScore);
 
       sorted.forEach((p, idx) => {
         const tr = document.createElement('tr');
-        tr.className = "hover:bg-slate-900/60 transition";
+        tr.className = "hover:bg-slate-900/60 transition cursor-pointer";
+        tr.title = "Click row to toggle Standing / Banked";
 
-        // Rank Badge
         let rankDisplay = `#${idx + 1}`;
         if (idx === 0) rankDisplay = `🥇 1st`;
         else if (idx === 1) rankDisplay = `🥈 2nd`;
@@ -1164,24 +1576,24 @@
 
         const isStanding = p.status === 'standing';
         const statusBadge = isStanding 
-          ? `<span class="bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full text-[10px] font-black">🧍 Standing</span>`
-          : `<span class="bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full text-[10px] font-black">🪑 Banked</span>`;
+          ? `<span onclick="event.stopPropagation(); toggleStudentStatus('${p.id}')" class="bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 border border-emerald-500/30 px-2 py-0.5 rounded-full text-[10px] font-black cursor-pointer">🧍 Standing</span>`
+          : `<span onclick="event.stopPropagation(); toggleStudentStatus('${p.id}')" class="bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20 border border-indigo-500/30 px-2 py-0.5 rounded-full text-[10px] font-black cursor-pointer">🪑 Banked</span>`;
 
         tr.innerHTML = `
-          <td class="py-2.5 px-3 font-mono font-bold text-amber-400">${rankDisplay}</td>
-          <td class="py-2.5 px-3 font-bold text-slate-200">
+          <td class="py-2.5 px-3 font-mono font-bold text-amber-400" onclick="toggleStudentStatus('${p.id}')">${rankDisplay}</td>
+          <td class="py-2.5 px-3 font-bold text-slate-200" onclick="toggleStudentStatus('${p.id}')">
             ${p.name}
             ${p.id === myPlayerId ? '<span class="ml-1 text-[10px] text-cyan-400 font-mono">(You)</span>' : ''}
           </td>
           <td class="py-2.5 px-3 text-center">${statusBadge}</td>
-          <td class="py-2.5 px-3 text-center font-mono ${p.roundScores[0] > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${p.roundScores[0]}</td>
-          <td class="py-2.5 px-3 text-center font-mono ${p.roundScores[1] > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${p.roundScores[1]}</td>
-          <td class="py-2.5 px-3 text-center font-mono ${p.roundScores[2] > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${p.roundScores[2]}</td>
-          <td class="py-2.5 px-3 text-center font-mono ${p.roundScores[3] > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${p.roundScores[3]}</td>
-          <td class="py-2.5 px-3 text-center font-mono ${p.roundScores[4] > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${p.roundScores[4]}</td>
-          <td class="py-2.5 px-3 text-right font-mono font-extrabold text-sm text-amber-300">${p.totalScore}</td>
+          <td class="py-2.5 px-3 text-center font-mono ${p.roundScores[0] > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}" onclick="toggleStudentStatus('${p.id}')">${p.roundScores[0]}</td>
+          <td class="py-2.5 px-3 text-center font-mono ${p.roundScores[1] > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}" onclick="toggleStudentStatus('${p.id}')">${p.roundScores[1]}</td>
+          <td class="py-2.5 px-3 text-center font-mono ${p.roundScores[2] > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}" onclick="toggleStudentStatus('${p.id}')">${p.roundScores[2]}</td>
+          <td class="py-2.5 px-3 text-center font-mono ${p.roundScores[3] > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}" onclick="toggleStudentStatus('${p.id}')">${p.roundScores[3]}</td>
+          <td class="py-2.5 px-3 text-center font-mono ${p.roundScores[4] > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}" onclick="toggleStudentStatus('${p.id}')">${p.roundScores[4]}</td>
+          <td class="py-2.5 px-3 text-right font-mono font-extrabold text-sm text-amber-300" onclick="toggleStudentStatus('${p.id}')">${p.totalScore}</td>
           <td class="py-2.5 px-3 text-right">
-            <button onclick="bootPlayer('${p.id}')" title="Boot Player" class="px-2 py-1 bg-rose-950/40 hover:bg-rose-900 border border-rose-800/40 text-rose-300 rounded-lg text-[10px] font-bold transition">
+            <button onclick="event.stopPropagation(); bootPlayer('${p.id}')" title="Boot Player" class="px-2 py-1 bg-rose-950/40 hover:bg-rose-900 border border-rose-800/40 text-rose-300 rounded-lg text-[10px] font-bold transition">
               🥾 Boot
             </button>
           </td>
@@ -1197,6 +1609,7 @@
 
       const sorted = [...players].sort((a, b) => b.totalScore - a.totalScore);
       const podium = document.getElementById('podium-list');
+      if (!podium) return;
       podium.innerHTML = '';
 
       if (sorted.length > 0) {
@@ -1228,27 +1641,20 @@
     }
 
     function copyStudentLink() {
-      const studentUrl = window.location.origin + window.location.pathname + '#student';
+      const studentUrl = window.location.origin + window.location.pathname + `?room=${activeRoomCode}#student`;
       const tempInput = document.createElement('input');
       tempInput.value = studentUrl;
       document.body.appendChild(tempInput);
       tempInput.select();
       document.execCommand('copy');
       document.body.removeChild(tempInput);
-      showCanvasNotification('📋 Direct Student Join Link copied to clipboard!');
-    }
-
-    function alertModal(title, text) {
-      showCanvasNotification(`⚠️ ${title}: ${text}`);
+      showCanvasNotification(`📋 Direct Student Link for Room ${activeRoomCode} copied to clipboard!`);
     }
 
     window.onload = function() {
       orientDiceFace(1);
-      if (window.location.hash === '#student') {
-        setAppMode('player');
-      } else {
-        updateUI();
-      }
+      initNetworking();
+      updateUI();
     };
   </script>
 </body>
