@@ -556,14 +556,15 @@
       },
       {
         id: 14,
-        title: "Level 14: Four-Step Staircase",
-        desc: "Four cascading tiered ramps. Maintain slope symmetry across all steps while adjusting each distinct intercept.",
-        launcher: { x: -8, y: 9.5 },
+        title: "Level 14: The Double Valley (W-Track)",
+        desc: "Two deep valleys! Marbles must swoop down into the first valley, climb the rise (m > 0), swoop through the second valley, and launch up the far crest.",
+        launcher: { x: -8, y: 9 },
         stars: [
-          { x: -6, y: 6.5 },
-          { x: -2, y: 2.5 },
-          { x: 2, y: -1.5 },
-          { x: 6, y: -5.5 }
+          { x: -5, y: 4 },
+          { x: -2, y: -1 },
+          { x: 1, y: 3 },
+          { x: 4, y: -1 },
+          { x: 7, y: 2 }
         ],
         defaultLines: [
           { m: 1, b: 0, xMin: -9, xMax: 9, enabled: true, color: '#06b6d4' }
@@ -572,30 +573,32 @@
       },
       {
         id: 15,
-        title: "Level 15: Speed Check & Catch",
-        desc: "Brake runaway marble speed using a flatter middle platform before the final plunge into the goal stars.",
-        launcher: { x: -8, y: 9 },
+        title: "Level 15: The Pinball Rebound",
+        desc: "The top two stars are on the right, but the lower two stars are back on the far left! Use a positive slope ramp (m > 0) to reverse marble momentum back to the left.",
+        launcher: { x: -8, y: 8.5 },
         stars: [
-          { x: -5, y: 4 },
-          { x: 0, y: 1.5 },
-          { x: 4, y: 0.5 },
-          { x: 8, y: -4 }
+          { x: -4, y: 5.5 },
+          { x: 0, y: 3 },
+          { x: -2, y: -1.5 },
+          { x: -6, y: -4.5 }
         ],
         defaultLines: [
           { m: 1, b: 0, xMin: -9, xMax: 9, enabled: true, color: '#06b6d4' }
         ],
-        maxLines: 4
+        maxLines: 3
       },
       {
         id: 16,
-        title: "Level 16: The Staggered Slalom",
-        desc: "Stars staggered in elevation require three precisely measured ramps with tight domain cutoffs.",
-        launcher: { x: -8, y: 8 },
+        title: "Level 16: The Classic Z-Pattern",
+        desc: "The iconic Z-Pattern! Guide marbles right, drop them onto a reverse slope (m > 0) that rolls LEFT, then drop them onto a third ramp that slides back to the right!",
+        launcher: { x: -8, y: 9 },
         stars: [
-          { x: -5, y: 5 },
-          { x: -1, y: 3 },
-          { x: 3, y: -1 },
-          { x: 7, y: -4 }
+          { x: -4, y: 6.5 },
+          { x: 0, y: 4.5 },
+          { x: 1, y: 0.5 },
+          { x: -4, y: -1.5 },
+          { x: -1, y: -4.5 },
+          { x: 5, y: -7 }
         ],
         defaultLines: [
           { m: 1, b: 0, xMin: -9, xMax: 9, enabled: true, color: '#06b6d4' }
@@ -604,47 +607,50 @@
       },
       {
         id: 17,
-        title: "Level 17: Valley of Stars",
-        desc: "Stars nestled deep in a central valley. Guide the fast marbles into the dip and up the exit ramp.",
-        launcher: { x: -8, y: 8.5 },
+        title: "Level 17: The Half-Pipe Stunt",
+        desc: "A deep half-pipe! Plunge into the basin, ride up the steep opposite wall to collect the high star, stall, reverse backwards into the gap, and catch the star below!",
+        launcher: { x: -7, y: 8.5 },
         stars: [
-          { x: -4, y: 3 },
-          { x: -1, y: -2 },
+          { x: -4, y: 3.5 },
+          { x: -1, y: -3 },
           { x: 2, y: -3 },
-          { x: 6, y: -5 }
+          { x: 6, y: 2 },
+          { x: 0, y: -7 }
         ],
         defaultLines: [
           { m: 1, b: 0, xMin: -9, xMax: 9, enabled: true, color: '#06b6d4' }
         ],
-        maxLines: 3
+        maxLines: 4
       },
       {
         id: 18,
-        title: "Level 18: High Velocity Ski Jump",
-        desc: "Launch marbles at maximum speed to clear a wide gap into a distant catch ramp.",
+        title: "Level 18: The Triple Zig-Zag",
+        desc: "Four tiered cascades alternating right-left-right-left. Use alternating negative and positive slopes with tight domain truncation [xMin, xMax].",
         launcher: { x: -8, y: 9.5 },
         stars: [
-          { x: -5, y: 5 },
-          { x: -1, y: 0.5 },
-          { x: 4, y: -2.5 },
-          { x: 8, y: -6 }
+          { x: -4, y: 7 },
+          { x: 1, y: 3.5 },
+          { x: -4, y: 2 },
+          { x: -2, y: -1.5 },
+          { x: 3, y: -3 },
+          { x: -5, y: -7.5 }
         ],
         defaultLines: [
           { m: 1, b: 0, xMin: -9, xMax: 9, enabled: true, color: '#06b6d4' }
         ],
-        maxLines: 3
+        maxLines: 5
       },
       {
         id: 19,
-        title: "Level 19: The 5-Star Gauntlet",
-        desc: "Five stars spread across the entire coordinate grid. Tune 3 ramps to catch them all in one drop.",
+        title: "Level 19: The Airborne Ski Jump",
+        desc: "Launch marbles down a high-speed ramp and truncate it early so they fly through the air across the chasm, snatching airborne stars before landing on the catch rail.",
         launcher: { x: -8, y: 9 },
         stars: [
-          { x: -6, y: 6 },
-          { x: -2, y: 2 },
-          { x: 1, y: -0.5 },
-          { x: 4, y: -3.5 },
-          { x: 7, y: -6.5 }
+          { x: -5, y: 3.5 },
+          { x: -1, y: 4 },
+          { x: 2, y: 2.5 },
+          { x: 6, y: -1 },
+          { x: 8, y: -5 }
         ],
         defaultLines: [
           { m: 1, b: 0, xMin: -9, xMax: 9, enabled: true, color: '#06b6d4' }
@@ -653,16 +659,17 @@
       },
       {
         id: 20,
-        title: "Level 20: Master Architect",
-        desc: "The ultimate challenge! 6 stars scattered across the canvas requiring four coordinated, high-speed ramps.",
+        title: "Level 20: Master Grand Prix",
+        desc: "The ultimate 7-star Grand Prix challenge! Requires 4 precisely engineered ramps alternating negative and positive gradients with laser-tight domain limits to conquer the whole grid in one single drop.",
         launcher: { x: -8, y: 9.5 },
         stars: [
-          { x: -6, y: 7 },
-          { x: -3, y: 3.5 },
-          { x: 0, y: 0 },
-          { x: 3, y: -1.5 },
-          { x: 5, y: -4 },
-          { x: 8, y: -6.5 }
+          { x: -5, y: 7.5 },
+          { x: -1, y: 5.5 },
+          { x: 3, y: 2 },
+          { x: -3, y: 0 },
+          { x: 0, y: -3 },
+          { x: 6, y: -5.5 },
+          { x: 2, y: -8.5 }
         ],
         defaultLines: [
           { m: 1, b: 0, xMin: -9, xMax: 9, enabled: true, color: '#06b6d4' }
@@ -1192,9 +1199,23 @@
                 m.vx = (dotT * tx * friction) - (dotN * nx * restitution);
                 m.vy = (dotT * ty * friction) - (dotN * ny * restitution);
 
-                const slopeFactor = line.m < 0 ? 0.65 : -0.65;
-                m.vx += tx * slopeFactor * dt;
-                m.vy += ty * slopeFactor * dt;
+                // Downhill acceleration: pushes downhill in the true direction of gravity
+                let tDownX = 0, tDownY = 0;
+                if (line.m < 0) {
+                  // Negative gradient: slopes down to the right (x increases, y decreases)
+                  const len = Math.sqrt(1 + line.m * line.m);
+                  tDownX = 1 / len;
+                  tDownY = line.m / len;
+                } else if (line.m > 0) {
+                  // Positive gradient: slopes down to the left (x decreases, y decreases)
+                  const len = Math.sqrt(1 + line.m * line.m);
+                  tDownX = -1 / len;
+                  tDownY = -line.m / len;
+                }
+
+                const rollAccel = 24.0;
+                m.vx += tDownX * rollAccel * dt;
+                m.vy += tDownY * rollAccel * dt;
               }
             }
           });
