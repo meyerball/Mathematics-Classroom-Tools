@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeyerBot 2000 - Year 7 Circumference Lesson</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #2563eb;
+            --secondary: #0284c7;
+            --bg: #f0f9ff;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --success: #16a34a;
+            --error: #dc2626;
+            --teacher-bg: #fffbeb;
+            --teacher-border: #f59e0b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 940px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        /* MeyerBot Header */
+        .bot-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #e0f2fe;
+            padding: 18px 22px;
+            border-radius: 14px;
+            border: 2px solid #bae6fd;
+            margin-bottom: 25px;
+        }
+
+        .bot-avatar-container {
+            width: 90px;
+            height: 90px;
+            flex-shrink: 0;
+            background: #38bdf8;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .bot-avatar {
+            width: 80px;
+            height: 80px;
+        }
+
+        .bot-speech-bubble {
+            background: white;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 2px solid var(--primary-light);
+            flex-grow: 1;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.05rem;
+            line-height: 1.4;
+            position: relative;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e2e8f0;
+            border-radius: 8px;
+            height: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-light);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Slide Show */
+        .slide { display: none; }
+        .slide.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Content Boxes */
+        .interactive-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 22px;
+            margin: 18px 0;
+        }
+
+        .note-taking-card {
+            background: #fffdf5;
+            border-left: 6px solid #eab308;
+            border-right: 1px solid #fef08a;
+            border-top: 1px solid #fef08a;
+            border-bottom: 1px solid #fef08a;
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        .note-taking-card h4 {
+            margin-top: 0;
+            color: #b45309;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .strategy-board {
+            background: var(--teacher-bg);
+            border-left: 6px solid var(--teacher-border);
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 18px 0;
+        }
+
+        .strategy-board h3 {
+            margin-top: 0;
+            color: #b45309;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.25rem;
+        }
+
+        /* Buttons & Inputs */
+        .btn {
+            background: var(--primary-light);
+            color: white;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: bold;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn:hover { background: var(--primary); }
+        .btn:active { transform: scale(0.98); }
+
+        .btn-reveal {
+            background: #0284c7;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        .btn-reveal:hover { background: #0369a1; }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 8px 12px;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 1rem;
+            width: 140px;
+        }
+
+        .feedback-text {
+            font-weight: bold;
+            margin-left: 8px;
+            font-size: 0.95rem;
+        }
+
+        .correct { color: var(--success); }
+        .incorrect { color: var(--error); }
+
+        .hidden-content {
+            display: none;
+            background: #e0f2fe;
+            border-left: 4px solid var(--primary-light);
+            padding: 14px 18px;
+            margin-top: 12px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .math-symbol {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        .formula-card {
+            background: #dbeafe;
+            border: 2px dashed var(--primary-light);
+            padding: 14px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 12px 0;
+            color: var(--primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th { background-color: #f1f5f9; }
+
+        /* Diagram Controls */
+        .diagram-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            margin: 15px 0;
+        }
+
+        .diagram-btn-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .diagram-btn {
+            background: #f1f5f9;
+            color: var(--text);
+            border: 1px solid #cbd5e1;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .diagram-btn.active {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Practice Grid */
+        .practice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 700px) {
+            .practice-grid { grid-template-columns: 1fr; }
+        }
+
+        .practice-card {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Controls Footer */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 2px solid #f1f5f9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Progress Bar -->
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- MeyerBot Header -->
+        <div class="bot-header">
+            <div class="bot-avatar-container">
+                <svg class="bot-avatar" viewBox="0 0 100 100">
+                    <rect x="15" y="15" width="70" height="70" rx="15" fill="#cbd5e1" stroke="#1e3a8a" stroke-width="3"/>
+                    <line x1="50" y1="15" x2="50" y2="5" stroke="#1e3a8a" stroke-width="3"/>
+                    <circle cx="50" cy="5" r="4" fill="#ef4444"/>
+                    <rect x="7" y="40" width="8" height="20" rx="2" fill="#94a3b8"/>
+                    <rect x="85" y="40" width="8" height="20" rx="2" fill="#94a3b8"/>
+                    <rect x="22" y="25" width="56" height="50" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+                    <rect x="28" y="33" width="18" height="14" rx="3" fill="#38bdf8" stroke="#1e3a8a" stroke-width="2"/>
+                    <rect x="54" y="33" width="18" height="14" rx="3" fill="#38bdf8" stroke="#1e3a8a" stroke-width="2"/>
+                    <line x1="46" y1="40" x2="54" y2="40" stroke="#1e3a8a" stroke-width="2"/>
+                    <circle cx="37" cy="40" r="3" fill="#1e3a8a"/>
+                    <circle cx="63" cy="40" r="3" fill="#1e3a8a"/>
+                    <path d="M 38 62 Q 50 72 62 62 Q 50 67 38 62 Z" fill="#475569"/>
+                    <path d="M 38 56 Q 50 63 62 56" fill="none" stroke="#1e3a8a" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="bot-speech-bubble" id="botDialogue">
+                BZZZT! Welcome Year 7! I am MeyerBot 2000. Open your Length Booklet to Page 10!
+            </div>
+        </div>
+
+        <!-- SLIDE 1: WELCOME & EQUIPMENT -->
+        <div class="slide active" data-dialogue="Welcome Year 7! Mr. Meyer is away today, so I am running the show. Get your 'Length' booklet ready on Page 10!">
+            <h2>Lesson 3: Circumference of a Circle</h2>
+            <div class="interactive-box">
+                <h3>📋 Equipment Check:</h3>
+                <ul>
+                    <li>Your <strong>Length Booklet</strong> (Open to <strong>Page 10</strong>)</li>
+                    <li>A pen/pencil to write key notes</li>
+                    <li>Your scientific calculator</li>
+                </ul>
+                <p>Stay in your seat, follow each slide at your own pace, and click <strong>Next ➡️</strong> to start our warm-up!</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: WARM UP QUESTIONS -->
+        <div class="slide" data-dialogue="Quick conversions on Page 10! Complete these 3 questions in your booklet and test your answers below.">
+            <h2>Step 1: Quick Warm-Up Questions (Page 10)</h2>
+            <div class="interactive-box">
+                <p>Complete these conversions on Page 10 of your booklet:</p>
+                
+                <div class="input-group">
+                    <label>1) Convert 3 cm to mm:</label>
+                    <input type="number" id="q1" placeholder="Answer"> mm
+                    <button class="btn" onclick="checkAnswer('q1', 30, 'fb1')">Check</button>
+                    <span id="fb1" class="feedback-text"></span>
+                </div>
+
+                <div class="input-group">
+                    <label>2) Convert 330 mm to cm:</label>
+                    <input type="number" id="q2" placeholder="Answer"> cm
+                    <button class="btn" onclick="checkAnswer('q2', 33, 'fb2')">Check</button>
+                    <span id="fb2" class="feedback-text"></span>
+                </div>
+
+                <div class="input-group">
+                    <label>3) Convert 3098 mm to m:</label>
+                    <input type="number" step="0.001" id="q3" placeholder="Answer"> m
+                    <button class="btn" onclick="checkAnswer('q3', 3.098, 'fb3')">Check</button>
+                    <span id="fb3" class="feedback-text"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: KEY CONCEPTS & BLANK LINES ON PAGE 10 -->
+        <div class="slide" data-dialogue="IMPORTANT! On Page 10 there are blank lines below the warm-up. Write down these core formulas and definitions!">
+            <h2>Step 2: Key Concepts & Blank Lines Notes (Page 10)</h2>
+            
+            <div class="interactive-box">
+                <h3>Interactive Circle Explorer</h3>
+                <p>Click the buttons below to highlight each part of a circle:</p>
+
+                <div class="diagram-container">
+                    <div class="diagram-btn-group">
+                        <button class="diagram-btn active" onclick="highlightCircle('all', event)">Show All</button>
+                        <button class="diagram-btn" onclick="highlightCircle('circumference', event)">Circumference (C)</button>
+                        <button class="diagram-btn" onclick="highlightCircle('diameter', event)">Diameter (d)</button>
+                        <button class="diagram-btn" onclick="highlightCircle('radius', event)">Radius (r)</button>
+                    </div>
+
+                    <svg width="220" height="220" viewBox="0 0 200 200">
+                        <circle id="svg-circ" cx="100" cy="100" r="80" fill="none" stroke="#2563eb" stroke-width="4"/>
+                        <circle cx="100" cy="100" r="4" fill="#1e3a8a"/>
+                        <line id="svg-diam" x1="20" y1="100" x2="180" y2="100" stroke="#dc2626" stroke-width="3.5"/>
+                        <line id="svg-rad" x1="100" y1="100" x2="156" y2="44" stroke="#16a34a" stroke-width="3.5"/>
+                        <text id="lbl-circ" x="100" y="15" fill="#2563eb" font-weight="bold" font-size="12" text-anchor="middle">Circumference (C)</text>
+                        <text id="lbl-diam" x="60" y="118" fill="#dc2626" font-weight="bold" font-size="12">Diameter (d)</text>
+                        <text id="lbl-rad" x="130" y="80" fill="#16a34a" font-weight="bold" font-size="12">Radius (r)</text>
+                    </svg>
+                </div>
+
+                <div class="note-taking-card">
+                    <h4>✏️ WRITE THESE KEY NOTES IN THE BLANK LINES ON PAGE 10:</h4>
+                    <ul>
+                        <li><strong>Circumference (C):</strong> The total perimeter or distance all the way around the outside of a circle.</li>
+                        <li><strong>Diameter (d):</strong> The straight line passing right through the center from one side to the other.</li>
+                        <li><strong>Radius (r):</strong> The distance from the center point to the outer edge (Half of the diameter: <span class="math-symbol">r = d ÷ 2</span>).</li>
+                        <li><strong>Diameter Rule:</strong> Diameter is twice the radius: <span class="math-symbol">d = 2r</span>.</li>
+                    </ul>
+                    <div class="formula-card">
+                        CORE FORMULAS TO COPY DOWN:<br>
+                        If given Diameter: &nbsp;&nbsp; <strong>C = π × d</strong> &nbsp;&nbsp; (or C = πd)<br>
+                        If given Radius: &nbsp;&nbsp; <strong>C = 2 × π × r</strong> &nbsp;&nbsp; (or C = 2πr)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: INVESTIGATION (PAGE 11) -->
+        <div class="slide" data-dialogue="Turn to Page 11! In Example 1, calculate C ÷ d for each row. What special number appears every time?">
+            <h2>Step 3: Example 1 - The Pi Investigation (Page 11)</h2>
+            
+            <div class="interactive-box">
+                <p>Calculate <span class="math-symbol">C ÷ d</span> in your booklet for each row:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Diameter <span class="math-symbol">d</span> (mm)</th>
+                            <th>Circumference <span class="math-symbol">C</span> (mm)</th>
+                            <th>Calculate <span class="math-symbol">C ÷ d</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>4.46</td>
+                            <td>14.01</td>
+                            <td><input type="number" step="0.01" id="inv1" placeholder="14.01 ÷ 4.46"></td>
+                        </tr>
+                        <tr>
+                            <td>11.88</td>
+                            <td>37.32</td>
+                            <td><input type="number" step="0.01" id="inv2" placeholder="37.32 ÷ 11.88"></td>
+                        </tr>
+                        <tr>
+                            <td>40.99</td>
+                            <td>128.76</td>
+                            <td><input type="number" step="0.01" id="inv3" placeholder="128.76 ÷ 40.99"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-reveal" onclick="toggleContent('inv-answers')">Show Answers & Fill-In Notes</button>
+                
+                <div id="inv-answers" class="hidden-content">
+                    <p><strong>Calculated Values:</strong> Every single row gives roughly <strong>3.141...</strong></p>
+                    <div class="note-taking-card">
+                        <h4>✏️ Write these on the blank lines under Example 1 (Page 11):</h4>
+                        <ul>
+                            <li><strong>What do you notice about C ÷ d?</strong> They are all approximately <strong>3.14</strong> (which is the mathematical constant <strong>Pi, π</strong>).</li>
+                            <li><strong>Why do numbers vary slightly?</strong> Due to slight measurement variations and decimal rounding.</li>
+                            <li><strong>Rule linking C with d:</strong> <strong>C = π × d</strong> &nbsp;&nbsp; (or <strong>C = 2 × π × r</strong>).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: STRATEGY BOARD - EXAMPLE 2 -->
+        <div class="slide" data-dialogue="🤖 MEYERBOT'S STRATEGY BOARD: How to conquer Example 2! Read this carefully before calculating.">
+            <h2>💡 MeyerBot's Strategy Board: Calculating Circumference</h2>
+            
+            <div class="strategy-board">
+                <h3>🤖 MeyerBot's Strategy Board</h3>
+                <p>Before touching your calculator, ask yourself:</p>
+                <div style="font-size:1.15rem; font-weight:bold; margin:12px 0; color:#1e3a8a;">
+                    "Am I given the RADIUS (r) or the DIAMETER (d)?"
+                </div>
+                <ul>
+                    <li><strong>If given RADIUS (r):</strong> The line only goes halfway from the center to edge.
+                        <br>👉 Use: <strong>C = 2 × π × r</strong>
+                    </li>
+                    <li><strong>If given DIAMETER (d):</strong> The line goes all the way across through the center.
+                        <br>👉 Use: <strong>C = π × d</strong>
+                    </li>
+                </ul>
+                <p><strong>Calculator Tip:</strong> Use the actual <strong>π</strong> key on your calculator, and remember to round your answer to <strong>2 decimal places</strong>!</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: WORKED EXAMPLE 2 (PAGE 11) -->
+        <div class="slide" data-dialogue="Example 2 on Page 11: In 2a, radius is 3.5 m. In 2b, diameter is 4 cm. Try them before checking your answers!">
+            <h2>Step 4: Worked Example 2 (Page 11)</h2>
+            
+            <div class="interactive-box">
+                <h4>a) Circle with Radius = 3.5 m</h4>
+                <p><em>Formula hint:</em> Since radius is given, use <span class="math-symbol">C = 2 × π × r</span>.</p>
+                <div class="input-group">
+                    <label>Your Answer (2 decimal places):</label>
+                    <input type="number" step="0.01" id="ex2a_in" placeholder="Answer"> m
+                    <button class="btn" onclick="checkAnswer('ex2a_in', 21.99, 'fb2a')">Check Answer</button>
+                    <span id="fb2a" class="feedback-text"></span>
+                </div>
+                <button class="btn btn-reveal" onclick="toggleContent('ex2a_working')">Show Worked Solution</button>
+                <div id="ex2a_working" class="hidden-content">
+                    <p><strong>Step 1:</strong> <span class="math-symbol">C = 2 × π × r</span></p>
+                    <p><strong>Step 2:</strong> <span class="math-symbol">C = 2 × π × 3.5</span></p>
+                    <p><strong>Step 3:</strong> <span class="math-symbol">C = 21.991148...</span></p>
+                    <p><strong>Answer:</strong> <strong>21.99 m</strong></p>
+                </div>
+
+                <hr style="margin:20px 0;">
+
+                <h4>b) Circle with Diameter = 4 cm</h4>
+                <p><em>Formula hint:</em> Since diameter is given, use <span class="math-symbol">C = π × d</span>.</p>
+                <div class="input-group">
+                    <label>Your Answer (2 decimal places):</label>
+                    <input type="number" step="0.01" id="ex2b_in" placeholder="Answer"> cm
+                    <button class="btn" onclick="checkAnswer('ex2b_in', 12.57, 'fb2b')">Check Answer</button>
+                    <span id="fb2b" class="feedback-text"></span>
+                </div>
+                <button class="btn btn-reveal" onclick="toggleContent('ex2b_working')">Show Worked Solution</button>
+                <div id="ex2b_working" class="hidden-content">
+                    <p><strong>Step 1:</strong> <span class="math-symbol">C = π × d</span></p>
+                    <p><strong>Step 2:</strong> <span class="math-symbol">C = π × 4</span></p>
+                    <p><strong>Step 3:</strong> <span class="math-symbol">C = 12.56637...</span></p>
+                    <p><strong>Answer:</strong> <strong>12.57 cm</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: STRATEGY BOARD - EXAMPLE 3 -->
+        <div class="slide" data-dialogue="🤖 MEYERBOT'S STRATEGY BOARD: How to handle approximations of Pi on Page 12!">
+            <h2>💡 MeyerBot's Strategy Board: Approximations of Pi</h2>
+            
+            <div class="strategy-board">
+                <h3>🤖 MeyerBot's Strategy Board</h3>
+                <p>Sometimes questions give an explicit approximation for Pi instead of using the calculator button:</p>
+                <ul>
+                    <li><strong>When given π = 3.14:</strong> Type <strong>3.14</strong> in place of π.<br>
+                        Example: <span class="math-symbol">C = 3.14 × d</span>
+                    </li>
+                    <li><strong>When given π = 22/7:</strong> Replace π with <strong>22/7</strong>.<br>
+                        <em>MeyerBot Secret Shortcut:</em> Always divide your radius or diameter by 7 first, then multiply by 22!
+                    </li>
+                </ul>
+                <p><strong>Important:</strong> Do NOT push the π button on your calculator if a specific value is given in the question!</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: WORKED EXAMPLE 3 (PAGE 12) -->
+        <div class="slide" data-dialogue="Example 3 on Page 12! Work out the calculations in your booklet first, then check your answers below.">
+            <h2>Step 5: Worked Example 3 (Page 12)</h2>
+            
+            <div class="interactive-box">
+                <h4>a) Diameter = 10 m, using π = 3.14</h4>
+                <div class="input-group">
+                    <label>Your Answer:</label>
+                    <input type="number" step="0.1" id="ex3a_in" placeholder="Answer"> m
+                    <button class="btn" onclick="checkAnswer('ex3a_in', 31.4, 'fb3a')">Check Answer</button>
+                    <span id="fb3a" class="feedback-text"></span>
+                </div>
+                <button class="btn btn-reveal" onclick="toggleContent('ex3a_working')">Show Worked Solution</button>
+                <div id="ex3a_working" class="hidden-content">
+                    <p><strong>Step 1:</strong> <span class="math-symbol">C = π × d</span></p>
+                    <p><strong>Step 2:</strong> Substitute <span class="math-symbol">π = 3.14</span> and <span class="math-symbol">d = 10</span></p>
+                    <p><strong>Step 3:</strong> <span class="math-symbol">C = 3.14 × 10</span></p>
+                    <p><strong>Answer:</strong> <strong>31.4 m</strong></p>
+                </div>
+
+                <hr style="margin:20px 0;">
+
+                <h4>b) Radius = 14 cm, using π = 22/7</h4>
+                <div class="input-group">
+                    <label>Your Answer:</label>
+                    <input type="number" id="ex3b_in" placeholder="Answer"> cm
+                    <button class="btn" onclick="checkAnswer('ex3b_in', 88, 'fb3b')">Check Answer</button>
+                    <span id="fb3b" class="feedback-text"></span>
+                </div>
+                <button class="btn btn-reveal" onclick="toggleContent('ex3b_working')">Show Worked Solution</button>
+                <div id="ex3b_working" class="hidden-content">
+                    <p><strong>Step 1:</strong> <span class="math-symbol">C = 2 × π × r</span></p>
+                    <p><strong>Step 2:</strong> <span class="math-symbol">C = 2 × (22/7) × 14</span></p>
+                    <p><strong>Step 3:</strong> Simplify by dividing 14 by 7: <span class="math-symbol">14 ÷ 7 = 2</span></p>
+                    <p><strong>Step 4:</strong> <span class="math-symbol">C = 2 × 22 × 2 = 88</span></p>
+                    <p><strong>Answer:</strong> <strong>88 cm</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: STRATEGY BOARD - REVERSING FORMULAS -->
+        <div class="slide" data-dialogue="🤖 MEYERBOT'S STRATEGY BOARD: Working backwards! How to find diameter or radius when given circumference.">
+            <h2>💡 MeyerBot's Strategy Board: Working Backwards</h2>
+            
+            <div class="strategy-board">
+                <h3>🤖 MeyerBot's Strategy Board</h3>
+                <p>What if the problem gives you the Circumference (C) and asks for the Diameter or Radius?</p>
+                <div class="formula-card">
+                    To find Diameter: &nbsp;&nbsp; <strong>d = C ÷ π</strong><br><br>
+                    To find Radius: &nbsp;&nbsp; <strong>r = d ÷ 2</strong> &nbsp;&nbsp; (or r = C ÷ (2 × π))
+                </div>
+                <p><strong>Calculator Alert:</strong> If calculating <span class="math-symbol">C ÷ (2 × π)</span>, remember to use brackets around the <span class="math-symbol">(2 × π)</span> so your calculator divides properly!</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: PROBLEM SOLVING 1 & 2 (PAGE 12) -->
+        <div class="slide" data-dialogue="Problem Solving 1 & 2 on Page 12! Try them in your booklet before checking your working below.">
+            <h2>Step 6: Problem Solving 1 & 2 (Page 12)</h2>
+            
+            <div class="interactive-box">
+                <h4>Problem Solving 1: A circle has a circumference of 60 cm</h4>
+                
+                <div class="input-group">
+                    <label>a) Diameter (to 1 decimal place):</label>
+                    <input type="number" step="0.1" id="ps1a_in" placeholder="cm">
+                    <button class="btn" onclick="checkAnswer('ps1a_in', 19.1, 'fb_ps1a')">Check</button>
+                    <span id="fb_ps1a" class="feedback-text"></span>
+                </div>
+
+                <div class="input-group">
+                    <label>b) Radius (to 1 decimal place):</label>
+                    <input type="number" step="0.1" id="ps1b_in" placeholder="cm">
+                    <button class="btn" onclick="checkAnswer('ps1b_in', 9.5, 'fb_ps1b')">Check</button>
+                    <span id="fb_ps1b" class="feedback-text"></span>
+                </div>
+
+                <button class="btn btn-reveal" onclick="toggleContent('ps1_working')">Show PS1 Worked Solution</button>
+                <div id="ps1_working" class="hidden-content">
+                    <p><strong>Part a:</strong> <span class="math-symbol">d = C ÷ π = 60 ÷ π = 19.09859...</span><br>
+                    Rounding to 1 d.p. gives <strong>19.1 cm</strong></p>
+                    <p><strong>Part b:</strong> <span class="math-symbol">r = d ÷ 2 = 19.09859... ÷ 2 = 9.54929...</span><br>
+                    Rounding to 1 d.p. gives <strong>9.5 cm</strong></p>
+                </div>
+
+                <hr style="margin:20px 0;">
+
+                <h4>Problem Solving 2: Car Tyre</h4>
+                <p>A car tyre has a circumference of 120 cm. Which of these is closest to the radius of the tyre?</p>
+                <p>Options: <strong>A) 9.5 cm &nbsp;|&nbsp; B) 19.1 cm &nbsp;|&nbsp; C) 38.0 cm &nbsp;|&nbsp; D) 753.6 cm</strong></p>
+                
+                <div class="input-group">
+                    <label>Your Option (A, B, C or D):</label>
+                    <input type="text" id="ps2_in" placeholder="Option">
+                    <button class="btn" onclick="checkTextAnswer('ps2_in', 'B', 'fb_ps2')">Check</button>
+                    <span id="fb_ps2" class="feedback-text"></span>
+                </div>
+                <button class="btn btn-reveal" onclick="toggleContent('ps2_working')">Show PS2 Worked Solution</button>
+                <div id="ps2_working" class="hidden-content">
+                    <p><strong>Step 1:</strong> Radius <span class="math-symbol">r = C ÷ (2 × π)</span></p>
+                    <p><strong>Step 2:</strong> <span class="math-symbol">r = 120 ÷ (2 × π) = 19.0985... cm</span></p>
+                    <p><strong>Answer:</strong> <strong>B (19.1 cm)</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: STRATEGY BOARD - ROLLING WHEELS -->
+        <div class="slide" data-dialogue="🤖 MEYERBOT'S STRATEGY BOARD: Rolling wheels on Page 13! One complete turn equals one circumference!">
+            <h2>💡 MeyerBot's Strategy Board: Rolling Wheel Problems</h2>
+            
+            <div class="strategy-board">
+                <h3>🤖 MeyerBot's Strategy Board</h3>
+                <p>When a circular wheel rolls along the ground:</p>
+                <div class="formula-card">
+                    Distance in 1 Full Turn = Circumference of the Wheel (C)<br>
+                    Total Distance = Circumference × Number of Turns
+                </div>
+                <p><strong>Watch the Units Trap!</strong> In Problem Solving 3, the diameter is in <strong>mm</strong>, but the question asks for distance in <strong>metres</strong>!</p>
+                <ul>
+                    <li>Convert mm to metres first by dividing by 1000 (<span class="math-symbol">530 mm = 0.53 m</span>).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: PROBLEM SOLVING 3 (PAGE 13) -->
+        <div class="slide" data-dialogue="Page 13 Bicycle Problem! Calculate the distance in metres in your booklet before checking below.">
+            <h2>Step 7: Problem Solving 3 - Bicycle Wheel (Page 13)</h2>
+            
+            <div class="interactive-box">
+                <p>A wheel on a bicycle has a diameter of <strong>530 mm</strong>. The wheel turns <strong>3 times</strong>. Approximately how many metres has the bicycle travelled?</p>
+                <p>Options: <strong>2m &nbsp;|&nbsp; 5m &nbsp;|&nbsp; 10m &nbsp;|&nbsp; 25m</strong></p>
+
+                <div class="input-group">
+                    <label>Your Answer (e.g. 5m):</label>
+                    <input type="text" id="ps3_in" placeholder="Answer">
+                    <button class="btn" onclick="checkTextAnswer('ps3_in', '5m', 'fb_ps3')">Check Answer</button>
+                    <span id="fb_ps3" class="feedback-text"></span>
+                </div>
+
+                <button class="btn btn-reveal" onclick="toggleContent('ps3_working')">Show Full Worked Solution</button>
+                <div id="ps3_working" class="hidden-content">
+                    <p><strong>Step 1: Convert units:</strong> <span class="math-symbol">530 mm ÷ 1000 = 0.53 m</span></p>
+                    <p><strong>Step 2: Find circumference for 1 turn:</strong> <span class="math-symbol">C = π × 0.53 = 1.665 m</span></p>
+                    <p><strong>Step 3: Multiply by 3 turns:</strong> <span class="math-symbol">Distance = 1.665 × 3 = 4.995 m</span></p>
+                    <p><strong>Answer:</strong> 4.995 m is closest to <strong>5m</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: 30-MINUTE PRACTICE MODULE WITH WORKED SOLUTIONS -->
+        <div class="slide" data-dialogue="30 Minutes of independent practice! Try each question in your book, check your answers, and reveal worked solutions.">
+            <h2>Step 8: 30-Minute Student Practice Module</h2>
+            
+            <div class="interactive-box">
+                <h3>PART A: Core Calculations (10 Minutes)</h3>
+                <div class="practice-grid">
+                    <div class="practice-card">
+                        <label><strong>1)</strong> Radius = 6 cm. Find C (2 d.p.):</label>
+                        <div class="input-group">
+                            <input type="number" step="0.01" id="p1"> cm
+                            <button class="btn" onclick="checkAnswer('p1', 37.70, 'fbp1')">Check</button>
+                        </div>
+                        <span id="fbp1" class="feedback-text"></span>
+                        <button class="btn btn-reveal" onclick="toggleContent('sol_p1')">Show Solution</button>
+                        <div id="sol_p1" class="hidden-content">
+                            <p><span class="math-symbol">C = 2 × π × 6 = 37.699... ≈ 37.70 cm</span></p>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <label><strong>2)</strong> Diameter = 15 m. Find C (2 d.p.):</label>
+                        <div class="input-group">
+                            <input type="number" step="0.01" id="p2"> m
+                            <button class="btn" onclick="checkAnswer('p2', 47.12, 'fbp2')">Check</button>
+                        </div>
+                        <span id="fbp2" class="feedback-text"></span>
+                        <button class="btn btn-reveal" onclick="toggleContent('sol_p2')">Show Solution</button>
+                        <div id="sol_p2" class="hidden-content">
+                            <p><span class="math-symbol">C = π × 15 = 47.123... ≈ 47.12 m</span></p>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <label><strong>3)</strong> Diameter = 28 cm, using π = 22/7:</label>
+                        <div class="input-group">
+                            <input type="number" id="p3"> cm
+                            <button class="btn" onclick="checkAnswer('p3', 88, 'fbp3')">Check</button>
+                        </div>
+                        <span id="fbp3" class="feedback-text"></span>
+                        <button class="btn btn-reveal" onclick="toggleContent('sol_p3')">Show Solution</button>
+                        <div id="sol_p3" class="hidden-content">
+                            <p><span class="math-symbol">C = (22/7) × 28 = 22 × 4 = 88 cm</span></p>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <label><strong>4)</strong> Radius = 10 m, using π = 3.14:</label>
+                        <div class="input-group">
+                            <input type="number" step="0.1" id="p4"> m
+                            <button class="btn" onclick="checkAnswer('p4', 62.8, 'fbp4')">Check</button>
+                        </div>
+                        <span id="fbp4" class="feedback-text"></span>
+                        <button class="btn btn-reveal" onclick="toggleContent('sol_p4')">Show Solution</button>
+                        <div id="sol_p4" class="hidden-content">
+                            <p><span class="math-symbol">C = 2 × 3.14 × 10 = 62.8 m</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <hr style="margin:20px 0;">
+
+                <h3>PART B: Applied Word Problems (10 Minutes)</h3>
+                <div class="practice-grid">
+                    <div class="practice-card">
+                        <label><strong>5)</strong> A circular wall clock has radius 12 cm. Find the distance around edge (2 d.p.):</label>
+                        <div class="input-group">
+                            <input type="number" step="0.01" id="p5"> cm
+                            <button class="btn" onclick="checkAnswer('p5', 75.40, 'fbp5')">Check</button>
+                        </div>
+                        <span id="fbp5" class="feedback-text"></span>
+                        <button class="btn btn-reveal" onclick="toggleContent('sol_p5')">Show Solution</button>
+                        <div id="sol_p5" class="hidden-content">
+                            <p><span class="math-symbol">C = 2 × π × 12 = 75.398... ≈ 75.40 cm</span></p>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <label><strong>6)</strong> A circular pool has diameter 8 m. Length of rope around edge (2 d.p.):</label>
+                        <div class="input-group">
+                            <input type="number" step="0.01" id="p6"> m
+                            <button class="btn" onclick="checkAnswer('p6', 25.13, 'fbp6')">Check</button>
+                        </div>
+                        <span id="fbp6" class="feedback-text"></span>
+                        <button class="btn btn-reveal" onclick="toggleContent('sol_p6')">Show Solution</button>
+                        <div id="sol_p6" class="hidden-content">
+                            <p><span class="math-symbol">C = π × 8 = 25.132... ≈ 25.13 m</span></p>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <label><strong>7)</strong> A ferris wheel has diameter 40 m. Distance in 1 rotation (2 d.p.):</label>
+                        <div class="input-group">
+                            <input type="number" step="0.01" id="p7"> m
+                            <button class="btn" onclick="checkAnswer('p7', 125.66, 'fbp7')">Check</button>
+                        </div>
+                        <span id="fbp7" class="feedback-text"></span>
+                        <button class="btn btn-reveal" onclick="toggleContent('sol_p7')">Show Solution</button>
+                        <div id="sol_p7" class="hidden-content">
+                            <p><span class="math-symbol">C = π × 40 = 125.663... ≈ 125.66 m</span></p>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <label><strong>8)</strong> A coin has radius 1.4 cm. Distance rolled in 5 complete turns (2 d.p.):</label>
+                        <div class="input-group">
+                            <input type="number" step="0.01" id="p8"> cm
+                            <button class="btn" onclick="checkAnswer('p8', 43.98, 'fbp8')">Check</button>
+                        </div>
+                        <span id="fbp8" class="feedback-text"></span>
+                        <button class="btn btn-reveal" onclick="toggleContent('sol_p8')">Show Solution</button>
+                        <div id="sol_p8" class="hidden-content">
+                            <p><span class="math-symbol">1 turn = 2 × π × 1.4 = 8.796 cm</span><br>
+                            <span class="math-symbol">5 turns = 8.796 × 5 ≈ 43.98 cm</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <hr style="margin:20px 0;">
+
+                <h3>PART C: Reversing & Multi-Step Challenges (10 Minutes)</h3>
+                <div class="practice-grid">
+                    <div class="practice-card">
+                        <label><strong>9)</strong> Circumference = 31.4 cm. Find diameter using π = 3.14:</label>
+                        <div class="input-group">
+                            <input type="number" id="p9"> cm
+                            <button class="btn" onclick="checkAnswer('p9', 10, 'fbp9')">Check</button>
+                        </div>
+                        <span id="fbp9" class="feedback-text"></span>
+                        <button class="btn btn-reveal" onclick="toggleContent('sol_p9')">Show Solution</button>
+                        <div id="sol_p9" class="hidden-content">
+                            <p><span class="math-symbol">d = C ÷ 3.14 = 31.4 ÷ 3.14 = 10 cm</span></p>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <label><strong>10)</strong> Circumference = 50 cm. Find diameter (to 1 d.p.):</label>
+                        <div class="input-group">
+                            <input type="number" step="0.1" id="p10"> cm
+                            <button class="btn" onclick="checkAnswer('p10', 15.9, 'fbp10')">Check</button>
+                        </div>
+                        <span id="fbp10" class="feedback-text"></span>
+                        <button class="btn btn-reveal" onclick="toggleContent('sol_p10')">Show Solution</button>
+                        <div id="sol_p10" class="hidden-content">
+                            <p><span class="math-symbol">d = 50 ÷ π = 15.915... ≈ 15.9 cm</span></p>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <label><strong>11)</strong> Circumference = 100 m. Find radius (to 1 d.p.):</label>
+                        <div class="input-group">
+                            <input type="number" step="0.1" id="p11"> m
+                            <button class="btn" onclick="checkAnswer('p11', 15.9, 'fbp11')">Check</button>
+                        </div>
+                        <span id="fbp11" class="feedback-text"></span>
+                        <button class="btn btn-reveal" onclick="toggleContent('sol_p11')">Show Solution</button>
+                        <div id="sol_p11" class="hidden-content">
+                            <p><span class="math-symbol">r = 100 ÷ (2 × π) = 15.915... ≈ 15.9 m</span></p>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <label><strong>12)</strong> Wheel diameter = 400 mm. Metres travelled in 10 full turns (2 d.p.):</label>
+                        <div class="input-group">
+                            <input type="number" step="0.01" id="p12"> m
+                            <button class="btn" onclick="checkAnswer('p12', 12.57, 'fbp12')">Check</button>
+                        </div>
+                        <span id="fbp12" class="feedback-text"></span>
+                        <button class="btn btn-reveal" onclick="toggleContent('sol_p12')">Show Solution</button>
+                        <div id="sol_p12" class="hidden-content">
+                            <p><span class="math-symbol">400 mm = 0.4 m</span><br>
+                            <span class="math-symbol">1 turn = π × 0.4 = 1.2566 m</span><br>
+                            <span class="math-symbol">10 turns = 1.2566 × 10 ≈ 12.57 m</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: SUCCESS CRITERIA CHECK -->
+        <div class="slide" data-dialogue="Outstanding job! Complete the Success Criteria checkboxes at the bottom of Page 13 before closing your booklet!">
+            <h2>Step 9: Success Criteria Reflection (Page 13)</h2>
+            <div class="interactive-box">
+                <p>Reflect on your mastery today and tick your confidence on Page 13:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Success Criteria</th>
+                            <th>Rarely</th>
+                            <th>Sometimes</th>
+                            <th>Always</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>I can calculate circumference using <span class="math-symbol">C = 2πr</span> or <span class="math-symbol">C = πd</span></td>
+                            <td><input type="radio" name="sc1"></td>
+                            <td><input type="radio" name="sc1"></td>
+                            <td><input type="radio" name="sc1"></td>
+                        </tr>
+                        <tr>
+                            <td>I can calculate diameter (<span class="math-symbol">d = C ÷ π</span>) or radius (<span class="math-symbol">r = C ÷ 2π</span>) given circumference</td>
+                            <td><input type="radio" name="sc2"></td>
+                            <td><input type="radio" name="sc2"></td>
+                            <td><input type="radio" name="sc2"></td>
+                        </tr>
+                        <tr>
+                            <td>I can round decimal answers accurately or use approximations like <span class="math-symbol">3.14</span> and <span class="math-symbol">22/7</span></td>
+                            <td><input type="radio" name="sc3"></td>
+                            <td><input type="radio" name="sc3"></td>
+                            <td><input type="radio" name="sc3"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="text-align: center; margin-top: 25px; font-weight: bold; font-size: 1.1rem; color: var(--primary);">
+                    🤖 MeyerBot 2000 signing off. Superb circuit activity today, Year 7!
+                </p>
+            </div>
+        </div>
+
+        <!-- Controls Footer -->
+        <div class="controls">
+            <button class="btn" id="prevBtn" onclick="changeSlide(-1)">⬅️ Previous</button>
+            <span id="slideIndicator" style="font-weight: bold;">Slide 1 of 14</span>
+            <button class="btn" id="nextBtn" onclick="changeSlide(1)">Next ➡️</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const slideIndicator = document.getElementById('slideIndicator');
+        const botDialogue = document.getElementById('botDialogue');
+
+        function updateSlideDisplay() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+
+            const progress = ((currentSlide + 1) / slides.length) * 100;
+            progressBar.style.width = progress + '%';
+            slideIndicator.innerText = `Slide ${currentSlide + 1} of ${slides.length}`;
+
+            const currentDialogue = slides[currentSlide].getAttribute('data-dialogue');
+            if (currentDialogue) {
+                botDialogue.innerText = currentDialogue;
+            }
+
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === slides.length - 1;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+            updateSlideDisplay();
+        }
+
+        function toggleContent(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === "block") ? "none" : "block";
+        }
+
+        function checkAnswer(inputId, expectedValue, feedbackId) {
+            const val = parseFloat(document.getElementById(inputId).value);
+            const fb = document.getElementById(feedbackId);
+            if (Math.abs(val - expectedValue) < 0.05) {
+                fb.innerText = "✓ Correct! BZZT!";
+                fb.className = "feedback-text correct";
+            } else {
+                fb.innerText = "✗ Try again!";
+                fb.className = "feedback-text incorrect";
+            }
+        }
+
+        function checkTextAnswer(inputId, expectedValue, feedbackId) {
+            const val = document.getElementById(inputId).value.trim().toLowerCase();
+            const fb = document.getElementById(feedbackId);
+            if (val === expectedValue.toLowerCase() || val === "5" || val === "5 metres" || val === "b" || val === "option b") {
+                fb.innerText = "✓ Correct! High voltage!";
+                fb.className = "feedback-text correct";
+            } else {
+                fb.innerText = "✗ Not quite. Try again!";
+                fb.className = "feedback-text incorrect";
+            }
+        }
+
+        function highlightCircle(mode, event) {
+            const circ = document.getElementById('svg-circ');
+            const diam = document.getElementById('svg-diam');
+            const rad = document.getElementById('svg-rad');
+            const lblCirc = document.getElementById('lbl-circ');
+            const lblDiam = document.getElementById('lbl-diam');
+            const lblRad = document.getElementById('lbl-rad');
+
+            circ.style.opacity = '0.2';
+            diam.style.opacity = '0.2';
+            rad.style.opacity = '0.2';
+            lblCirc.style.opacity = '0.2';
+            lblDiam.style.opacity = '0.2';
+            lblRad.style.opacity = '0.2';
+
+            if (mode === 'all') {
+                circ.style.opacity = '1';
+                diam.style.opacity = '1';
+                rad.style.opacity = '1';
+                lblCirc.style.opacity = '1';
+                lblDiam.style.opacity = '1';
+                lblRad.style.opacity = '1';
+            } else if (mode === 'circumference') {
+                circ.style.opacity = '1';
+                lblCirc.style.opacity = '1';
+            } else if (mode === 'diameter') {
+                diam.style.opacity = '1';
+                lblDiam.style.opacity = '1';
+            } else if (mode === 'radius') {
+                rad.style.opacity = '1';
+                lblRad.style.opacity = '1';
+            }
+
+            const btns = document.querySelectorAll('.diagram-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+        }
+
+        updateSlideDisplay();
+    </script>
+</body>
+</html>
