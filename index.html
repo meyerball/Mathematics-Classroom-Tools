@@ -13,6 +13,7 @@
       --text-sub: #94a3b8;
       --accent-blue: #38bdf8;
       --accent-purple: #c084fc;
+      --accent-emerald: #34d399;
       --border: #334155;
     }
 
@@ -22,14 +23,14 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: var(--bg);
       color: var(--text-main);
-      max-width: 900px;
+      max-width: 960px;
       margin: 0 auto;
       padding: 40px 20px;
       line-height: 1.5;
     }
 
     header {
-      margin-bottom: 40px;
+      margin-bottom: 36px;
       padding-bottom: 24px;
       border-bottom: 1px solid var(--border);
     }
@@ -60,7 +61,7 @@
 
     p.subtitle {
       color: var(--text-sub);
-      font-size: 1.1rem;
+      font-size: 1.05rem;
     }
 
     .grid {
@@ -78,6 +79,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      min-height: 180px;
       text-decoration: none;
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
@@ -98,7 +100,7 @@
       transform: translateY(-5px);
       background: var(--card-hover);
       border-color: #475569;
-      box-shadow: 0 12px 24px -10px rgba(56, 189, 248, 0.2);
+      box-shadow: 0 12px 24px -10px rgba(56, 189, 248, 0.25);
     }
 
     .card:hover::before {
@@ -120,7 +122,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 10px;
+      border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
@@ -133,14 +135,15 @@
       color: var(--accent-blue);
       padding: 4px 10px;
       border-radius: 9999px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
     }
 
     .card-title {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 700;
       color: var(--text-main);
       margin-bottom: 16px;
-      line-height: 1.4;
+      line-height: 1.35;
     }
 
     .btn-action {
@@ -155,6 +158,14 @@
     .card:hover .btn-action {
       color: var(--accent-purple);
     }
+
+    .loading-text {
+      color: var(--text-sub);
+      grid-column: 1 / -1;
+      padding: 30px 0;
+      text-align: center;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
@@ -162,29 +173,68 @@
   <header>
     <div class="brand-badge">&lt;meyerball /&gt;</div>
     <h1>Classroom Maths Tools</h1>
-    <p class="subtitle">Interactive tools & practice arcades for mathematics activities.</p>
+    <p class="subtitle">Interactive tools, simulations &amp; practice arcades for mathematics activities.</p>
   </header>
 
-  <div id="tool-list" class="grid">Loading activities...</div>
+  <div id="tool-list" class="grid">
+    <div class="loading-text">Loading classroom activities...</div>
+  </div>
 
   <script>
-    fetch('https://api.github.com/repos/meyerball/Year-11-Classroom-Tools/contents/')
-      .then(res => res.json())
+    /*
+      Automatically scans the GitHub repository to generate cards for all HTML activities.
+      Includes special icon matching for Circumference, Greedy Pig, Marble Slides, and Trig!
+    */
+    const REPO_OWNER = 'meyerball';
+    const REPO_NAME = 'Year-11-Classroom-Tools';
+
+    fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/`)
+      .then(res => {
+        if (!res.ok) throw new Error('Network or rate-limit issue');
+        return res.json();
+      })
       .then(files => {
         const container = document.getElementById('tool-list');
         container.innerHTML = '';
         
+        let foundFiles = 0;
+
         files.forEach(file => {
-          if (file.name.endsWith('.html') && file.name !== 'index.html') {
-            let cleanName = file.name.replace('.html', '').replace(/_/g, ' ');
+          if (file.name.endsWith('.html') && file.name.toLowerCase() !== 'index.html') {
+            foundFiles++;
+            const raw = file.name.toLowerCase();
+
+            // Friendly title formatting
+            let cleanName = file.name.replace('.html', '').replace(/_/g, ' ').replace(/-/g, ' ');
             cleanName = cleanName.replace(/\b\w/g, l => l.toUpperCase());
 
-            // Dynamic icon assignment based on file keywords
+            // Context-specific icon and category badge selection
             let icon = '🎮';
-            if (file.name.includes('adv')) icon = '⚡';
-            if (file.name.includes('standard')) icon = '🎯';
-            if (file.name.includes('slide') || file.name.includes('linear')) icon = '📈';
-            if (file.name.includes('calc')) icon = '🧮';
+            let badgeText = 'Activity';
+
+            if (raw.includes('circumference') || raw.includes('circle')) {
+              icon = '⭕';
+              badgeText = 'Year 7 Geometry';
+              if (!cleanName.includes('Circumference')) cleanName = 'Year 7: Circumference';
+            } else if (raw.includes('pig')) {
+              icon = '🐷';
+              badgeText = 'Classroom Game';
+            } else if (raw.includes('marble') || raw.includes('linear') || raw.includes('slide')) {
+              icon = '🔮';
+              badgeText = 'Graphing Puzzle';
+            } else if (raw.includes('trig')) {
+              icon = '📐';
+              badgeText = 'Year 9 Arcade';
+            } else if (raw.includes('adv')) {
+              icon = '⚡';
+              badgeText = 'Advanced Maths';
+            } else if (raw.includes('standard')) {
+              icon = '🎯';
+              badgeText = 'Standard Maths';
+            } else if (raw.includes('calc')) {
+              icon = '🧮';
+              badgeText = 'Calculator Tool';
+            }
 
             const card = document.createElement('a');
             card.className = 'card';
@@ -193,7 +243,7 @@
               <div>
                 <div class="card-header">
                   <span class="icon-box">${icon}</span>
-                  <span class="badge">Interactive Activity</span>
+                  <span class="badge">${badgeText}</span>
                 </div>
                 <h2 class="card-title">${cleanName}</h2>
               </div>
@@ -202,6 +252,38 @@
             container.appendChild(card);
           }
         });
+
+        if (foundFiles === 0) {
+          container.innerHTML = '<div class="loading-text">No activity files found yet. Upload an HTML lesson to get started!</div>';
+        }
+      })
+      .catch(err => {
+        console.warn('API fetch error, rendering standard direct links:', err);
+        // Fallback links in case GitHub API rate limits a guest browser
+        const container = document.getElementById('tool-list');
+        container.innerHTML = `
+          <a class="card" href="greedy_pig_classroom.html">
+            <div>
+              <div class="card-header"><span class="icon-box">🐷</span><span class="badge">Classroom Game</span></div>
+              <h2 class="card-title">Greedy Pig: MeyerBall Edition</h2>
+            </div>
+            <div class="btn-action">Launch Activity &rarr;</div>
+          </a>
+          <a class="card" href="marble_slides_linear_functions.html">
+            <div>
+              <div class="card-header"><span class="icon-box">🔮</span><span class="badge">Graphing Puzzle</span></div>
+              <h2 class="card-title">Marble Slides: Linear Functions</h2>
+            </div>
+            <div class="btn-action">Launch Activity &rarr;</div>
+          </a>
+          <a class="card" href="year_9_trig_interactive_arcade.html">
+            <div>
+              <div class="card-header"><span class="icon-box">📐</span><span class="badge">Year 9 Arcade</span></div>
+              <h2 class="card-title">Year 9 Trigonometry Arcade</h2>
+            </div>
+            <div class="btn-action">Launch Activity &rarr;</div>
+          </a>
+        `;
       });
   </script>
 
