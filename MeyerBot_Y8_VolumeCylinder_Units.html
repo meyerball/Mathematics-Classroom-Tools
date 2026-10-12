@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeyerBot 2000 - Year 8 Volume & Unit Conversions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #2563eb;
+            --secondary: #0284c7;
+            --bg: #f0f9ff;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --success: #16a34a;
+            --error: #dc2626;
+            --teacher-bg: #fefce8;
+            --teacher-border: #eab308;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 940px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 24px;
+            box-sizing: border-box;
+        }
+
+        /* MeyerBot Header */
+        .bot-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #e0f2fe;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 2px solid #bae6fd;
+            margin-bottom: 20px;
+        }
+
+        .bot-avatar-container {
+            width: 82px;
+            height: 82px;
+            flex-shrink: 0;
+            background: #38bdf8;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .bot-speech-bubble {
+            background: white;
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: 2px solid #60a5fa;
+            flex-grow: 1;
+            font-weight: 600;
+            color: #1e3a8a;
+            font-size: 1.02rem;
+            line-height: 1.45;
+        }
+
+        /* Lesson Nav Tabs */
+        .lesson-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid #cbd5e1;
+            background: #f8fafc;
+            font-weight: bold;
+            font-size: 0.98rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            background: #1e3a8a;
+            color: white;
+            border-color: #1e3a8a;
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.2);
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e2e8f0;
+            border-radius: 999px;
+            height: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #2563eb;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Slide Transition */
+        .slide { display: none; }
+        .slide.active {
+            display: block;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Casio Calculator Keys */
+        .casio-key {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #1e293b;
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 0.85rem;
+            padding: 3px 8px;
+            border-radius: 5px;
+            border: 1px solid #475569;
+            box-shadow: 0 2px 0 #0f172a;
+            margin: 1px 3px;
+        }
+
+        .casio-shift {
+            background: #b45309;
+            border-color: #d97706;
+            box-shadow: 0 2px 0 #78350f;
+            color: #fef08a;
+        }
+
+        .casio-sd {
+            background: #475569;
+            color: #38bdf8;
+        }
+
+        /* Math Typography & Equal Sign Alignment */
+        .math-pi {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-size: 1.25em;
+            font-weight: normal;
+        }
+
+        .aligned-math {
+            display: grid;
+            grid-template-columns: auto auto 1fr;
+            row-gap: 6px;
+            column-gap: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.05rem;
+            background: #ffffff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            margin: 10px 0;
+            width: fit-content;
+        }
+
+        .aligned-math span { white-space: nowrap; }
+
+        /* Strategy Boards & Prompts */
+        .strategy-board {
+            background: #fefce8;
+            border-left: 6px solid #eab308;
+            border-right: 1px solid #fef08a;
+            border-top: 1px solid #fef08a;
+            border-bottom: 1px solid #fef08a;
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin: 16px 0;
+        }
+
+        .interactive-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 18px;
+            margin: 16px 0;
+        }
+
+        .hint-step-box {
+            background: #f0fdf4;
+            border: 1px dashed #22c55e;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin: 8px 0;
+            display: none;
+        }
+
+        .btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn:hover { background: #1d4ed8; }
+        .btn-hint {
+            background: #0284c7;
+            font-size: 0.88rem;
+            padding: 6px 12px;
+        }
+        .btn-hint:hover { background: #0369a1; }
+
+        .btn-reveal {
+            background: #475569;
+            font-size: 0.88rem;
+            padding: 6px 12px;
+        }
+        .btn-reveal:hover { background: #334155; }
+
+        .skip-banner {
+            background: #fef2f2;
+            border: 2px dashed #ef4444;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: #991b1b;
+            font-weight: bold;
+            margin: 12px 0;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 8px 12px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 140px;
+        }
+
+        .feedback-text {
+            font-weight: bold;
+            margin-left: 6px;
+            font-size: 0.95rem;
+        }
+        .correct { color: var(--success); }
+        .incorrect { color: var(--error); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+        }
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 10px;
+            text-align: center;
+        }
+        th { background: #f1f5f9; }
+
+        .practice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 12px;
+        }
+        @media (max-width: 650px) {
+            .practice-grid { grid-template-columns: 1fr; }
+        }
+        .practice-card {
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 2px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Progress Bar -->
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Lesson Switcher -->
+    <div class="lesson-nav">
+        <button class="tab-btn active" id="tabL3" onclick="jumpToLesson(3)">
+            📘 Hour 1: Volume of Cylinders (Lesson 3 / Pg 12-14)
+        </button>
+        <button class="tab-btn" id="tabL4" onclick="jumpToLesson(4)">
+            🔄 Hour 2: Converting Units (Lesson 4 / Pg 16-18)
+        </button>
+    </div>
+
+    <!-- MeyerBot Header -->
+    <div class="bot-header">
+        <div class="bot-avatar-container">
+            <svg style="width:72px; height:72px;" viewBox="0 0 100 100">
+                <rect x="15" y="15" width="70" height="70" rx="15" fill="#cbd5e1" stroke="#1e3a8a" stroke-width="3"/>
+                <line x1="50" y1="15" x2="50" y2="5" stroke="#1e3a8a" stroke-width="3"/>
+                <circle cx="50" cy="5" r="4" fill="#ef4444"/>
+                <rect x="7" y="40" width="8" height="20" rx="2" fill="#94a3b8"/>
+                <rect x="85" y="40" width="8" height="20" rx="2" fill="#94a3b8"/>
+                <rect x="22" y="25" width="56" height="50" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+                <rect x="28" y="33" width="18" height="14" rx="3" fill="#38bdf8" stroke="#1e3a8a" stroke-width="2"/>
+                <rect x="54" y="33" width="18" height="14" rx="3" fill="#38bdf8" stroke="#1e3a8a" stroke-width="2"/>
+                <line x1="46" y1="40" x2="54" y2="40" stroke="#1e3a8a" stroke-width="2"/>
+                <circle cx="37" cy="40" r="3" fill="#1e3a8a"/>
+                <circle cx="63" cy="40" r="3" fill="#1e3a8a"/>
+                <path d="M 38 62 Q 50 72 62 62 Q 50 67 38 62 Z" fill="#475569"/>
+                <path d="M 38 56 Q 50 63 62 56" fill="none" stroke="#1e3a8a" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div class="bot-speech-bubble" id="botDialogue">
+            BZZZT! Welcome Year 8! I am MeyerBot 2000. Take it slow and easy. We are on Page 12 of your Volume booklet!
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- LESSON 3: VOLUME OF CYLINDERS (Pages 12-14) -->
+    <!-- ========================================== -->
+
+    <!-- SLIDE 1: Welcome Page 12 -->
+    <div class="slide active" data-lesson="3" data-dialogue="Welcome Year 8! Open your Volume Booklet to Page 12. You have your own calculator and we will take every step nice and slow!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded">LESSON 3</span>
+            <span class="bg-gray-100 text-gray-700 text-xs font-semibold px-2.5 py-1 rounded">Page 12</span>
+        </div>
+        <h2 class="text-2xl font-bold text-blue-900 mb-2">Finding the Volume of Cylinders</h2>
+        <div class="interactive-box">
+            <h3 class="font-bold text-lg mb-2">📋 What You Need Right Now:</h3>
+            <ul class="list-disc pl-5 space-y-1 text-gray-800">
+                <li>Your <strong>Volume Booklet</strong> (Open to <strong>Page 12</strong>)</li>
+                <li>Your pen or pencil</li>
+                <li>Your <strong>Casio fx-82AU PLUS II</strong> calculator</li>
+            </ul>
+            <p class="mt-3 text-sm text-gray-600">You don't need to leave your seat! Every question has hints ready when you need a gentle push.</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 2: Warm Up Page 12 -->
+    <div class="slide" data-lesson="3" data-dialogue="Page 12 Quick Warm Up! Try these in your booklet. Use the hints if you get stuck, then check your answer!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 12</span>
+            <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded">WARM UP</span>
+        </div>
+        <h2 class="text-xl font-bold text-blue-900">Lesson 3: Warm-Up Questions (Page 12)</h2>
+        <div class="interactive-box">
+            <!-- WU 1 -->
+            <div class="mb-4 p-3 bg-white border border-gray-200 rounded-lg">
+                <p class="font-semibold text-gray-800">1) Calculate: (6 - 3) × -3</p>
+                <button class="btn btn-hint mt-1" onclick="toggleHint('hint_wu1')">💡 Click for Hint</button>
+                <div id="hint_wu1" class="hint-step-box">
+                    <p class="text-sm text-green-800"><strong>Step 1:</strong> Do inside the brackets first: 6 - 3 = 3.</p>
+                    <p class="text-sm text-green-800"><strong>Step 2:</strong> Now calculate 3 × -3. Remember: a positive times a negative gives a negative!</p>
+                </div>
+                <div class="flex items-center gap-2 mt-2">
+                    <input type="number" id="wu1_l3" placeholder="Your answer">
+                    <button class="btn" onclick="checkAnswer('wu1_l3', -9, 'fb_wu1')">Check</button>
+                    <span id="fb_wu1" class="feedback-text"></span>
+                </div>
+            </div>
+
+            <!-- WU 2 -->
+            <div class="mb-4 p-3 bg-white border border-gray-200 rounded-lg">
+                <p class="font-semibold text-gray-800">2) Calculate: 6 - 3 × -3</p>
+                <button class="btn btn-hint mt-1" onclick="toggleHint('hint_wu2')">💡 Click for Hint</button>
+                <div id="hint_wu2" class="hint-step-box">
+                    <p class="text-sm text-green-800"><strong>Step 1 (Order of Ops):</strong> Multiplication comes before subtraction! Calculate -3 × -3 first.</p>
+                    <p class="text-sm text-green-800"><strong>Step 2:</strong> -3 × -3 = +9. So what is 6 + 9?</p>
+                </div>
+                <div class="flex items-center gap-2 mt-2">
+                    <input type="number" id="wu2_l3" placeholder="Your answer">
+                    <button class="btn" onclick="checkAnswer('wu2_l3', 15, 'fb_wu2')">Check</button>
+                    <span id="fb_wu2" class="feedback-text"></span>
+                </div>
+            </div>
+
+            <!-- WU 3 -->
+            <div class="p-3 bg-white border border-gray-200 rounded-lg">
+                <p class="font-semibold text-gray-800">3) If radius r = 3, find the Circle Area: Area = <span class="math-pi">π</span> × r²</p>
+                <button class="btn btn-hint mt-1" onclick="toggleHint('hint_wu3')">💡 Click for Hint (Casio Recipe)</button>
+                <div id="hint_wu3" class="hint-step-box">
+                    <p class="text-sm text-green-800 mb-1">On your <strong>Casio fx-82AU PLUS II</strong> press:</p>
+                    <div>
+                        <span class="casio-key casio-shift">SHIFT</span>
+                        <span class="casio-key">×10ˣ</span>
+                        <span class="casio-key">×</span>
+                        <span class="casio-key">3</span>
+                        <span class="casio-key">x²</span>
+                        <span class="casio-key">=</span>
+                        <span class="casio-key casio-sd">S⇔D</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 mt-2">
+                    <input type="number" step="0.01" id="wu3_l3" placeholder="Round to 2 d.p.">
+                    <button class="btn" onclick="checkAnswer('wu3_l3', 28.27, 'fb_wu3')">Check</button>
+                    <span id="fb_wu3" class="feedback-text"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 3: Key Notes Page 12 -->
+    <div class="slide" data-lesson="3" data-dialogue="Important note writing time! In the blank lines below the warm-up on Page 12, copy these notes down!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 12</span>
+            <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded">BLANK LINES NOTES</span>
+        </div>
+        <h2 class="text-xl font-bold text-blue-900">What is a Cylinder & The Volume Formula</h2>
+
+        <div class="p-4 bg-amber-50 border-2 border-amber-300 rounded-xl my-3">
+            <h4 class="font-bold text-amber-900 text-base mb-2">✏️ COPY THESE NOTES ONTO THE BLANK LINES ON PAGE 12:</h4>
+            <ul class="list-disc pl-5 space-y-2 text-gray-800 text-sm">
+                <li><strong>What is a cylinder?</strong> A 3D solid with circular bases and straight smooth sides (like a drink can!).</li>
+                <li><strong>Base Area:</strong> The base is a circle, so: <br>
+                    <span class="font-bold text-blue-900">Area = <span class="math-pi">π</span> × r²</span>
+                </li>
+                <li><strong>General Volume Rule:</strong> Volume = Base Area × Height</li>
+            </ul>
+
+            <div class="bg-white p-3 rounded-lg border-2 border-blue-400 mt-3 text-center">
+                <p class="text-xs uppercase tracking-wider font-bold text-gray-500">Core Formula to Memorise</p>
+                <p class="text-2xl font-black text-blue-900 mt-1">Volume = <span class="math-pi">π</span> × r² × h</p>
+                <p class="text-xs text-gray-600 mt-1">(where <strong>r</strong> is the radius of the circular base, and <strong>h</strong> is the height)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 4: Strategy Board Example 1 -->
+    <div class="slide" data-lesson="3" data-dialogue="🤖 MeyerBot's Strategy Board! Let's examine Example 1 on Page 13. Answer my questions first!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded">STRATEGY BOARD</span>
+            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 13</span>
+        </div>
+        <h2 class="text-xl font-bold text-amber-900">🤖 MeyerBot's Strategy Board: When Area (A) is Already Given!</h2>
+
+        <div class="strategy-board">
+            <h3 class="font-bold text-amber-950 text-lg mb-2">Let's look at Example 1 on Page 13 together:</h3>
+            <p class="text-gray-700 text-sm mb-3">Notice something special? Look at the label pointing to the circle!</p>
+            
+            <div class="bg-white p-3 rounded-lg border border-amber-300 mb-3">
+                <p class="font-bold text-blue-900 text-sm">🤔 Prompt Question 1:</p>
+                <p class="text-sm text-gray-700">Did the diagram already give you the area with 'A = ...'?</p>
+                <button class="btn btn-hint mt-2" onclick="toggleHint('sb_ex1_reveal')">Click to Answer</button>
+                <div id="sb_ex1_reveal" class="hint-step-box mt-2">
+                    <p class="text-sm font-bold text-green-700">👉 YES! It gave you Area = 12 mm²!</p>
+                    <p class="text-xs text-gray-600">That means you do NOT need to calculate <span class="math-pi">π</span> × r²! The hard work is already done for you!</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-3 rounded-lg border border-amber-300">
+                <p class="font-bold text-blue-900 text-sm">Your Simple Rule:</p>
+                <p class="text-lg font-bold text-blue-900">Volume = Area × Height</p>
+                <p class="text-xs text-gray-600">Just multiply the two numbers together!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 5: Example 1 (Page 13) -->
+    <div class="slide" data-lesson="3" data-dialogue="Try Example 1 on Page 13 in your booklet now! Multiply Area by Height.">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 13</span>
+            <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded">EXAMPLE 1</span>
+        </div>
+        <h2 class="text-xl font-bold text-blue-900">Worked Example 1: Area is Given</h2>
+
+        <div class="interactive-box">
+            <!-- Ex 1a -->
+            <div class="mb-5 pb-4 border-b border-gray-200">
+                <h4 class="font-bold text-blue-900">Cylinder 1: Area A = 12 mm², Height h = 10 mm</h4>
+                <div class="flex items-center gap-2 my-2">
+                    <label class="text-sm font-semibold">Volume:</label>
+                    <input type="number" id="ex1a_in" placeholder="mm³">
+                    <button class="btn" onclick="checkAnswer('ex1a_in', 120, 'fb_ex1a')">Check</button>
+                    <span id="fb_ex1a" class="feedback-text"></span>
+                </div>
+                <button class="btn btn-hint" onclick="toggleHint('hint_ex1a')">💡 Click for Hint</button>
+                <div id="hint_ex1a" class="hint-step-box">
+                    <p class="text-xs text-green-800">Multiply the two numbers: 12 × 10 = ?</p>
+                </div>
+                <button class="btn btn-reveal ml-2" onclick="toggleHint('sol_ex1a')">Show Solution</button>
+                <div id="sol_ex1a" class="hint-step-box">
+                    <div class="aligned-math">
+                        <span>Volume</span><span>=</span><span>Area × Height</span>
+                        <span></span><span>=</span><span>12 × 10</span>
+                        <span></span><span>=</span><span><strong>120 mm³</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ex 1b -->
+            <div>
+                <h4 class="font-bold text-blue-900">Cylinder 2: Area A = 20 cm², Height h = 8 cm</h4>
+                <div class="flex items-center gap-2 my-2">
+                    <label class="text-sm font-semibold">Volume:</label>
+                    <input type="number" id="ex1b_in" placeholder="cm³">
+                    <button class="btn" onclick="checkAnswer('ex1b_in', 160, 'fb_ex1b')">Check</button>
+                    <span id="fb_ex1b" class="feedback-text"></span>
+                </div>
+                <button class="btn btn-hint" onclick="toggleHint('hint_ex1b')">💡 Click for Hint</button>
+                <div id="hint_ex1b" class="hint-step-box">
+                    <p class="text-xs text-green-800">Multiply the two numbers: 20 × 8 = ?</p>
+                </div>
+                <button class="btn btn-reveal ml-2" onclick="toggleHint('sol_ex1b')">Show Solution</button>
+                <div id="sol_ex1b" class="hint-step-box">
+                    <div class="aligned-math">
+                        <span>Volume</span><span>=</span><span>Area × Height</span>
+                        <span></span><span>=</span><span>20 × 8</span>
+                        <span></span><span>=</span><span><strong>160 cm³</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 6: Strategy Board Example 2 -->
+    <div class="slide" data-lesson="3" data-dialogue="🤖 MeyerBot's Strategy Board! Now for Example 2. Let's learn the Casio calculator keys and spot the radius trap!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded">STRATEGY BOARD</span>
+            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 13</span>
+        </div>
+        <h2 class="text-xl font-bold text-amber-900">🤖 MeyerBot's Strategy Board: Using V = <span class="math-pi">π</span> × r² × h</h2>
+
+        <div class="strategy-board">
+            <h3 class="font-bold text-amber-950 mb-2">Watch out for the RADIUS TRAP!</h3>
+            
+            <div class="bg-white p-3 rounded-lg border border-amber-300 mb-3">
+                <p class="font-bold text-red-700 text-sm">⚠️ Always ask yourself before typing:</p>
+                <p class="text-sm text-gray-800">"Does the line go <strong>halfway</strong> (Radius) or <strong>all the way across</strong> (Diameter)?"</p>
+                <div class="mt-2 text-xs space-y-1">
+                    <p class="text-blue-900">✅ <strong>Halfway:</strong> Radius (<span class="font-bold">r</span>) — ready to use!</p>
+                    <p class="text-purple-900">⚠️ <strong>All the way:</strong> Diameter (<span class="font-bold">d</span>) — <strong>DIVIDE BY 2 FIRST!</strong> (<span class="font-bold">r = d ÷ 2</span>)</p>
+                </div>
+            </div>
+
+            <!-- Casio fx-82AU PLUS II buttons -->
+            <div class="bg-white p-3 rounded-lg border border-blue-300">
+                <p class="font-bold text-blue-900 text-sm mb-1">🎮 Your Casio fx-82AU PLUS II 2nd Edition Button Recipe:</p>
+                <p class="text-xs text-gray-600 mb-2">To get the mathematical symbol <span class="math-pi">π</span>, press SHIFT then the ×10ˣ button at the bottom:</p>
+                <div class="flex flex-wrap items-center gap-1 mb-2">
+                    <span class="casio-key casio-shift">SHIFT</span>
+                    <span class="casio-key">×10ˣ</span>
+                    <span class="text-xs font-bold text-gray-600">gives</span>
+                    <span class="font-bold text-blue-900 math-pi">π</span>
+                </div>
+                <div class="text-xs text-gray-700">
+                    Full sequence: <br>
+                    <span class="casio-key casio-shift">SHIFT</span>
+                    <span class="casio-key">×10ˣ</span>
+                    <span class="casio-key">×</span>
+                    <span class="casio-key">[ radius ]</span>
+                    <span class="casio-key">x²</span>
+                    <span class="casio-key">×</span>
+                    <span class="casio-key">[ height ]</span>
+                    <span class="casio-key">=</span>
+                    <span class="casio-key casio-sd">S⇔D</span>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">💡 If your calculator displays a fraction or <span class="math-pi">π</span> in the answer, press the <span class="casio-key casio-sd">S⇔D</span> button to convert it to decimals!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 7: Example 2a and 2b -->
+    <div class="slide" data-lesson="3" data-dialogue="Example 2a and 2b on Page 13! Let's do each step with our Casio calculators.">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 13</span>
+            <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded">EXAMPLE 2a & 2b</span>
+        </div>
+        <h2 class="text-xl font-bold text-blue-900">Example 2 (Part a & b)</h2>
+
+        <div class="interactive-box">
+            <!-- 2a -->
+            <div class="mb-5 pb-4 border-b border-gray-200">
+                <h4 class="font-bold text-blue-900">2a) Cylinder: radius r = 5 m, height h = 10 m</h4>
+                <div class="flex items-center gap-2 my-2">
+                    <label class="text-sm font-semibold">Volume (2 d.p.):</label>
+                    <input type="number" step="0.01" id="ex2a_in" placeholder="m³">
+                    <button class="btn" onclick="checkAnswer('ex2a_in', 785.40, 'fb_ex2a')">Check</button>
+                    <span id="fb_ex2a" class="feedback-text"></span>
+                </div>
+                <button class="btn btn-hint" onclick="toggleHint('hint_ex2a')">💡 Click for Hint</button>
+                <div id="hint_ex2a" class="hint-step-box">
+                    <p class="text-xs text-green-800">On your Casio press: <span class="casio-key casio-shift">SHIFT</span> <span class="casio-key">×10ˣ</span> <span class="casio-key">×</span> <span class="casio-key">5</span> <span class="casio-key">x²</span> <span class="casio-key">×</span> <span class="casio-key">10</span> <span class="casio-key">=</span> <span class="casio-key casio-sd">S⇔D</span></p>
+                </div>
+                <button class="btn btn-reveal ml-2" onclick="toggleHint('sol_ex2a')">Show Solution</button>
+                <div id="sol_ex2a" class="hint-step-box">
+                    <div class="aligned-math">
+                        <span>V</span><span>=</span><span><span class="math-pi">π</span> × r² × h</span>
+                        <span></span><span>=</span><span><span class="math-pi">π</span> × 5² × 10</span>
+                        <span></span><span>=</span><span><span class="math-pi">π</span> × 25 × 10</span>
+                        <span></span><span>=</span><span>785.398...</span>
+                        <span></span><span>=</span><span><strong>785.40 m³</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2b -->
+            <div>
+                <h4 class="font-bold text-blue-900">2b) Cylinder: radius r = 10 mm, height h = 40 mm</h4>
+                <div class="flex items-center gap-2 my-2">
+                    <label class="text-sm font-semibold">Volume (2 d.p.):</label>
+                    <input type="number" step="0.01" id="ex2b_in" placeholder="mm³">
+                    <button class="btn" onclick="checkAnswer('ex2b_in', 12566.37, 'fb_ex2b')">Check</button>
+                    <span id="fb_ex2b" class="feedback-text"></span>
+                </div>
+                <button class="btn btn-hint" onclick="toggleHint('hint_ex2b')">💡 Click for Hint</button>
+                <div id="hint_ex2b" class="hint-step-box">
+                    <p class="text-xs text-green-800">Formula: <span class="math-pi">π</span> × 10² × 40. Press <span class="casio-key casio-sd">S⇔D</span> to see decimals!</p>
+                </div>
+                <button class="btn btn-reveal ml-2" onclick="toggleHint('sol_ex2b')">Show Solution</button>
+                <div id="sol_ex2b" class="hint-step-box">
+                    <div class="aligned-math">
+                        <span>V</span><span>=</span><span><span class="math-pi">π</span> × r² × h</span>
+                        <span></span><span>=</span><span><span class="math-pi">π</span> × 10² × 40</span>
+                        <span></span><span>=</span><span><span class="math-pi">π</span> × 100 × 40</span>
+                        <span></span><span>=</span><span>12566.370...</span>
+                        <span></span><span>=</span><span><strong>12,566.37 mm³</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 8: Example 2c and 2d (Diameter Trap!) -->
+    <div class="slide" data-lesson="3" data-dialogue="Example 2c and 2d on Page 13! Watch out in 2c: the line goes all the way across, so it's a diameter!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 13</span>
+            <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded">EXAMPLE 2c & 2d</span>
+        </div>
+        <h2 class="text-xl font-bold text-blue-900">Example 2 (Part c & d) - Diameter Alert!</h2>
+
+        <div class="interactive-box">
+            <!-- 2c -->
+            <div class="mb-5 pb-4 border-b border-gray-200">
+                <h4 class="font-bold text-blue-900">2c) Cylinder: Diameter d = 4 cm, Height h = 20 cm</h4>
+                <div class="flex items-center gap-2 my-2">
+                    <label class="text-sm font-semibold">Volume (2 d.p.):</label>
+                    <input type="number" step="0.01" id="ex2c_in" placeholder="cm³">
+                    <button class="btn" onclick="checkAnswer('ex2c_in', 251.33, 'fb_ex2c')">Check</button>
+                    <span id="fb_ex2c" class="feedback-text"></span>
+                </div>
+                <button class="btn btn-hint" onclick="toggleHint('hint_ex2c')">💡 Click for Hint (Step 1)</button>
+                <div id="hint_ex2c" class="hint-step-box">
+                    <p class="text-xs text-red-700 font-bold">⚠️ TRAP DETECTED: 4 cm is the Diameter!</p>
+                    <p class="text-xs text-green-800">Radius = 4 ÷ 2 = <strong>2 cm</strong>.</p>
+                    <p class="text-xs text-green-800">Now calculate on your Casio: <span class="math-pi">π</span> × 2² × 20.</p>
+                </div>
+                <button class="btn btn-reveal ml-2" onclick="toggleHint('sol_ex2c')">Show Solution</button>
+                <div id="sol_ex2c" class="hint-step-box">
+                    <div class="aligned-math">
+                        <span>Radius (r)</span><span>=</span><span>4 ÷ 2 = 2 cm</span>
+                        <span>V</span><span>=</span><span><span class="math-pi">π</span> × r² × h</span>
+                        <span></span><span>=</span><span><span class="math-pi">π</span> × 2² × 20</span>
+                        <span></span><span>=</span><span><span class="math-pi">π</span> × 4 × 20</span>
+                        <span></span><span>=</span><span>251.327...</span>
+                        <span></span><span>=</span><span><strong>251.33 cm³</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2d -->
+            <div>
+                <h4 class="font-bold text-blue-900">2d) Cylinder: Radius r = 7 cm, Height h = 50 cm</h4>
+                <div class="flex items-center gap-2 my-2">
+                    <label class="text-sm font-semibold">Volume (2 d.p.):</label>
+                    <input type="number" step="0.01" id="ex2d_in" placeholder="cm³">
+                    <button class="btn" onclick="checkAnswer('ex2d_in', 7696.90, 'fb_ex2d')">Check</button>
+                    <span id="fb_ex2d" class="feedback-text"></span>
+                </div>
+                <button class="btn btn-hint" onclick="toggleHint('hint_ex2d')">💡 Click for Hint</button>
+                <div id="hint_ex2d" class="hint-step-box">
+                    <p class="text-xs text-green-800">Radius is already given as 7 cm. Type: <span class="math-pi">π</span> × 7² × 50 on your Casio!</p>
+                </div>
+                <button class="btn btn-reveal ml-2" onclick="toggleHint('sol_ex2d')">Show Solution</button>
+                <div id="sol_ex2d" class="hint-step-box">
+                    <div class="aligned-math">
+                        <span>V</span><span>=</span><span><span class="math-pi">π</span> × r² × h</span>
+                        <span></span><span>=</span><span><span class="math-pi">π</span> × 7² × 50</span>
+                        <span></span><span>=</span><span><span class="math-pi">π</span> × 49 × 50</span>
+                        <span></span><span>=</span><span>7696.902...</span>
+                        <span></span><span>=</span><span><strong>7,696.90 cm³</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 9: Example 3 Semi-Cylinder (Page 14) -->
+    <div class="slide" data-lesson="3" data-dialogue="Page 14 Example 3! A semi-cylinder. 'Semi' means half. Find the volume of a full cylinder and divide by 2!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 14</span>
+            <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded">EXAMPLE 3</span>
+        </div>
+        <h2 class="text-xl font-bold text-blue-900">Example 3: Semi-Cylinder (Half Cylinder)</h2>
+
+        <div class="strategy-board">
+            <h3 class="font-bold text-amber-950 mb-1">🤖 MeyerBot's Strategy:</h3>
+            <p class="text-sm text-gray-700">Dimensions: Radius = 5 mm, Height = 10 mm.<br>
+            Calculate the full cylinder volume, then divide your answer by 2!</p>
+        </div>
+
+        <div class="interactive-box">
+            <div class="flex items-center gap-2 my-2">
+                <label class="text-sm font-semibold">Volume (2 d.p.):</label>
+                <input type="number" step="0.01" id="ex3_l3_in" placeholder="mm³">
+                <button class="btn" onclick="checkAnswer('ex3_l3_in', 392.70, 'fb_ex3_l3')">Check</button>
+                <span id="fb_ex3_l3" class="feedback-text"></span>
+            </div>
+            <button class="btn btn-hint" onclick="toggleHint('hint_ex3')">💡 Click for Hint (Step-by-Step)</button>
+            <div id="hint_ex3" class="hint-step-box">
+                <p class="text-xs text-green-800"><strong>Step 1:</strong> Full cylinder = <span class="math-pi">π</span> × 5² × 10 = 785.398... mm³</p>
+                <p class="text-xs text-green-800"><strong>Step 2:</strong> Half cylinder = 785.398... ÷ 2</p>
+            </div>
+            <button class="btn btn-reveal ml-2" onclick="toggleHint('sol_ex3')">Show Solution</button>
+            <div id="sol_ex3" class="hint-step-box">
+                <div class="aligned-math">
+                    <span>Full Cylinder</span><span>=</span><span><span class="math-pi">π</span> × 5² × 10 = 785.398...</span>
+                    <span>Semi-Cylinder</span><span>=</span><span>785.398... ÷ 2</span>
+                    <span></span><span>=</span><span>392.699...</span>
+                    <span></span><span>=</span><span><strong>392.70 mm³</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 10: Problem Solving 1 (Page 14 - Composite Solid 1 & 2) -->
+    <div class="slide" data-lesson="3" data-dialogue="Problem Solving 1 on Page 14 has TWO shapes! Shape 1 is a Cube + Cylinder. Shape 2 is a Hollow Pipe. Try them step-by-step!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 14</span>
+            <span class="bg-purple-100 text-purple-800 text-xs font-bold px-2.5 py-1 rounded">PROBLEM SOLVING 1</span>
+        </div>
+        <h2 class="text-xl font-bold text-blue-900">Problem Solving 1: Both Composite Shapes</h2>
+
+        <!-- Notice skipping PS 2 & 3 -->
+        <div class="skip-banner">
+            📢 NOTE FROM MR. MEYER: Only do Problem Solving 1! Problem Solving 2 and 3 are SKIPPED today!
+        </div>
+
+        <div class="interactive-box">
+            <!-- Shape 1: Cube + Cylinder -->
+            <div class="mb-5 pb-4 border-b border-gray-200">
+                <h4 class="font-bold text-blue-900">Shape 1: Cube with Cylinder on Top</h4>
+                <p class="text-xs text-gray-600 mb-2">Cube has sides of 2 cm. Cylinder has diameter 2 cm (r = 1 cm) and height 2 cm.</p>
+                
+                <div class="flex items-center gap-2 my-2">
+                    <label class="text-sm font-semibold">Total Volume (2 d.p.):</label>
+                    <input type="number" step="0.01" id="ps1a_l3_in" placeholder="cm³">
+                    <button class="btn" onclick="checkAnswer('ps1a_l3_in', 14.28, 'fb_ps1a_l3')">Check</button>
+                    <span id="fb_ps1a_l3" class="feedback-text"></span>
+                </div>
+                <button class="btn btn-hint" onclick="toggleHint('hint_ps1a')">💡 Click for Hint</button>
+                <div id="hint_ps1a" class="hint-step-box">
+                    <p class="text-xs text-green-800">1. Cube = 2 × 2 × 2 = 8 cm³</p>
+                    <p class="text-xs text-green-800">2. Cylinder = <span class="math-pi">π</span> × 1² × 2 = 6.283... cm³</p>
+                    <p class="text-xs text-green-800">3. Add them together!</p>
+                </div>
+                <button class="btn btn-reveal ml-2" onclick="toggleHint('sol_ps1a')">Show Solution</button>
+                <div id="sol_ps1a" class="hint-step-box">
+                    <div class="aligned-math">
+                        <span>Cube Vol</span><span>=</span><span>2 × 2 × 2 = 8 cm³</span>
+                        <span>Cylinder Vol</span><span>=</span><span><span class="math-pi">π</span> × 1² × 2 = 6.283... cm³</span>
+                        <span>Total Volume</span><span>=</span><span>8 + 6.283...</span>
+                        <span></span><span>=</span><span><strong>14.28 cm³</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shape 2: Hollow Pipe / Cylinder -->
+            <div>
+                <h4 class="font-bold text-blue-900">Shape 2: Hollow Pipe / Cylinder</h4>
+                <p class="text-xs text-gray-600 mb-2">Outer diameter = 2 m (Outer radius R = 1 m). Inner diameter = 108 cm = 1.08 m (Inner radius r = 0.54 m). Length = 4 m.</p>
+
+                <div class="flex items-center gap-2 my-2">
+                    <label class="text-sm font-semibold">Pipe Volume (2 d.p.):</label>
+                    <input type="number" step="0.01" id="ps1b_l3_in" placeholder="m³">
+                    <button class="btn" onclick="checkAnswer('ps1b_l3_in', 8.90, 'fb_ps1b_l3')">Check</button>
+                    <span id="fb_ps1b_l3" class="feedback-text"></span>
+                </div>
+                <button class="btn btn-hint" onclick="toggleHint('hint_ps1b')">💡 Click for Hint (Outer - Inner)</button>
+                <div id="hint_ps1b" class="hint-step-box">
+                    <p class="text-xs text-green-800">1. Outer cylinder: <span class="math-pi">π</span> × 1² × 4 = 12.566 m³</p>
+                    <p class="text-xs text-green-800">2. Inner hole: radius = 108 cm ÷ 2 = 54 cm = 0.54 m. Hole vol = <span class="math-pi">π</span> × 0.54² × 4 = 3.664 m³</p>
+                    <p class="text-xs text-green-800">3. Subtract: Outer - Inner = ?</p>
+                </div>
+                <button class="btn btn-reveal ml-2" onclick="toggleHint('sol_ps1b')">Show Solution</button>
+                <div id="sol_ps1b" class="hint-step-box">
+                    <div class="aligned-math">
+                        <span>Outer Vol</span><span>=</span><span><span class="math-pi">π</span> × 1.0² × 4 = 12.566 m³</span>
+                        <span>Inner Hole</span><span>=</span><span><span class="math-pi">π</span> × 0.54² × 4 = 3.664 m³</span>
+                        <span>Pipe Vol</span><span>=</span><span>12.566 - 3.664</span>
+                        <span></span><span>=</span><span><strong>8.90 m³</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 11: Supported Practice Lesson 3 -->
+    <div class="slide" data-lesson="3" data-dialogue="Practice time for cylinders! Try these 4 simple questions in your exercise book. Use hints if you need them!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded">LESSON 3</span>
+            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded">PRACTICE MODULE</span>
+        </div>
+        <h2 class="text-xl font-bold text-blue-900">Supported Cylinder Practice (15-20 Mins)</h2>
+
+        <div class="interactive-box">
+            <div class="practice-grid">
+                <!-- Practice 1 -->
+                <div class="practice-card">
+                    <p class="font-semibold text-sm">1) Area A = 15 cm², Height h = 4 cm. Volume:</p>
+                    <div class="flex items-center gap-2 my-2">
+                        <input type="number" id="p_l3_1" placeholder="cm³">
+                        <button class="btn" onclick="checkAnswer('p_l3_1', 60, 'fb_p_l3_1')">Check</button>
+                    </div>
+                    <span id="fb_p_l3_1" class="feedback-text"></span>
+                    <button class="btn btn-hint" onclick="toggleHint('h_p1')">💡 Hint</button>
+                    <div id="h_p1" class="hint-step-box text-xs">Multiply: 15 × 4.</div>
+                    <button class="btn btn-reveal ml-1" onclick="toggleHint('s_p1')">Solution</button>
+                    <div id="s_p1" class="hint-step-box text-xs font-bold">15 × 4 = 60 cm³</div>
+                </div>
+
+                <!-- Practice 2 -->
+                <div class="practice-card">
+                    <p class="font-semibold text-sm">2) Radius r = 3 m, Height h = 6 m. Volume (2 d.p.):</p>
+                    <div class="flex items-center gap-2 my-2">
+                        <input type="number" step="0.01" id="p_l3_2" placeholder="m³">
+                        <button class="btn" onclick="checkAnswer('p_l3_2', 169.65, 'fb_p_l3_2')">Check</button>
+                    </div>
+                    <span id="fb_p_l3_2" class="feedback-text"></span>
+                    <button class="btn btn-hint" onclick="toggleHint('h_p2')">💡 Hint</button>
+                    <div id="h_p2" class="hint-step-box text-xs">Casio: <span class="math-pi">π</span> × 3² × 6</div>
+                    <button class="btn btn-reveal ml-1" onclick="toggleHint('s_p2')">Solution</button>
+                    <div id="s_p2" class="hint-step-box text-xs font-bold"><span class="math-pi">π</span> × 9 × 6 = 169.65 m³</div>
+                </div>
+
+                <!-- Practice 3 -->
+                <div class="practice-card">
+                    <p class="font-semibold text-sm">3) Radius r = 2 cm, Height h = 10 cm. Volume (2 d.p.):</p>
+                    <div class="flex items-center gap-2 my-2">
+                        <input type="number" step="0.01" id="p_l3_3" placeholder="cm³">
+                        <button class="btn" onclick="checkAnswer('p_l3_3', 125.66, 'fb_p_l3_3')">Check</button>
+                    </div>
+                    <span id="fb_p_l3_3" class="feedback-text"></span>
+                    <button class="btn btn-hint" onclick="toggleHint('h_p3')">💡 Hint</button>
+                    <div id="h_p3" class="hint-step-box text-xs">Casio: <span class="math-pi">π</span> × 2² × 10</div>
+                    <button class="btn btn-reveal ml-1" onclick="toggleHint('s_p3')">Solution</button>
+                    <div id="s_p3" class="hint-step-box text-xs font-bold"><span class="math-pi">π</span> × 4 × 10 = 125.66 cm³</div>
+                </div>
+
+                <!-- Practice 4 -->
+                <div class="practice-card">
+                    <p class="font-semibold text-sm">4) Diameter d = 8 m (so r = 4 m), Height h = 5 m. Volume (2 d.p.):</p>
+                    <div class="flex items-center gap-2 my-2">
+                        <input type="number" step="0.01" id="p_l3_4" placeholder="m³">
+                        <button class="btn" onclick="checkAnswer('p_l3_4', 251.33, 'fb_p_l3_4')">Check</button>
+                    </div>
+                    <span id="fb_p_l3_4" class="feedback-text"></span>
+                    <button class="btn btn-hint" onclick="toggleHint('h_p4')">💡 Hint</button>
+                    <div id="h_p4" class="hint-step-box text-xs">Radius = 4. Type: <span class="math-pi">π</span> × 4² × 5</div>
+                    <button class="btn btn-reveal ml-1" onclick="toggleHint('s_p4')">Solution</button>
+                    <div id="s_p4" class="hint-step-box text-xs font-bold"><span class="math-pi">π</span> × 16 × 5 = 251.33 m³</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 12: Lesson 3 Success Criteria (Page 15) -->
+    <div class="slide" data-lesson="3" data-dialogue="Lesson 3 complete! Check your Success Criteria on Page 15 of your booklet before our halftime break!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 15</span>
+            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded">SUCCESS CRITERIA</span>
+        </div>
+        <h2 class="text-xl font-bold text-blue-900">Lesson 3 Success Criteria (Page 15)</h2>
+
+        <div class="interactive-box">
+            <p class="text-sm text-gray-700 mb-3">Reflect on how you felt during Lesson 3 and tick your booklet:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Success Criteria</th>
+                        <th>Rarely</th>
+                        <th>Sometimes</th>
+                        <th>Always</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-left text-sm">I know what a cylinder is and how to identify one</td>
+                        <td><input type="radio" name="sc_l3_1"></td>
+                        <td><input type="radio" name="sc_l3_1"></td>
+                        <td><input type="radio" name="sc_l3_1" checked></td>
+                    </tr>
+                    <tr>
+                        <td class="text-left text-sm">I can find the volume of any cylinder using V = <span class="math-pi">π</span> × r² × h</td>
+                        <td><input type="radio" name="sc_l3_2"></td>
+                        <td><input type="radio" name="sc_l3_2"></td>
+                        <td><input type="radio" name="sc_l3_2" checked></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SLIDE 13: HALFTIME BREAKPOINT -->
+    <div class="slide" data-lesson="3" data-dialogue="HALFTIME BREAK! Fantastic effort on Lesson 3! If this is the end of Hour 1, pause here. If starting Hour 2, continue to Lesson 4!">
+        <div class="bg-indigo-50 border-2 border-indigo-300 rounded-xl p-6 text-center">
+            <h2 class="text-2xl font-black text-indigo-900 mb-2">🎉 End of Hour 1 (Lesson 3 Complete!)</h2>
+            <p class="text-gray-700 max-w-lg mx-auto mb-4 text-sm">
+                You have learned how to find the volume of cylinders using your Casio calculator! Take a 2-minute brain break.
+            </p>
+            <button class="btn bg-indigo-600 hover:bg-indigo-700 text-base px-6 py-3" onclick="jumpToLesson(4)">
+                🚀 Continue to Hour 2: Lesson 4 (Converting Units, Page 16) ➡️
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- LESSON 4: CONVERTING UNITS (Pages 16-18)  -->
+    <!-- ========================================== -->
+
+    <!-- SLIDE 14: Lesson 4 Welcome -->
+    <div class="slide" data-lesson="4" data-dialogue="Welcome to Lesson 4! Open your booklet to Page 16. Today we convert units of Area, Volume, and Capacity!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-1 rounded">LESSON 4</span>
+            <span class="bg-gray-100 text-gray-700 text-xs font-semibold px-2.5 py-1 rounded">Page 16</span>
+        </div>
+        <h2 class="text-2xl font-bold text-indigo-900 mb-2">Converting Units of Area & Volume</h2>
+        <div class="interactive-box">
+            <h3 class="font-bold text-lg mb-2">📋 Hour 2 Checklist:</h3>
+            <ul class="list-disc pl-5 space-y-1 text-gray-800 text-sm">
+                <li>Make sure your booklet is open to <strong>Page 16</strong></li>
+                <li>Keep your <strong>Casio fx-82AU PLUS II</strong> calculator ready</li>
+                <li>We'll break every unit conversion down with simple multiplier rules!</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- SLIDE 15: Lesson 4 Warm Up (Page 16) -->
+    <div class="slide" data-lesson="4" data-dialogue="Warm-Up on Page 16! Multiplying and dividing by 1000. Try them in your booklet, then test your answers!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 16</span>
+            <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded">WARM UP</span>
+        </div>
+        <h2 class="text-xl font-bold text-indigo-900">Lesson 4: Warm-Up Questions (Page 16)</h2>
+
+        <div class="interactive-box">
+            <!-- WU 1 -->
+            <div class="mb-4 p-3 bg-white border border-gray-200 rounded-lg">
+                <p class="font-semibold text-gray-800">1) Calculate: 1.43 × 1000</p>
+                <button class="btn btn-hint mt-1" onclick="toggleHint('h_l4_1')">💡 Click for Hint</button>
+                <div id="h_l4_1" class="hint-step-box text-xs">Multiplying by 1000 moves the decimal point 3 spots to the right: 1.43 → 14.3 → 143 → 1430.</div>
+                <div class="flex items-center gap-2 mt-2">
+                    <input type="number" id="wu1_l4" placeholder="Answer">
+                    <button class="btn" onclick="checkAnswer('wu1_l4', 1430, 'fb_wu1_l4')">Check</button>
+                    <span id="fb_wu1_l4" class="feedback-text"></span>
+                </div>
+            </div>
+
+            <!-- WU 2 -->
+            <div class="mb-4 p-3 bg-white border border-gray-200 rounded-lg">
+                <p class="font-semibold text-gray-800">2) Calculate: 1.43 × 10³ (Note: 10³ is just 1000!)</p>
+                <div class="flex items-center gap-2 mt-2">
+                    <input type="number" id="wu2_l4" placeholder="Answer">
+                    <button class="btn" onclick="checkAnswer('wu2_l4', 1430, 'fb_wu2_l4')">Check</button>
+                    <span id="fb_wu2_l4" class="feedback-text"></span>
+                </div>
+            </div>
+
+            <!-- WU 3 -->
+            <div class="p-3 bg-white border border-gray-200 rounded-lg">
+                <p class="font-semibold text-gray-800">3) Calculate: 1.43 ÷ 1000</p>
+                <button class="btn btn-hint mt-1" onclick="toggleHint('h_l4_3')">💡 Click for Hint</button>
+                <div id="h_l4_3" class="hint-step-box text-xs">Dividing by 1000 moves decimal point 3 spots to the left!</div>
+                <div class="flex items-center gap-2 mt-2">
+                    <input type="number" step="0.0001" id="wu3_l4" placeholder="Answer">
+                    <button class="btn" onclick="checkAnswer('wu3_l4', 0.00143, 'fb_wu3_l4')">Check</button>
+                    <span id="fb_wu3_l4" class="feedback-text"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 16: Key Notes for Page 16 (Blank Lines) -->
+    <div class="slide" data-lesson="4" data-dialogue="Write these core facts in the blank lines on Page 16! These conversion facts will be your cheat codes today!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 16</span>
+            <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded">BLANK LINES NOTES</span>
+        </div>
+        <h2 class="text-xl font-bold text-indigo-900">Key Conversion Facts to Write Down (Page 16)</h2>
+
+        <div class="p-4 bg-amber-50 border-2 border-amber-300 rounded-xl my-3">
+            <h4 class="font-bold text-amber-900 text-base mb-2">✏️ COPY THESE CONVERSION FACTS ONTO THE BLANK LINES ON PAGE 16:</h4>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+                <div class="bg-white p-3 rounded-lg border border-blue-200">
+                    <p class="font-bold text-blue-900 text-sm">💧 Capacity (Liquids):</p>
+                    <ul class="text-xs space-y-1 list-disc pl-4 text-gray-700 mt-1">
+                        <li><strong>1 L = 1000 mL</strong></li>
+                        <li><strong>1 kL (kilolitre) = 1000 L</strong></li>
+                        <li><strong>1 ML (megalitre) = 1000 kL</strong></li>
+                    </ul>
+                </div>
+                <div class="bg-white p-3 rounded-lg border border-blue-200">
+                    <p class="font-bold text-blue-900 text-sm">📦 Linking Volume & Capacity:</p>
+                    <ul class="text-xs space-y-1 list-disc pl-4 text-gray-700 mt-1">
+                        <li><strong>1 cm³ = 1 mL</strong> (A small dice holds 1 mL!)</li>
+                        <li><strong>1000 cm³ = 1 L</strong></li>
+                        <li><strong>1 m³ = 1000 L = 1 kL</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white p-3 rounded-lg border border-blue-300 mt-3 text-center">
+                <p class="text-sm font-bold text-blue-900">⭐ Golden Conversion Rule:</p>
+                <p class="text-xs text-gray-700 mt-1">Big unit → Small unit (e.g. L → mL) 👉 <strong>MULTIPLY (× 1000)</strong></p>
+                <p class="text-xs text-gray-700">Small unit → Big unit (e.g. mL → L) 👉 <strong>DIVIDE (÷ 1000)</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 17: Example 1 - Area Conversions (Page 17) -->
+    <div class="slide" data-lesson="4" data-dialogue="Example 1 on Page 17! Area conversions use squared units. Let's do parts a, b and d!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 17</span>
+            <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded">EXAMPLE 1</span>
+        </div>
+        <h2 class="text-xl font-bold text-indigo-900">Example 1: Area Conversions (Page 17)</h2>
+
+        <div class="strategy-board">
+            <h3 class="font-bold text-amber-950 mb-1">🤖 MeyerBot's Area Conversion Strategy:</h3>
+            <p class="text-xs text-gray-700">
+                Because area is 2-dimensional, we square the normal conversion number!<br>
+                • 1 cm = 10 mm → <strong>1 cm² = 10² = 100 mm²</strong> (Multiply by 100)<br>
+                • 1 m = 100 cm → <strong>1 m² = 100² = 10,000 cm²</strong> (Multiply by 10,000)<br>
+                • 1 ha (hectare) = <strong>10,000 m²</strong>
+            </p>
+        </div>
+
+        <div class="interactive-box space-y-4">
+            <div>
+                <p class="font-semibold text-gray-800 text-sm">a) Convert 2 cm² to mm²</p>
+                <button class="btn btn-hint mt-1" onclick="toggleHint('h_ex1a_l4')">💡 Click for Hint</button>
+                <div id="h_ex1a_l4" class="hint-step-box text-xs">Multiply by 100: 2 × 100 = ?</div>
+                <div class="flex items-center gap-2 mt-2">
+                    <input type="number" id="ex1a_l4" placeholder="mm²">
+                    <button class="btn" onclick="checkAnswer('ex1a_l4', 200, 'fb_ex1a_l4')">Check</button>
+                    <span id="fb_ex1a_l4" class="feedback-text"></span>
+                </div>
+            </div>
+
+            <div>
+                <p class="font-semibold text-gray-800 text-sm">b) Convert 7 m² to cm²</p>
+                <button class="btn btn-hint mt-1" onclick="toggleHint('h_ex1b_l4')">💡 Click for Hint</button>
+                <div id="h_ex1b_l4" class="hint-step-box text-xs">Multiply by 10,000: 7 × 10,000 = ?</div>
+                <div class="flex items-center gap-2 mt-2">
+                    <input type="number" id="ex1b_l4" placeholder="cm²">
+                    <button class="btn" onclick="checkAnswer('ex1b_l4', 70000, 'fb_ex1b_l4')">Check</button>
+                    <span id="fb_ex1b_l4" class="feedback-text"></span>
+                </div>
+            </div>
+
+            <div>
+                <p class="font-semibold text-gray-800 text-sm">d) Convert 3 ha to m²</p>
+                <button class="btn btn-hint mt-1" onclick="toggleHint('h_ex1d_l4')">💡 Click for Hint</button>
+                <div id="h_ex1d_l4" class="hint-step-box text-xs">1 ha = 10,000 m², so multiply 3 × 10,000.</div>
+                <div class="flex items-center gap-2 mt-2">
+                    <input type="number" id="ex1d_l4" placeholder="m²">
+                    <button class="btn" onclick="checkAnswer('ex1d_l4', 30000, 'fb_ex1d_l4')">Check</button>
+                    <span id="fb_ex1d_l4" class="feedback-text"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 18: Examples 2 & 3 - Capacity Conversions (Page 17) -->
+    <div class="slide" data-lesson="4" data-dialogue="Examples 2 and 3 on Page 17! Liquid capacity. Fill in the missing numbers in your booklet!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 17</span>
+            <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded">EXAMPLES 2 & 3</span>
+        </div>
+        <h2 class="text-xl font-bold text-indigo-900">Examples 2 & 3: Liquid Capacity Conversions (Page 17)</h2>
+
+        <div class="interactive-box">
+            <h4 class="font-bold text-blue-900 mb-2">Example 2: Fill in the Missing Numbers</h4>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                <div class="p-2 border rounded bg-white">
+                    <label class="text-xs font-semibold">1 L = ? mL</label>
+                    <div class="flex items-center gap-2 mt-1">
+                        <input type="number" id="ex2a_l4" placeholder="mL">
+                        <button class="btn" onclick="checkAnswer('ex2a_l4', 1000, 'fb_ex2a_l4')">Check</button>
+                    </div>
+                    <span id="fb_ex2a_l4" class="feedback-text"></span>
+                </div>
+
+                <div class="p-2 border rounded bg-white">
+                    <label class="text-xs font-semibold">1 mL = ? cm³</label>
+                    <div class="flex items-center gap-2 mt-1">
+                        <input type="number" id="ex2d_l4" placeholder="cm³">
+                        <button class="btn" onclick="checkAnswer('ex2d_l4', 1, 'fb_ex2d_l4')">Check</button>
+                    </div>
+                    <span id="fb_ex2d_l4" class="feedback-text"></span>
+                </div>
+            </div>
+
+            <hr class="my-4 border-gray-300">
+
+            <h4 class="font-bold text-blue-900 mb-2">Example 3: Practice Conversions</h4>
+            <div class="space-y-3">
+                <div class="p-2 border rounded bg-white">
+                    <label class="text-xs font-semibold">3a) Convert 2 L to mL (Prompt: 2 × 1000):</label>
+                    <div class="flex items-center gap-2 mt-1">
+                        <input type="number" id="ex3a_l4" placeholder="mL">
+                        <button class="btn" onclick="checkAnswer('ex3a_l4', 2000, 'fb_ex3a_l4')">Check</button>
+                    </div>
+                    <span id="fb_ex3a_l4" class="feedback-text"></span>
+                </div>
+
+                <div class="p-2 border rounded bg-white">
+                    <label class="text-xs font-semibold">3d) Convert 3000 mL to L (Prompt: 3000 ÷ 1000):</label>
+                    <div class="flex items-center gap-2 mt-1">
+                        <input type="number" id="ex3d_l4" placeholder="L">
+                        <button class="btn" onclick="checkAnswer('ex3d_l4', 3, 'fb_ex3d_l4')">Check</button>
+                    </div>
+                    <span id="fb_ex3d_l4" class="feedback-text"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 19: Problem Solving 1 (Page 18) -->
+    <div class="slide" data-lesson="4" data-dialogue="Problem Solving 1 on Page 18! Find the volume first, then use your conversion rule to find the litres.">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 18</span>
+            <span class="bg-purple-100 text-purple-800 text-xs font-bold px-2.5 py-1 rounded">PROBLEM SOLVING 1</span>
+        </div>
+        <h2 class="text-xl font-bold text-indigo-900">Problem Solving 1: Finding Capacity (Page 18)</h2>
+
+        <!-- Notice skipping PS 2 -->
+        <div class="skip-banner">
+            📢 NOTE FROM MR. MEYER: Only do Problem Solving 1! Problem Solving 2 on Page 18 is SKIPPED today!
+        </div>
+
+        <div class="strategy-board">
+            <h3 class="font-bold text-amber-950 mb-1">🤖 MeyerBot's 2-Step Strategy:</h3>
+            <p class="text-sm text-gray-800 font-semibold mb-2">Don't guess! Break it into two simple questions:</p>
+            <div class="space-y-2 text-xs text-gray-700">
+                <div class="p-2 bg-white rounded border border-amber-200">
+                    <p class="font-bold text-blue-900">Step 1: What is the Volume in cm³?</p>
+                    <p>It's a rectangular box (prism). Multiply: <strong>Length × Width × Height</strong>.</p>
+                </div>
+                <div class="p-2 bg-white rounded border border-amber-200">
+                    <p class="font-bold text-blue-900">Step 2: How do you turn cm³ into Litres (L)?</p>
+                    <p>Remember your Page 16 notes: <em>1000 cm³ = 1 L</em>. Should you multiply or divide your answer by 1000?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="interactive-box">
+            <h4 class="font-bold text-blue-900">Rectangular Box (40 cm × 20 cm × 10 cm)</h4>
+            <div class="flex items-center gap-2 my-2">
+                <label class="text-sm font-semibold">Capacity in Litres (L):</label>
+                <input type="number" id="ps1_l4_in" placeholder="L">
+                <button class="btn" onclick="checkAnswer('ps1_l4_in', 8, 'fb_ps1_l4')">Check</button>
+                <span id="fb_ps1_l4" class="feedback-text"></span>
+            </div>
+            <button class="btn btn-hint" onclick="toggleHint('h_ps1_l4')">💡 Click for Hint</button>
+            <div id="h_ps1_l4" class="hint-step-box text-xs">
+                <p>1. Find volume: 40 × 20 × 10 = ? cm³</p>
+                <p>2. Then divide that answer by 1000 to get Litres!</p>
+            </div>
+            <button class="btn btn-reveal ml-2" onclick="toggleHint('sol_ps1_l4')">Show Solution</button>
+            <div id="sol_ps1_l4" class="hint-step-box">
+                <div class="aligned-math">
+                    <span>Volume</span><span>=</span><span>40 × 20 × 10 = 8000 cm³</span>
+                    <span>Convert to L</span><span>=</span><span>8000 ÷ 1000</span>
+                    <span></span><span>=</span><span><strong>8 Litres (L)</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 20: Lesson 4 Supported Practice Module -->
+    <div class="slide" data-lesson="4" data-dialogue="Final practice module! Try these 4 simple conversion questions in your books.">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-1 rounded">LESSON 4</span>
+            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded">PRACTICE MODULE</span>
+        </div>
+        <h2 class="text-xl font-bold text-indigo-900">Supported Units Practice (15-20 Mins)</h2>
+
+        <div class="interactive-box">
+            <div class="practice-grid">
+                <!-- Practice 1 -->
+                <div class="practice-card">
+                    <p class="font-semibold text-sm">1) Convert 4 L to mL (Prompt: × 1000):</p>
+                    <div class="flex items-center gap-2 my-2">
+                        <input type="number" id="p_l4_1" placeholder="mL">
+                        <button class="btn" onclick="checkAnswer('p_l4_1', 4000, 'fb_p_l4_1')">Check</button>
+                    </div>
+                    <span id="fb_p_l4_1" class="feedback-text"></span>
+                    <button class="btn btn-reveal" onclick="toggleHint('s_p_l4_1')">Solution</button>
+                    <div id="s_p_l4_1" class="hint-step-box text-xs font-bold">4 × 1000 = 4000 mL</div>
+                </div>
+
+                <!-- Practice 2 -->
+                <div class="practice-card">
+                    <p class="font-semibold text-sm">2) Convert 5000 mL to L (Prompt: ÷ 1000):</p>
+                    <div class="flex items-center gap-2 my-2">
+                        <input type="number" id="p_l4_2" placeholder="L">
+                        <button class="btn" onclick="checkAnswer('p_l4_2', 5, 'fb_p_l4_2')">Check</button>
+                    </div>
+                    <span id="fb_p_l4_2" class="feedback-text"></span>
+                    <button class="btn btn-reveal" onclick="toggleHint('s_p_l4_2')">Solution</button>
+                    <div id="s_p_l4_2" class="hint-step-box text-xs font-bold">5000 ÷ 1000 = 5 L</div>
+                </div>
+
+                <!-- Practice 3 -->
+                <div class="practice-card">
+                    <p class="font-semibold text-sm">3) A bottle holds 750 cm³. How many mL is this?</p>
+                    <div class="flex items-center gap-2 my-2">
+                        <input type="number" id="p_l4_3" placeholder="mL">
+                        <button class="btn" onclick="checkAnswer('p_l4_3', 750, 'fb_p_l4_3')">Check</button>
+                    </div>
+                    <span id="fb_p_l4_3" class="feedback-text"></span>
+                    <button class="btn btn-reveal" onclick="toggleHint('s_p_l4_3')">Solution</button>
+                    <div id="s_p_l4_3" class="hint-step-box text-xs font-bold">1 cm³ = 1 mL, so 750 cm³ = 750 mL!</div>
+                </div>
+
+                <!-- Practice 4 -->
+                <div class="practice-card">
+                    <p class="font-semibold text-sm">4) Container volume is 3000 cm³. How many Litres (L)?</p>
+                    <div class="flex items-center gap-2 my-2">
+                        <input type="number" id="p_l4_4" placeholder="L">
+                        <button class="btn" onclick="checkAnswer('p_l4_4', 3, 'fb_p_l4_4')">Check</button>
+                    </div>
+                    <span id="fb_p_l4_4" class="feedback-text"></span>
+                    <button class="btn btn-reveal" onclick="toggleHint('s_p_l4_4')">Solution</button>
+                    <div id="s_p_l4_4" class="hint-step-box text-xs font-bold">3000 ÷ 1000 = 3 L</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 21: Lesson 4 Success Criteria (Page 18) -->
+    <div class="slide" data-lesson="4" data-dialogue="Outstanding effort across both lessons, Year 8! Tick your success criteria on Page 18 before logging off!">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-1 rounded">PAGE 18</span>
+            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded">SUCCESS CRITERIA</span>
+        </div>
+        <h2 class="text-xl font-bold text-indigo-900">Success Criteria Reflection (Page 18)</h2>
+
+        <div class="interactive-box">
+            <p class="mb-3 text-gray-700 text-sm">Reflect on your learning and tick your confidence level on Page 18:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Success Criteria</th>
+                        <th>Rarely</th>
+                        <th>Sometimes</th>
+                        <th>Always</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-left text-sm">I can convert between units of area & volume</td>
+                        <td><input type="radio" name="sc_l4_1"></td>
+                        <td><input type="radio" name="sc_l4_1"></td>
+                        <td><input type="radio" name="sc_l4_1" checked></td>
+                    </tr>
+                    <tr>
+                        <td class="text-left text-sm">I can convert units of capacity (L and mL)</td>
+                        <td><input type="radio" name="sc_l4_2"></td>
+                        <td><input type="radio" name="sc_l4_2"></td>
+                        <td><input type="radio" name="sc_l4_2" checked></td>
+                    </tr>
+                    <tr>
+                        <td class="text-left text-sm">I can convert between units of volume and capacity (1 cm³ = 1 mL)</td>
+                        <td><input type="radio" name="sc_l4_3"></td>
+                        <td><input type="radio" name="sc_l4_3"></td>
+                        <td><input type="radio" name="sc_l4_3" checked></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="text-center mt-6">
+                <p class="font-extrabold text-blue-900 text-lg">🤖 MeyerBot 2000 SYSTEM SHUTDOWN: MISSION COMPLETE!</p>
+                <p class="text-sm text-gray-600 mt-1">Fantastic resilience and focus over both lessons, Year 8. Mr. Meyer will be very proud of you!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls Footer -->
+    <div class="controls">
+        <button class="btn" id="prevBtn" onclick="changeSlide(-1)">⬅️ Previous</button>
+        <span id="slideIndicator" class="font-bold text-sm text-gray-700">Slide 1 of 21</span>
+        <button class="btn" id="nextBtn" onclick="changeSlide(1)">Next ➡️</button>
+    </div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const progressBar = document.getElementById('progressBar');
+    const slideIndicator = document.getElementById('slideIndicator');
+    const botDialogue = document.getElementById('botDialogue');
+    const tabL3 = document.getElementById('tabL3');
+    const tabL4 = document.getElementById('tabL4');
+
+    function updateSlideDisplay() {
+        slides.forEach((slide, index) => {
+            slide.classList.toggle('active', index === currentSlide);
+        });
+
+        // Update progress
+        const progress = ((currentSlide + 1) / slides.length) * 100;
+        progressBar.style.width = progress + '%';
+        slideIndicator.innerText = `Slide ${currentSlide + 1} of ${slides.length}`;
+
+        // Update bot dialogue
+        const currentDialogue = slides[currentSlide].getAttribute('data-dialogue');
+        if (currentDialogue) {
+            botDialogue.innerText = currentDialogue;
+        }
+
+        // Update Tab Active styling
+        const lesson = slides[currentSlide].getAttribute('data-lesson');
+        if (lesson === '3') {
+            tabL3.classList.add('active');
+            tabL4.classList.remove('active');
+        } else {
+            tabL4.classList.add('active');
+            tabL3.classList.remove('active');
+        }
+
+        // Button disabled states
+        document.getElementById('prevBtn').disabled = currentSlide === 0;
+        document.getElementById('nextBtn').disabled = currentSlide === slides.length - 1;
+    }
+
+    function changeSlide(direction) {
+        currentSlide += direction;
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+        updateSlideDisplay();
+    }
+
+    function jumpToLesson(lessonNumber) {
+        if (lessonNumber === 3) {
+            currentSlide = 0; // Starts at Slide 1
+        } else if (lessonNumber === 4) {
+            currentSlide = 13; // Starts at Slide 14 (Lesson 4 Welcome)
+        }
+        updateSlideDisplay();
+    }
+
+    function toggleHint(id) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.style.display = (el.style.display === "block") ? "none" : "block";
+        }
+    }
+
+    function checkAnswer(inputId, expectedValue, feedbackId) {
+        const inputEl = document.getElementById(inputId);
+        const fb = document.getElementById(feedbackId);
+        if (!inputEl || !fb) return;
+
+        const val = parseFloat(inputEl.value);
+        if (isNaN(val)) {
+            fb.innerText = "Type a number first!";
+            fb.className = "feedback-text incorrect";
+            return;
+        }
+
+        if (Math.abs(val - expectedValue) < 0.05) {
+            fb.innerText = "✓ Correct! High voltage!";
+            fb.className = "feedback-text correct";
+        } else {
+            fb.innerText = "✗ Not quite. Try using the hint!";
+            fb.className = "feedback-text incorrect";
+        }
+    }
+
+    // Initialize display on load
+    updateSlideDisplay();
+</script>
+</body>
+</html>
