@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Year 11 Advanced Mathematics — Final Revision & Gateway to Year 12</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- KaTeX for crisp mathematical typography -->
+  <!-- KaTeX for mathematical notation -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
-  <!-- FontAwesome Icons for clean UI cues -->
+  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
@@ -23,7 +23,6 @@
       font-family: 'JetBrains Mono', monospace;
     }
 
-    /* Print optimization for handouts */
     @media print {
       .no-print {
         display: none !important;
@@ -46,6 +45,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-indigo-500 selection:text-white min-h-screen flex flex-col">
 
+  <!-- Header & Live Classroom Timer -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center space-x-3">
@@ -57,11 +57,11 @@
             <h1 class="text-lg font-bold text-slate-900 tracking-tight">Year 11 Advanced Mathematics</h1>
             <span class="text-xs px-2 py-0.5 rounded-full font-semibold bg-emerald-100 text-emerald-700">Final Session</span>
           </div>
-          <p class="text-xs text-slate-500">Bridge to Year 12 Mastery • Pre-Retreat Capstone</p>
+          <p class="text-xs text-slate-500">Bridge to Year 12 Mastery • Pre-Retreat Capstone (50-Min Lesson)</p>
         </div>
       </div>
 
-      <!-- Quick Action Controls & Classroom Timer -->
+      <!-- Quick Action Controls & Classroom Timers -->
       <div class="flex items-center gap-3 no-print">
         <div id="timerContainer" class="flex items-center bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 text-sm font-medium text-slate-700">
           <i class="fa-regular fa-clock mr-2 text-indigo-600"></i>
@@ -77,442 +77,658 @@
     </div>
   </header>
 
-  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-    
-    <!-- Hero Alert Banner -->
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 sm:p-8 shadow-xl">
-      <div class="relative z-10 max-w-3xl space-y-3">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-indigo-200 text-xs font-semibold backdrop-blur-md border border-white/15">
-          <i class="fa-solid fa-campground text-amber-300"></i> Before we depart for retreat...
-        </div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">The 4 Foundation Pillars of Year 12 Success</h2>
-        <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-          Over 75% of Year 12 marks rely on Year 11 calculus, trigonometry, and function behavior. Today, we diagnose sticking points, lock in muscle memory, and ensure you head on retreat with total peace of mind.
-        </p>
-      </div>
-      <div class="absolute -right-10 -bottom-10 opacity-10 text-white text-[180px] pointer-events-none select-none font-serif">
-        &fnof;'(x)
-      </div>
+  <!-- Main View Tab Bar -->
+  <nav class="bg-white border-b border-slate-200 sticky top-[65px] z-30 shadow-xs no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-2 sm:space-x-4 py-2">
+      <button id="navLessonBtn" onclick="switchView('lesson')" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 transition">
+        <i class="fa-solid fa-book-open"></i>
+        <span>Part 1: Key Notes & Pitfalls</span>
+      </button>
+      <button id="navPracticeBtn" onclick="switchView('practice')" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition border border-transparent">
+        <i class="fa-solid fa-layer-group text-indigo-500"></i>
+        <span>Part 2: Question Bank (9 Topics)</span>
+        <span class="ml-1 px-2 py-0.5 rounded-full text-xs bg-indigo-100 text-indigo-700 font-bold">Practice Vault</span>
+      </button>
     </div>
+  </nav>
 
-    <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
-      <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
-        <div class="flex items-center gap-2">
-          <div class="p-2 rounded-lg bg-indigo-50 text-indigo-600">
-            <i class="fa-solid fa-list-check"></i>
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+
+    <!-- VIEW 1: PART 1 - KEY CONCEPTS, MASTER NOTES & PITFALLS -->
+    <div id="lessonView" class="space-y-10">
+      <!-- Hero Alert Banner -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 sm:p-8 shadow-xl">
+        <div class="relative z-10 max-w-3xl space-y-2">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-indigo-200 text-xs font-semibold backdrop-blur-md border border-white/10">
+            <i class="fa-solid fa-graduation-cap text-amber-300"></i> Part 1 • Revision Master Notes & Pitfall Audit
           </div>
-          <h3 class="font-bold text-slate-800 text-base">Lesson Architecture (50-Minute Plan)</h3>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Year 11 Foundation Guide for Year 12</h2>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            Consolidate key formulas, algebraic principles, common HSC examiner traps, and see how each topic links directly to your Year 12 calculus course before heading out on retreat.
+          </p>
         </div>
-        <span class="text-xs font-medium text-slate-500">Suggested Timing</span>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-        <div class="p-4 rounded-xl border border-indigo-100 bg-indigo-50/50">
-          <div class="flex justify-between items-center text-indigo-900 font-bold mb-1">
-            <span>Part 1: The Diagnostic Sprint</span>
-            <span class="px-2 py-0.5 rounded text-xs bg-indigo-200/70 text-indigo-800 font-semibold">20 mins</span>
+      <!-- Quick Jump Anchors -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 no-print">
+        <a href="#core-rules" class="p-4 rounded-xl border border-indigo-200 bg-white hover:border-indigo-400 transition shadow-xs flex items-center justify-between group">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">1</div>
+            <div>
+              <div class="font-bold text-slate-900 group-hover:text-indigo-600 transition">Essential Formulas & Rules</div>
+              <div class="text-xs text-slate-500">Calculus, Trig & Functions</div>
+            </div>
           </div>
-          <p class="text-xs text-slate-600">Paired collaboration. 5 high-yield exam questions covering Calculus, Trig, Functions, and Transformations.</p>
-        </div>
+          <i class="fa-solid fa-arrow-down text-slate-400 group-hover:text-indigo-600"></i>
+        </a>
 
-        <div class="p-4 rounded-xl border border-amber-100 bg-amber-50/50">
-          <div class="flex justify-between items-center text-amber-900 font-bold mb-1">
-            <span>Part 2: Deconstruction & Pitfalls</span>
-            <span class="px-2 py-0.5 rounded text-xs bg-amber-200/70 text-amber-800 font-semibold">20 mins</span>
+        <a href="#hsc-pitfalls" class="p-4 rounded-xl border border-amber-200 bg-white hover:border-amber-400 transition shadow-xs flex items-center justify-between group">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold">2</div>
+            <div>
+              <div class="font-bold text-slate-900 group-hover:text-amber-700 transition">HSC Pitfalls & Traps</div>
+              <div class="text-xs text-slate-500">Signs, Endpoints & Roots</div>
+            </div>
           </div>
-          <p class="text-xs text-slate-600">Teacher-led solution walkthrough. Reveal common HSC traps: quotient rule signs, non-acute trig quadrants, and domain errors.</p>
-        </div>
+          <i class="fa-solid fa-arrow-down text-slate-400 group-hover:text-amber-600"></i>
+        </a>
 
-        <div class="p-4 rounded-xl border border-emerald-100 bg-emerald-50/50">
-          <div class="flex justify-between items-center text-emerald-900 font-bold mb-1">
-            <span>Part 3: Year 12 Horizon Preview</span>
-            <span class="px-2 py-0.5 rounded text-xs bg-emerald-200/70 text-emerald-800 font-semibold">10 mins</span>
+        <a href="#y12-bridge" class="p-4 rounded-xl border border-emerald-200 bg-white hover:border-emerald-400 transition shadow-xs flex items-center justify-between group">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">3</div>
+            <div>
+              <div class="font-bold text-slate-900 group-hover:text-emerald-700 transition">Year 12 Horizon Bridge</div>
+              <div class="text-xs text-slate-500">How Y11 Connects to Term 1</div>
+            </div>
           </div>
-          <p class="text-xs text-slate-600">Brief preview showing how today's skills translate directly into Y12 integral calculus and trig derivatives.</p>
-        </div>
+          <i class="fa-solid fa-arrow-down text-slate-400 group-hover:text-emerald-600"></i>
+        </a>
       </div>
-    </section>
 
-    <section class="space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-            <span class="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-xs">Q</span>
-            The 5 Critical Diagnostic Questions
-          </h3>
-          <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Attempt these before revealing hints and complete step-by-step solutions.</p>
+      <!-- SECTION 1: ESSENTIAL FORMULAS & RULES MASTER NOTES -->
+      <section id="core-rules" class="space-y-6 scroll-mt-20">
+        <div class="border-b border-slate-200 pb-3">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-600 text-white">Module 1</span>
+          <h3 class="text-xl font-extrabold text-slate-900 mt-1">High-Yield Theory & Formula Reference</h3>
+          <p class="text-xs text-slate-500">Review these core definitions and algebraic relationships. You will apply them continuously across Year 12.</p>
         </div>
-        <div class="flex items-center gap-2 no-print">
-          <button onclick="revealAllSolutions()" class="text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-100 transition">
-            <i class="fa-solid fa-eye mr-1"></i> Reveal All Solutions
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Calculus Rules Note -->
+          <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-3 card-print">
+            <div class="flex items-center gap-2 text-indigo-700 font-bold text-sm">
+              <i class="fa-solid fa-square-root-variable"></i>
+              <span>1. Differential Calculus Core Rules</span>
+            </div>
+            <ul class="text-xs text-slate-700 space-y-2 leading-relaxed">
+              <li>
+                <strong>Product Rule:</strong> $\frac{d}{dx}[uv] = u'v + uv'$. Use whenever two variable terms are multiplied (e.g., $x^2 \sqrt{x+1}$).
+              </li>
+              <li>
+                <strong>Quotient Rule:</strong> $\frac{d}{dx}\left[\frac{u}{v}\right] = \frac{v u' - u v'}{v^2}$. Mnemonic: <em>"Low d-high minus high d-low over the square of what's below."</em>
+              </li>
+              <li>
+                <strong>Chain Rule (Composite Functions):</strong> $\frac{dy}{dx} = \frac{dy}{du} \cdot \frac{du}{dx}$, or $\frac{d}{dx}[f(g(x))] = f'(g(x)) \cdot g'(x)$. Differentiate the outer function, then multiply by the derivative of the inside.
+              </li>
+              <li>
+                <strong>Tangents & Normals:</strong> Gradient of tangent is $m_T = f'(x_0)$. Normal is perpendicular: $m_N = -\frac{1}{m_T}$. Point-gradient equation: $y - y_1 = m(x - x_1)$.
+              </li>
+            </ul>
+          </article>
+
+          <!-- Trigonometry Rules Note -->
+          <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-3 card-print">
+            <div class="flex items-center gap-2 text-purple-700 font-bold text-sm">
+              <i class="fa-solid fa-wave-square"></i>
+              <span>2. Trigonometry & The Unit Circle</span>
+            </div>
+            <ul class="text-xs text-slate-700 space-y-2 leading-relaxed">
+              <li>
+                <strong>Pythagorean Identities:</strong> $\sin^2\theta + \cos^2\theta = 1$, $\tan\theta = \frac{\sin\theta}{\cos\theta}$, $1 + \tan^2\theta = \sec^2\theta$.
+              </li>
+              <li>
+                <strong>ASTC Quadrant Rule:</strong>
+                Quadrant I (All $+$), Quadrant II ($\sin +$), Quadrant III ($\tan +$), Quadrant IV ($\cos +$).
+              </li>
+              <li>
+                <strong>Reference Angles ($\theta_{\text{ref}}$):</strong>
+                Q2: $\pi - \theta_{\text{ref}}$, Q3: $\pi + \theta_{\text{ref}}$, Q4: $2\pi - \theta_{\text{ref}}$.
+              </li>
+              <li>
+                <strong>Exact Values:</strong> $\frac{\pi}{6} = 30^\circ$, $\frac{\pi}{4} = 45^\circ$, $\frac{\pi}{3} = 60^\circ$, $\frac{\pi}{2} = 90^\circ$.
+              </li>
+            </ul>
+          </article>
+
+          <!-- Functions & Symmetries Note -->
+          <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-3 card-print">
+            <div class="flex items-center gap-2 text-cyan-700 font-bold text-sm">
+              <i class="fa-solid fa-chart-line"></i>
+              <span>3. Functions, Symmetries & Domains</span>
+            </div>
+            <ul class="text-xs text-slate-700 space-y-2 leading-relaxed">
+              <li>
+                <strong>Even Function:</strong> $f(-x) = f(x)$ for all $x$ in domain. Geometrically symmetric across the $y$-axis (line of reflection $x=0$).
+              </li>
+              <li>
+                <strong>Odd Function:</strong> $f(-x) = -f(x)$ for all $x$ in domain. Possesses point symmetry ($180^\circ$ rotational symmetry about $(0,0)$).
+              </li>
+              <li>
+                <strong>Domain Restrictions:</strong>
+                Denominators $\ne 0$; Square roots $\sqrt{f(x)} \implies f(x) \ge 0$; Square roots in denominator $\frac{1}{\sqrt{f(x)}} \implies f(x) > 0$.
+              </li>
+              <li>
+                <strong>Graph Shifts:</strong> $f(x - c)$ shifts right by $c$; $f(x + c)$ shifts left by $c$; $f(x) + c$ shifts up by $c$.
+              </li>
+            </ul>
+          </article>
+
+          <!-- Probability Trees Note -->
+          <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-3 card-print">
+            <div class="flex items-center gap-2 text-emerald-700 font-bold text-sm">
+              <i class="fa-solid fa-diagram-project"></i>
+              <span>4. Probability & Tree Diagrams</span>
+            </div>
+            <ul class="text-xs text-slate-700 space-y-2 leading-relaxed">
+              <li>
+                <strong>Without Replacement:</strong> Total sample size decreases by 1 on each subsequent branch (denominator shrinks).
+              </li>
+              <li>
+                <strong>Complementary Events:</strong> $P(\text{at least one}) = 1 - P(\text{none})$. Saves time in multi-branch calculations.
+              </li>
+              <li>
+                <strong>Conditional Probability:</strong> $P(A \mid B) = \frac{P(A \cap B)}{P(B)}$. Restrict sample space strictly to condition $B$.
+              </li>
+              <li>
+                <strong>Multiplication along branches:</strong> Multiply probabilities along paths; add disjoint branch results together.
+              </li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- SECTION 2: HSC EXAMINER PITFALL CLINIC -->
+      <section id="hsc-pitfalls" class="space-y-6 scroll-mt-20">
+        <div class="border-b border-slate-200 pb-3">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500 text-white">Module 2</span>
+          <h3 class="text-xl font-extrabold text-slate-900 mt-1">HSC Marker Pitfall Clinic: The 3 Costliest Traps</h3>
+          <p class="text-xs text-slate-500">These three specific errors account for the majority of lost marks in Year 11 and Year 12 assessment tasks.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Trap 1 -->
+          <article class="bg-white rounded-2xl border border-amber-200 p-5 shadow-xs space-y-3 card-print">
+            <div class="flex items-center gap-2 text-rose-600 font-bold text-sm">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <span>Trap 1: The Minus Sign in Quotient Rule</span>
+            </div>
+            
+            <div class="p-3 rounded-lg bg-rose-50 border border-rose-100 text-xs text-rose-900 space-y-1">
+              <p class="font-bold">Common Student Mistake:</p>
+              <p class="font-mono line-through text-[11px]">$f'(x) = \frac{(x^2+1)(2) - 4x^2 - 2x}{(x^2+1)^2}$</p>
+              <p class="text-[11px] text-rose-700">Forgetting parentheses around $u v' = (2x - 1)(2x) = 4x^2 - 2x$. The negative sign must distribute to both terms!</p>
+            </div>
+
+            <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-100 text-xs text-emerald-900 space-y-1">
+              <p class="font-bold text-emerald-800">The Fix (Mandatory Brackets):</p>
+              <p class="font-mono text-[11px]">$-[4x^2 - 2x] = -4x^2 + 2x$</p>
+              <p class="text-[11px] text-emerald-700">Always write square brackets around the second term of the quotient rule numerator before expanding.</p>
+            </div>
+
+            <div class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+              <strong>Takeaway:</strong> Swapping $u v'$ and $v u'$ in the quotient rule flips the signs completely and leads to zero marks for the derivative.
+            </div>
+          </article>
+
+          <!-- Trap 2 -->
+          <article class="bg-white rounded-2xl border border-amber-200 p-5 shadow-xs space-y-3 card-print">
+            <div class="flex items-center gap-2 text-amber-600 font-bold text-sm">
+              <i class="fa-solid fa-compass"></i>
+              <span>Trap 2: Ignoring Domain Boundaries</span>
+            </div>
+            
+            <div class="p-3 rounded-lg bg-rose-50 border border-rose-100 text-xs text-rose-900 space-y-1">
+              <p class="font-bold">Common Student Mistake:</p>
+              <p class="font-mono line-through text-[11px]">$\cos\theta = 1 \implies \theta = 0$ (Only!)</p>
+              <p class="text-[11px] text-rose-700">Remembering $0$, but missing $2\pi$. If the question specifies $0 \le \theta \le 2\pi$, both endpoints are valid and required!</p>
+            </div>
+
+            <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-100 text-xs text-emerald-900 space-y-1">
+              <p class="font-bold text-emerald-800">The Fix (Domain Checklist):</p>
+              <p class="text-[11px] text-emerald-700">Check inequality symbols: if $\le$ is used, evaluate the boundary values immediately before solving for internal quadrants.</p>
+            </div>
+
+            <div class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+              <strong>Takeaway:</strong> If the domain is $0 \le \theta < 2\pi$, including $2\pi$ is an extraneous root. Always read the inequality signs carefully.
+            </div>
+          </article>
+
+          <!-- Trap 3 -->
+          <article class="bg-white rounded-2xl border border-amber-200 p-5 shadow-xs space-y-3 card-print">
+            <div class="flex items-center gap-2 text-indigo-600 font-bold text-sm">
+              <i class="fa-solid fa-divide"></i>
+              <span>Trap 3: Strict Inequality in Denominators</span>
+            </div>
+            
+            <div class="p-3 rounded-lg bg-rose-50 border border-rose-100 text-xs text-rose-900 space-y-1">
+              <p class="font-bold">Common Student Mistake:</p>
+              <p class="font-mono line-through text-[11px]">Domain: $-4 \le x \le 4$</p>
+              <p class="text-[11px] text-rose-700">Writing $\ge 0$ out of habit for square roots. But when the root is in the denominator, zero creates an undefined division.</p>
+            </div>
+
+            <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-100 text-xs text-emerald-900 space-y-1">
+              <p class="font-bold text-emerald-800">The Fix (Strict Inequality):</p>
+              <p class="font-mono text-[11px]">$\sqrt{f(x)}$ in denom $\implies f(x) > 0$ strictly!</p>
+              <p class="text-[11px] text-emerald-700">Round brackets $(-4, 4)$ instead of square brackets $[-4, 4]$.</p>
+            </div>
+
+            <div class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+              <strong>Takeaway:</strong> Check your brackets. Open interval $(-4, 4)$ means vertical asymptotes exist at $x = \pm 4$.
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- SECTION 3: YEAR 12 HORIZON BRIDGE -->
+      <section id="y12-bridge" class="bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-lg space-y-6 scroll-mt-20">
+        <div class="max-w-2xl border-b border-indigo-800 pb-4">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500 text-white">Module 3</span>
+            <span class="text-xs uppercase tracking-wider font-bold text-indigo-300">Transition Bridge</span>
+          </div>
+          <h3 class="text-2xl font-black mt-2">The Gateway to Year 12: How Year 11 Connects</h3>
+          <p class="text-sm text-indigo-200 mt-1">
+            Year 12 builds directly on Year 11 skills. Here is how your current revision connects immediately to Term 1 of Year 12.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <!-- Pillar 1 -->
+          <div class="bg-white/10 backdrop-blur-md rounded-xl p-5 border border-white/10 space-y-3">
+            <div class="flex items-center text-amber-300 font-bold gap-2 text-sm">
+              <i class="fa-solid fa-arrow-right-arrow-left"></i>
+              <span>Differential &rarr; Integral Calculus</span>
+            </div>
+            <p class="text-slate-300 text-xs leading-relaxed">
+              In Year 11, you found the gradient of a curve using $\frac{dy}{dx}$. In Year 12, you will reverse this process through <strong>Integration</strong>:
+            </p>
+            <div class="bg-black/30 p-2.5 rounded-lg border border-white/10 text-xs font-mono text-amber-200">
+              $$\int 2x \, dx = x^2 + C$$
+            </div>
+            <p class="text-slate-400 text-[11px]">
+              To calculate areas bounded between curves and volumes of revolution, standard differentiation rules must be second nature.
+            </p>
+          </div>
+
+          <!-- Pillar 2 -->
+          <div class="bg-white/10 backdrop-blur-md rounded-xl p-5 border border-white/10 space-y-3">
+            <div class="flex items-center text-emerald-300 font-bold gap-2 text-sm">
+              <i class="fa-solid fa-wave-square"></i>
+              <span>Trigonometry &rarr; Trig Calculus</span>
+            </div>
+            <p class="text-slate-300 text-xs leading-relaxed">
+              In Year 12 Term 1, we differentiate and integrate trigonometric functions:
+            </p>
+            <div class="bg-black/30 p-2.5 rounded-lg border border-white/10 text-xs font-mono text-emerald-200">
+              $$\frac{d}{dx}[\sin(x)] = \cos(x)$$
+            </div>
+            <p class="text-slate-400 text-[11px]">
+              Finding stationary points and curve sketching requires solving equations like $\cos(2x) = 0$ across multiple quadrants quickly.
+            </p>
+          </div>
+
+          <!-- Pillar 3 -->
+          <div class="bg-white/10 backdrop-blur-md rounded-xl p-5 border border-white/10 space-y-3">
+            <div class="flex items-center text-sky-300 font-bold gap-2 text-sm">
+              <i class="fa-solid fa-chart-line"></i>
+              <span>Functions &rarr; Curve Sketching & Inflection</span>
+            </div>
+            <p class="text-slate-300 text-xs leading-relaxed">
+              Year 12 introduces the <strong>Second Derivative</strong> $f''(x)$:
+            </p>
+            <div class="bg-black/30 p-2.5 rounded-lg border border-white/10 text-xs font-mono text-sky-200">
+              $$f''(x) > 0 \implies \text{Concave Up}$$
+            </div>
+            <p class="text-slate-400 text-[11px]">
+              Classifying maximums, minimums, horizontal and oblique points of inflection combines polynomial algebra, symmetry, and calculus into one problem.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-indigo-950/60 border border-indigo-700/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base">
+              <i class="fa-solid fa-check"></i>
+            </div>
+            <span class="text-indigo-200">Now head over to Part 2 to test your skills on the curated 9-topic question bank!</span>
+          </div>
+          <button onclick="switchView('practice')" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-bold text-white transition whitespace-nowrap shadow-sm flex items-center gap-2">
+            <span>Go to Part 2: Question Bank</span>
+            <i class="fa-solid fa-arrow-right"></i>
           </button>
-          <button onclick="hideAllSolutions()" class="text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-100 transition">
-            <i class="fa-solid fa-eye-slash mr-1"></i> Hide All
+        </div>
+      </section>
+    </div><!-- END PART 1 VIEW -->
+
+    <!-- VIEW 2: PART 2 - KEY SKILLS PRACTICE VAULT & QUESTION BANK -->
+    <div id="practiceView" class="hidden space-y-8">
+      <!-- Practice Header Banner -->
+      <div class="bg-gradient-to-r from-slate-900 to-indigo-900 text-white rounded-2xl p-6 sm:p-8 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-2 max-w-2xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-indigo-200 text-xs font-semibold backdrop-blur-md border border-white/10">
+            <i class="fa-solid fa-layer-group text-amber-300"></i> Part 2 • Key Skills Question Bank
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Practice Vault (9 Core Syllabus Areas)</h2>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            Consolidate each foundational skill before starting Year 12. Filter by topic, test your working, and inspect step-by-step model solutions.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 no-print">
+          <button onclick="revealAllPractice()" class="px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-xs flex items-center">
+            <i class="fa-solid fa-eye mr-1.5"></i> Reveal All Solutions
+          </button>
+          <button onclick="hideAllPractice()" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition border border-slate-700 flex items-center">
+            <i class="fa-solid fa-eye-slash mr-1.5"></i> Hide All
           </button>
         </div>
       </div>
 
-      <!-- Question 1: Calculus (Quotient + Tangent) -->
-      <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs card-print space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
-          <div class="flex items-center gap-2.5">
-            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-indigo-100 text-indigo-800">Topic 1</span>
-            <h4 class="font-bold text-slate-900 text-base">Calculus: The Quotient Rule & Tangent Equation</h4>
+      <!-- Topic Filter Pills -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 text-xs no-print">
+        <span class="text-slate-500 font-semibold uppercase tracking-wider text-[11px] whitespace-nowrap mr-1">Filter:</span>
+        <button onclick="filterPractice('all')" class="filter-btn px-3 py-1.5 rounded-full font-bold bg-slate-900 text-white transition whitespace-nowrap" data-filter="all">All Topics (9)</button>
+        <button onclick="filterPractice('calculus')" class="filter-btn px-3 py-1.5 rounded-full font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition whitespace-nowrap" data-filter="calculus">Calculus (Product, Quotient, Chain)</button>
+        <button onclick="filterPractice('trigonometry')" class="filter-btn px-3 py-1.5 rounded-full font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition whitespace-nowrap" data-filter="trigonometry">Trig (Equations & Identities)</button>
+        <button onclick="filterPractice('functions')" class="filter-btn px-3 py-1.5 rounded-full font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition whitespace-nowrap" data-filter="functions">Functions, Symmetry & Piecewise</button>
+        <button onclick="filterPractice('probability')" class="filter-btn px-3 py-1.5 rounded-full font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition whitespace-nowrap" data-filter="probability">Probability Trees</button>
+      </div>
+
+      <!-- Practice Questions Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Practice Item 1: Product Rule -->
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="calculus">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-indigo-100 text-indigo-800">Q1 • Product Rule</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
           </div>
-          <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
-        </div>
-
-        <div class="text-slate-800 text-base space-y-2">
-          <p class="font-medium">
-            Consider the function \( f(x) = \frac{2x - 1}{x^2 + 1} \).
-          </p>
-          <p class="text-sm text-slate-700">
-            <strong>(a)</strong> Show that the derivative is given by \( f'(x) = \frac{-2x^2 + 2x + 2}{(x^2 + 1)^2} \).<br>
-            <strong>(b)</strong> Hence, find the exact equation of the tangent to the curve at the point where \( x = 1 \).
-          </p>
-        </div>
-
-        <!-- Interactive Hint & Solution -->
-        <div class="pt-2 flex flex-col gap-3 no-print">
-          <div class="flex gap-2">
-            <button onclick="toggleSection('hint1')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition flex items-center">
-              <i class="fa-regular fa-lightbulb mr-1.5"></i> Hint
-            </button>
-            <button onclick="toggleSection('sol1')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition flex items-center">
-              <i class="fa-solid fa-check-double mr-1.5"></i> Model Solution
-            </button>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Differentiating a Product with Surds</h4>
+            <p class="text-sm text-slate-700">Differentiate $y = (3x - 2)\sqrt{x+1}$ with respect to $x$. Express your final answer as a single simplified algebraic fraction.</p>
           </div>
-
-          <div id="hint1" class="hidden p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 leading-relaxed">
-            <span class="font-bold">Hint:</span> Let \( u = 2x - 1 \) and \( v = x^2 + 1 \). Apply \( \frac{v u' - u v'}{v^2} \). Watch the negative sign when distributing \( -u v' \)!
-          </div>
-
-          <div id="sol1" class="solution-block hidden p-4 rounded-xl bg-slate-50 border border-slate-200 text-sm space-y-3">
-            <div class="font-bold text-slate-800 border-b border-slate-200 pb-1 text-xs uppercase tracking-wide">Worked Solution</div>
-            <div class="space-y-2 text-slate-700">
-              <p><strong>Part (a):</strong> Let \( u = 2x - 1 \implies u' = 2 \), and \( v = x^2 + 1 \implies v' = 2x \).</p>
-              <p>Applying the Quotient Rule:</p>
-              <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs overflow-x-auto">
-                \[ f'(x) = \frac{(x^2 + 1)(2) - (2x - 1)(2x)}{(x^2 + 1)^2} = \frac{2x^2 + 2 - (4x^2 - 2x)}{(x^2 + 1)^2} = \frac{-2x^2 + 2x + 2}{(x^2 + 1)^2} \]
-              </div>
-              <p><strong>Part (b):</strong> At \( x = 1 \):</p>
-              <p>Evaluate \( y \)-coordinate: \( y = f(1) = \frac{2(1) - 1}{1^2 + 1} = \frac{1}{2} \). So the point is \( \left(1, \frac{1}{2}\right) \).</p>
-              <p>Evaluate gradient \( m \): \( m = f'(1) = \frac{-2(1)^2 + 2(1) + 2}{(1^2 + 1)^2} = \frac{2}{4} = \frac{1}{2} \).</p>
-              <p>Using point-gradient form \( y - y_1 = m(x - x_1) \):</p>
-              <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs overflow-x-auto">
-                \[ y - \frac{1}{2} = \frac{1}{2}(x - 1) \implies y = \frac{1}{2}x \quad \text{or} \quad x - 2y = 0 \]
-              </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintP1')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solP1')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintP1" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              Let $u = 3x - 2$ and $v = (x+1)^{1/2}$. Apply $(uv)' = u'v + uv'$, then bring to a common denominator of $2\sqrt{x+1}$.
+            </div>
+            <div id="solP1" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p>$u = 3x - 2 \implies u' = 3$</p>
+              <p>$v = (x+1)^{1/2} \implies v' = \frac{1}{2}(x+1)^{-1/2} = \frac{1}{2\sqrt{x+1}}$</p>
+              <p class="font-mono">$$\frac{dy}{dx} = 3\sqrt{x+1} + \frac{3x - 2}{2\sqrt{x+1}}$$</p>
+              <p>Common denominator:</p>
+              <p class="font-mono">$$\frac{dy}{dx} = \frac{6(x+1) + (3x - 2)}{2\sqrt{x+1}} = \frac{9x + 4}{2\sqrt{x+1}}$$</p>
             </div>
           </div>
-        </div>
-      </article>
+        </article>
 
-      <!-- Question 2: Trigonometric Equations & Exact Values -->
-      <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs card-print space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
-          <div class="flex items-center gap-2.5">
-            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-purple-100 text-purple-800">Topic 2</span>
-            <h4 class="font-bold text-slate-900 text-base">Trigonometry: Solving Multi-Quadrant Equations</h4>
+        <!-- Practice Item 2: Quotient Rule -->
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="calculus">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-indigo-100 text-indigo-800">Q2 • Quotient Rule</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
           </div>
-          <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
-        </div>
-
-        <div class="text-slate-800 text-base space-y-2">
-          <p class="font-medium">
-            Solve the equation \( 2\cos^2\theta - \cos\theta - 1 = 0 \) for the domain \( 0 \le \theta \le 2\pi \).
-          </p>
-          <p class="text-xs text-slate-500">Give your answers as exact values in terms of \( \pi \).</p>
-        </div>
-
-        <div class="pt-2 flex flex-col gap-3 no-print">
-          <div class="flex gap-2">
-            <button onclick="toggleSection('hint2')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition flex items-center">
-              <i class="fa-regular fa-lightbulb mr-1.5"></i> Hint
-            </button>
-            <button onclick="toggleSection('sol2')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition flex items-center">
-              <i class="fa-solid fa-check-double mr-1.5"></i> Model Solution
-            </button>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Rational Function & Normal Gradient</h4>
+            <p class="text-sm text-slate-700">Find the gradient of the normal to the curve $y = \frac{x^2 - 3}{2x + 1}$ at the point where $x = 1$.</p>
           </div>
-
-          <div id="hint2" class="hidden p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 leading-relaxed">
-            <span class="font-bold">Hint:</span> Treat this as a quadratic equation in \( u = \cos\theta \): \( 2u^2 - u - 1 = 0 \). Factorize, then use the ASTC quadrant rule for the unit circle.
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintP2')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solP2')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintP2" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              Find $y' = \frac{v u' - u v'}{v^2}$. Substitute $x = 1$ to get the tangent gradient $m_T$. The normal gradient is $m_N = -\frac{1}{m_T}$.
+            </div>
+            <div id="solP2" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p>$u = x^2 - 3 \implies u' = 2x$</p>
+              <p>$v = 2x + 1 \implies v' = 2$</p>
+              <p class="font-mono">$$y' = \frac{(2x+1)(2x) - (x^2-3)(2)}{(2x+1)^2} = \frac{4x^2 + 2x - 2x^2 + 6}{(2x+1)^2} = \frac{2x^2 + 2x + 6}{(2x+1)^2}$$</p>
+              <p>At $x = 1$: $m_T = \frac{2(1)^2 + 2(1) + 6}{(2(1)+1)^2} = \frac{10}{9}$.</p>
+              <p class="font-mono">$$\therefore m_{\text{normal}} = -\frac{1}{m_T} = -\frac{9}{10}$$</p>
+            </div>
           </div>
+        </article>
 
-          <div id="sol2" class="solution-block hidden p-4 rounded-xl bg-slate-50 border border-slate-200 text-sm space-y-3">
-            <div class="font-bold text-slate-800 border-b border-slate-200 pb-1 text-xs uppercase tracking-wide">Worked Solution</div>
-            <div class="space-y-2 text-slate-700">
-              <p>Factor the quadratic: \( (2\cos\theta + 1)(\cos\theta - 1) = 0 \).</p>
-              <p>This gives two branches:</p>
-              <ul class="list-disc pl-5 space-y-1">
-                <li><strong>Branch 1:</strong> \( \cos\theta = 1 \implies \theta = 0, 2\pi \) (at boundary endpoints).</li>
-                <li><strong>Branch 2:</strong> \( \cos\theta = -\frac{1}{2} \). The reference angle is \( \frac{\pi}{3} \). Cosine is negative in Quadrants II and III:
-                  \[ \theta = \pi - \frac{\pi}{3} = \frac{2\pi}{3}, \quad \text{and} \quad \theta = \pi + \frac{\pi}{3} = \frac{4\pi}{3} \]
-                </li>
+        <!-- Practice Item 3: Chain Rule -->
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="calculus">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-indigo-100 text-indigo-800">Q3 • Chain Rule</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Repeated Composite Differentiation</h4>
+            <p class="text-sm text-slate-700">Differentiate $f(x) = \frac{1}{(5 - 2x^3)^4}$ and determine all values of $x$ for which $f'(x) > 0$.</p>
+          </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintP3')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solP3')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintP3" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              Rewrite as $f(x) = (5 - 2x^3)^{-4}$. Apply the chain rule. Then analyze the sign of the numerator and denominator.
+            </div>
+            <div id="solP3" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p class="font-mono">$$f'(x) = -4(5 - 2x^3)^{-5} \cdot (-6x^2) = \frac{24x^2}{(5 - 2x^3)^5}$$</p>
+              <p>For $f'(x) > 0$: Since $24x^2 \ge 0$ for all real $x$ (with $24x^2 = 0$ at $x = 0$), the numerator is positive whenever $x \neq 0$.</p>
+              <p>The sign depends on the denominator: $(5 - 2x^3)^5 > 0 \iff 5 - 2x^3 > 0 \iff x^3 < \frac{5}{2} \iff x < \sqrt[3]{\frac{5}{2}}$.</p>
+              <p class="font-mono">$$\therefore x < \sqrt[3]{\frac{5}{2}}, \quad x \neq 0$$</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Practice Item 4: Symmetry (Even / Odd) -->
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="functions">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-cyan-100 text-cyan-800">Q4 • Symmetry</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Algebraic Proof of Function Symmetry</h4>
+            <p class="text-sm text-slate-700">Determine algebraically whether the function $h(x) = \frac{x^3 - 4x}{x^2 + 9}$ is even, odd, or neither. Describe its geometric symmetry.</p>
+          </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintP4')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solP4')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintP4" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              Substitute $-x$ into $h(x)$ and compare with $h(x)$ and $-h(x)$. Remember $(-x)^3 = -x^3$ and $(-x)^2 = x^2$.
+            </div>
+            <div id="solP4" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p class="font-mono">$$h(-x) = \frac{(-x)^3 - 4(-x)}{(-x)^2 + 9} = \frac{-x^3 + 4x}{x^2 + 9} = \frac{-(x^3 - 4x)}{x^2 + 9} = -h(x)$$</p>
+              <p>Since $h(-x) = -h(x)$ for all real $x$, $h(x)$ is an <strong>odd function</strong>.</p>
+              <p><strong>Geometric feature:</strong> Possesses point symmetry ($180^\circ$ rotational symmetry) about the origin $(0,0)$.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Practice Item 5: Trig Equations -->
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="trigonometry">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-purple-100 text-purple-800">Q5 • Trig Equations</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Compound Angle Exact Solutions</h4>
+            <p class="text-sm text-slate-700">Solve $2\sin\left(2\theta - \frac{\pi}{6}\right) = \sqrt{3}$ for $0 \le \theta \le \pi$. Give exact radian solutions.</p>
+          </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintP5')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solP5')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintP5" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              Transform the domain: If $0 \le \theta \le \pi$, then $-\frac{\pi}{6} \le 2\theta - \frac{\pi}{6} \le \frac{11\pi}{6}$. Then find angles where $\sin = \frac{\sqrt{3}}{2}$.
+            </div>
+            <div id="solP5" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p>Let $\alpha = 2\theta - \frac{\pi}{6}$. Equation: $\sin\alpha = \frac{\sqrt{3}}{2}$.</p>
+              <p>Domain: $-\frac{\pi}{6} \le \alpha \le \frac{11\pi}{6}$.</p>
+              <p>Reference angle is $\frac{\pi}{3}$. Sin is positive in Quadrants I and II:</p>
+              <p>$\alpha = \frac{\pi}{3}, \frac{2\pi}{3}$.</p>
+              <p>Solving for $\theta$:</p>
+              <p>1) $2\theta - \frac{\pi}{6} = \frac{\pi}{3} \implies 2\theta = \frac{3\pi}{6} = \frac{\pi}{2} \implies \theta = \frac{\pi}{4}$.</p>
+              <p>2) $2\theta - \frac{\pi}{6} = \frac{2\pi}{3} \implies 2\theta = \frac{5\pi}{6} \implies \theta = \frac{5\pi}{12}$.</p>
+              <p class="font-mono">$$\therefore \theta = \frac{\pi}{4}, \; \frac{5\pi}{12}$$</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Practice Item 6: Trig Identities -->
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="trigonometry">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-purple-100 text-purple-800">Q6 • Trig Identities</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Pythagorean Identity Algebraic Proof</h4>
+            <p class="text-sm text-slate-700">Prove the identity: $\frac{1 + \sin\theta}{\cos\theta} + \frac{\cos\theta}{1 + \sin\theta} = \frac{2}{\cos\theta}$.</p>
+          </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintP6')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solP6')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintP6" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              Combine the LHS under a common denominator of $\cos\theta(1 + \sin\theta)$. Expand the numerator and apply $\sin^2\theta + \cos^2\theta = 1$.
+            </div>
+            <div id="solP6" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p class="font-mono">$$\text{LHS} = \frac{(1 + \sin\theta)^2 + \cos^2\theta}{\cos\theta(1 + \sin\theta)}$$</p>
+              <p class="font-mono">$$= \frac{1 + 2\sin\theta + \sin^2\theta + \cos^2\theta}{\cos\theta(1 + \sin\theta)}$$</p>
+              <p>Substitute $\sin^2\theta + \cos^2\theta = 1$:</p>
+              <p class="font-mono">$$= \frac{1 + 2\sin\theta + 1}{\cos\theta(1 + \sin\theta)} = \frac{2 + 2\sin\theta}{\cos\theta(1 + \sin\theta)} = \frac{2(1 + \sin\theta)}{\cos\theta(1 + \sin\theta)} = \frac{2}{\cos\theta} = \text{RHS}$$</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Practice Item 7: Function Notation & Shifts -->
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="functions">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-cyan-100 text-cyan-800">Q7 • Function Notation</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Composite Notation & Horizontal Translation</h4>
+            <p class="text-sm text-slate-700">Given $f(x) = 2x^2 - 3x + 1$, expand and simplify $f(x - 2)$. Hence describe the geometric transformation mapping $y = f(x)$ to $y = f(x - 2)$.</p>
+          </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintP7')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solP7')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintP7" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              Replace every $x$ with the entire binomial $(x - 2)$. Remember that $(x - 2)^2 = x^2 - 4x + 4$.
+            </div>
+            <div id="solP7" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p class="font-mono">$$f(x - 2) = 2(x - 2)^2 - 3(x - 2) + 1$$</p>
+              <p class="font-mono">$$= 2(x^2 - 4x + 4) - 3x + 6 + 1 = 2x^2 - 8x + 8 - 3x + 7$$</p>
+              <p class="font-mono">$$= 2x^2 - 11x + 15$$</p>
+              <p><strong>Geometric Transformation:</strong> A horizontal translation of <strong>2 units to the right</strong> (positive $x$-direction).</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Practice Item 8: Piecewise Functions -->
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="functions">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-cyan-100 text-cyan-800">Q8 • Piecewise Functions</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Sub-domain Evaluation & Continuity Testing</h4>
+            <p class="text-sm text-slate-700">A piecewise function is defined by:</p>
+            <div class="my-1 font-mono text-xs bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+              $$f(x) = \begin{cases} 4 - x^2 & \text{for } x < 1 \\ 2x + 1 & \text{for } x \ge 1 \end{cases}$$
+            </div>
+            <p class="text-xs text-slate-700 mt-1"><strong>(a)</strong> Evaluate $f(-3)$ and $f(1)$.<br><strong>(b)</strong> Determine whether $f(x)$ is continuous at $x = 1$.</p>
+          </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintP8')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solP8')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintP8" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              Check which branch holds for each value of $x$. For continuity, check whether the left-hand limit $\lim_{x \to 1^-} f(x)$ matches the right-hand value $f(1)$.
+            </div>
+            <div id="solP8" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p><strong>Part (a):</strong></p>
+              <ul class="list-disc pl-4 space-y-1">
+                <li>$x = -3 < 1 \implies f(-3) = 4 - (-3)^2 = 4 - 9 = -5$.</li>
+                <li>$x = 1 \ge 1 \implies f(1) = 2(1) + 1 = 3$.</li>
               </ul>
-              <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs">
-                \[ \therefore \theta = 0, \; \frac{2\pi}{3}, \; \frac{4\pi}{3}, \; 2\pi \]
-              </div>
+              <p><strong>Part (b) Continuity test at $x = 1$:</strong></p>
+              <p>Left branch as $x \to 1^-$: $4 - (1)^2 = 3$.</p>
+              <p>Right branch as $x \to 1^+$: $2(1) + 1 = 3$.</p>
+              <p>Since $\lim_{x \to 1^-} f(x) = \lim_{x \to 1^+} f(x) = f(1) = 3$, the function is <strong>continuous</strong> at $x = 1$.</p>
             </div>
           </div>
-        </div>
-      </article>
+        </article>
 
-      <!-- Question 3: Functions, Symmetries & Domain/Range -->
-      <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs card-print space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
-          <div class="flex items-center gap-2.5">
-            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-cyan-100 text-cyan-800">Topic 3</span>
-            <h4 class="font-bold text-slate-900 text-base">Functions: Even/Odd Symmetry & Maximal Domain</h4>
+        <!-- Practice Item 9: Probability Tree Diagrams -->
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="probability">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">Q9 • Probability Trees</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
           </div>
-          <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
-        </div>
-
-        <div class="text-slate-800 text-base space-y-2">
-          <p class="font-medium">
-            Let \( g(x) = \frac{x}{\sqrt{16 - x^2}} \).
-          </p>
-          <p class="text-sm text-slate-700">
-            <strong>(a)</strong> State the maximal real domain of \( g(x) \).<br>
-            <strong>(b)</strong> Prove algebraically whether \( g(x) \) is an even function, an odd function, or neither.
-          </p>
-        </div>
-
-        <div class="pt-2 flex flex-col gap-3 no-print">
-          <div class="flex gap-2">
-            <button onclick="toggleSection('hint3')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition flex items-center">
-              <i class="fa-regular fa-lightbulb mr-1.5"></i> Hint
-            </button>
-            <button onclick="toggleSection('sol3')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition flex items-center">
-              <i class="fa-solid fa-check-double mr-1.5"></i> Model Solution
-            </button>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Sampling Without Replacement & Conditionals</h4>
+            <p class="text-sm text-slate-700">A box contains 5 red balls and 3 green balls. Two balls are drawn randomly without replacement.</p>
+            <p class="text-xs text-slate-700 mt-1"><strong>(a)</strong> Find the probability that both balls are the same colour.<br><strong>(b)</strong> Given that at least one green ball is selected, find the probability that both are green.</p>
           </div>
-
-          <div id="hint3" class="hidden p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 leading-relaxed">
-            <span class="font-bold">Hint:</span> For domain, the denominator cannot be zero AND the expression under the square root must be strictly positive: \( 16 - x^2 > 0 \). For symmetry, compute \( g(-x) \) and compare with \( -g(x) \).
-          </div>
-
-          <div id="sol3" class="solution-block hidden p-4 rounded-xl bg-slate-50 border border-slate-200 text-sm space-y-3">
-            <div class="font-bold text-slate-800 border-b border-slate-200 pb-1 text-xs uppercase tracking-wide">Worked Solution</div>
-            <div class="space-y-2 text-slate-700">
-              <p><strong>Part (a): Domain</strong></p>
-              <p>Because \( \sqrt{16 - x^2} \) is in the denominator, we require: \( 16 - x^2 > 0 \implies x^2 < 16 \implies -4 < x < 4 \).</p>
-              <p>Hence, the domain is \( x \in (-4, 4) \) or \( \{ x \in \mathbb{R} : -4 < x < 4 \} \).</p>
-              
-              <p><strong>Part (b): Symmetry Proof</strong></p>
-              <p>Evaluate \( g(-x) \):</p>
-              <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs">
-                \[ g(-x) = \frac{-x}{\sqrt{16 - (-x)^2}} = \frac{-x}{\sqrt{16 - x^2}} = -\left(\frac{x}{\sqrt{16 - x^2}}\right) = -g(x) \]
-              </div>
-              <p>Since \( g(-x) = -g(x) \) for all \( x \) in the domain, \( g(x) \) is an <strong>odd function</strong> (possessing point rotational symmetry of \( 180^\circ \) about the origin).</p>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintP9')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solP9')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintP9" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              Total balls = 8. For second draw, denominator decreases to 7. For (b), use $P(A|B) = \frac{P(A \cap B)}{P(B)}$ where $B = \text{at least one green} = 1 - P(RR)$.
+            </div>
+            <div id="solP9" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p>Total balls = 8. First draw: $P(R) = \frac{5}{8}, P(G) = \frac{3}{8}$.</p>
+              <p><strong>Part (a): Same colour:</strong></p>
+              <p class="font-mono">$$P(\text{Same}) = P(RR) + P(GG) = \left(\frac{5}{8} \times \frac{4}{7}\right) + \left(\frac{3}{8} \times \frac{2}{7}\right) = \frac{20}{56} + \frac{6}{56} = \frac{26}{56} = \frac{13}{28}$$</p>
+              <p><strong>Part (b): Conditional Probability:</strong></p>
+              <p>$P(\text{At least 1 green}) = 1 - P(RR) = 1 - \frac{20}{56} = \frac{36}{56}$.</p>
+              <p class="font-mono">$$P(\text{Both } G \mid \text{At least 1 } G) = \frac{P(GG)}{P(\text{At least 1 } G)} = \frac{6/56}{36/56} = \frac{6}{36} = \frac{1}{6}$$</p>
             </div>
           </div>
-        </div>
-      </article>
+        </article>
 
-      <!-- Question 4: Differential Calculus & Rates -->
-      <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs card-print space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
-          <div class="flex items-center gap-2.5">
-            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">Topic 4</span>
-            <h4 class="font-bold text-slate-900 text-base">Calculus: Composite Functions & The Chain Rule</h4>
-          </div>
-          <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
-        </div>
-
-        <div class="text-slate-800 text-base space-y-2">
-          <p class="font-medium">
-            Differentiate \( y = (3x^2 - 5x)^4 \) with respect to \( x \), and hence find all points on the curve where the tangent is horizontal.
-          </p>
-        </div>
-
-        <div class="pt-2 flex flex-col gap-3 no-print">
-          <div class="flex gap-2">
-            <button onclick="toggleSection('hint4')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition flex items-center">
-              <i class="fa-regular fa-lightbulb mr-1.5"></i> Hint
-            </button>
-            <button onclick="toggleSection('sol4')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition flex items-center">
-              <i class="fa-solid fa-check-double mr-1.5"></i> Model Solution
-            </button>
-          </div>
-
-          <div id="hint4" class="hidden p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 leading-relaxed">
-            <span class="font-bold">Hint:</span> Chain rule: \( \frac{dy}{dx} = n[u(x)]^{n-1} \cdot u'(x) \). Horizontal tangent means \( \frac{dy}{dx} = 0 \). Factorise completely!
-          </div>
-
-          <div id="sol4" class="solution-block hidden p-4 rounded-xl bg-slate-50 border border-slate-200 text-sm space-y-3">
-            <div class="font-bold text-slate-800 border-b border-slate-200 pb-1 text-xs uppercase tracking-wide">Worked Solution</div>
-            <div class="space-y-2 text-slate-700">
-              <p>Let \( u = 3x^2 - 5x \implies \frac{du}{dx} = 6x - 5 \).</p>
-              <p>Then \( y = u^4 \implies \frac{dy}{du} = 4u^3 \).</p>
-              <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs">
-                \[ \frac{dy}{dx} = 4(3x^2 - 5x)^3 (6x - 5) \]
-              </div>
-              <p>For a horizontal tangent, set \( \frac{dy}{dx} = 0 \):</p>
-              <p>Notice that \( 3x^2 - 5x = x(3x - 5) \). So:
-                \[ 4 [x(3x - 5)]^3 (6x - 5) = 4x^3(3x - 5)^3(6x - 5) = 0 \]
-              </p>
-              <p>This yields roots at:
-                \[ x = 0, \quad x = \frac{5}{3}, \quad x = \frac{5}{6} \]
-              </p>
-              <p>Corresponding \( y \)-values:</p>
-              <ul class="list-disc pl-5 text-xs space-y-1">
-                <li>When \( x = 0 \implies y = 0 \implies (0, 0) \)</li>
-                <li>When \( x = \frac{5}{3} \implies 3(5/3)^2 - 5(5/3) = 0 \implies y = 0 \implies \left(\frac{5}{3}, 0\right) \)</li>
-                <li>When \( x = \frac{5}{6} \implies y = \left(3\cdot\frac{25}{36} - \frac{25}{6}\right)^4 = \left(-\frac{25}{12}\right)^4 = \frac{390625}{20736} \approx 18.84 \)</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Question 5: Quadratics & The Discriminant -->
-      <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs card-print space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
-          <div class="flex items-center gap-2.5">
-            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-rose-100 text-rose-800">Topic 5</span>
-            <h4 class="font-bold text-slate-900 text-base">Quadratics: The Discriminant & Tangency Conditions</h4>
-          </div>
-          <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
-        </div>
-
-        <div class="text-slate-800 text-base space-y-2">
-          <p class="font-medium">
-            Find the values of \( k \) for which the line \( y = 2x + k \) is tangent to the parabola \( y = x^2 - 4x + 7 \).
-          </p>
-        </div>
-
-        <div class="pt-2 flex flex-col gap-3 no-print">
-          <div class="flex gap-2">
-            <button onclick="toggleSection('hint5')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition flex items-center">
-              <i class="fa-regular fa-lightbulb mr-1.5"></i> Hint
-            </button>
-            <button onclick="toggleSection('sol5')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition flex items-center">
-              <i class="fa-solid fa-check-double mr-1.5"></i> Model Solution
-            </button>
-          </div>
-
-          <div id="hint5" class="hidden p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 leading-relaxed">
-            <span class="font-bold">Hint:</span> Equate both equations to form a quadratic in \( x \). For tangency (exactly one intersection point), set the discriminant \( \Delta = b^2 - 4ac = 0 \).
-          </div>
-
-          <div id="sol5" class="solution-block hidden p-4 rounded-xl bg-slate-50 border border-slate-200 text-sm space-y-3">
-            <div class="font-bold text-slate-800 border-b border-slate-200 pb-1 text-xs uppercase tracking-wide">Worked Solution</div>
-            <div class="space-y-2 text-slate-700">
-              <p>Equating the curves:</p>
-              <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs">
-                \[ x^2 - 4x + 7 = 2x + k \implies x^2 - 6x + (7 - k) = 0 \]
-              </div>
-              <p>For the line to be tangent to the parabola, there must be exactly one intersection, meaning \( \Delta = 0 \):</p>
-              <p>Here \( a = 1, b = -6, c = 7 - k \):</p>
-              <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs">
-                \[ \Delta = (-6)^2 - 4(1)(7 - k) = 36 - 28 + 4k = 8 + 4k \]
-              </div>
-              <p>Setting \( \Delta = 0 \):</p>
-              <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs">
-                \[ 8 + 4k = 0 \implies 4k = -8 \implies k = -2 \]
-              </div>
-              <p class="text-xs text-slate-500"><em>Alternative calculus method:</em> Set gradient \( \frac{dy}{dx} = 2x - 4 = 2 \implies x = 3 \). Then \( y = 3^2 - 4(3) + 7 = 4 \). Plug into line: \( 4 = 2(3) + k \implies k = -2 \). (Great way to cross-verify!)</p>
-            </div>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <section class="bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-lg space-y-6">
-      <div class="max-w-2xl">
-        <span class="text-xs uppercase tracking-wider font-bold text-indigo-400">Sneak Peek</span>
-        <h3 class="text-2xl font-black mt-1">The Gateway to Year 12</h3>
-        <p class="text-sm text-indigo-200 mt-2">
-          Here is exactly why today's lesson matters: Year 12 does not replace Year 11—it multiplies it.
-        </p>
       </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs sm:text-sm">
-        <div class="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/10 space-y-2">
-          <div class="flex items-center text-amber-300 font-bold gap-2">
-            <i class="fa-solid fa-bolt"></i>
-            <span>Calculus &rarr; Integral Calculus</span>
-          </div>
-          <p class="text-slate-300 text-xs leading-relaxed">
-            In Y12, you will reverse differentiation to find areas under curves. If you cannot spot the chain rule or reverse power rule rapidly, integration becomes double the work.
-          </p>
-        </div>
-
-        <div class="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/10 space-y-2">
-          <div class="flex items-center text-emerald-300 font-bold gap-2">
-            <i class="fa-solid fa-wave-square"></i>
-            <span>Trigonometry &rarr; Trig Derivatives</span>
-          </div>
-          <p class="text-slate-300 text-xs leading-relaxed">
-            In Term 1 of Y12, you will find \( \frac{d}{dx}[\sin(x)] = \cos(x) \). Solving stationary points requires solving trig equations across \( [0, 2\pi] \) instantly!
-          </p>
-        </div>
-
-        <div class="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/10 space-y-2">
-          <div class="flex items-center text-sky-300 font-bold gap-2">
-            <i class="fa-solid fa-chart-line"></i>
-            <span>Functions &rarr; Curve Sketching</span>
-          </div>
-          <p class="text-slate-300 text-xs leading-relaxed">
-            Second derivatives \( f''(x) \), points of inflection, concavity, and asymptotes combine every single graph rule learned in Year 11.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-        <div class="flex items-center gap-2">
-          <div class="p-2 rounded-lg bg-slate-100 text-slate-700">
-            <i class="fa-solid fa-bookmark text-indigo-600"></i>
-          </div>
-          <h3 class="font-bold text-slate-900 text-base">Pocket Reference: Year 11 Must-Know Rules</h3>
-        </div>
-        <span class="text-xs text-slate-500 font-medium">Keep for Year 12 Term 1</span>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-        <!-- Rule 1 -->
-        <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-1.5">
-          <p class="font-bold text-slate-800">1. Product Rule</p>
-          <p class="text-slate-600 font-mono">\( (uv)' = u'v + uv' \)</p>
-          <p class="text-slate-500 text-[11px]">Differentiate the first, keep the second + keep first, differentiate second.</p>
-        </div>
-
-        <!-- Rule 2 -->
-        <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-1.5">
-          <p class="font-bold text-slate-800">2. Quotient Rule</p>
-          <p class="text-slate-600 font-mono">\( \left(\frac{u}{v}\right)' = \frac{vu' - uv'}{v^2} \)</p>
-          <p class="text-slate-500 text-[11px]">"Low d-high minus high d-low over the square of what's below."</p>
-        </div>
-
-        <!-- Rule 3 -->
-        <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-1.5">
-          <p class="font-bold text-slate-800">3. Chain Rule</p>
-          <p class="text-slate-600 font-mono">\( \frac{dy}{dx} = \frac{dy}{du} \cdot \frac{du}{dx} \)</p>
-          <p class="text-slate-500 text-[11px]">Differentiate outer function, then multiply by derivative of inside.</p>
-        </div>
-
-        <!-- Rule 4 -->
-        <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-1.5">
-          <p class="font-bold text-slate-800">4. Symmetry Rules</p>
-          <p class="text-slate-600 font-mono">Even: \( f(-x) = f(x) \)<br>Odd: \( f(-x) = -f(x) \)</p>
-          <p class="text-slate-500 text-[11px]">Even = y-axis reflection symmetry.<br>Odd = origin rotation symmetry.</p>
-        </div>
-      </div>
-    </section>
+    </div><!-- END PRACTICE VIEW -->
 
   </main>
 
   <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-12 no-print">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <p>Have a wonderful, restful retreat! See you in Year 12 ready to conquer calculus.</p>
-      <p class="text-slate-400">Generated for NSW Stage 6 Mathematics Advanced</p>
+      <p>Have a restful retreat! See you in Year 12 ready to tackle integral calculus.</p>
+      <p class="text-slate-400">NSW Stage 6 Mathematics Advanced Transition Resource</p>
     </div>
   </footer>
 
   <script>
-    // KaTeX auto-rendering trigger
     document.addEventListener("DOMContentLoaded", function() {
       if (window.renderMathInElement) {
         renderMathInElement(document.body, {
@@ -527,7 +743,66 @@
       }
     });
 
-    // Toggle single hint / solution section
+    function switchView(viewName) {
+      const lessonView = document.getElementById('lessonView');
+      const practiceView = document.getElementById('practiceView');
+      const navLessonBtn = document.getElementById('navLessonBtn');
+      const navPracticeBtn = document.getElementById('navPracticeBtn');
+
+      if (viewName === 'lesson') {
+        lessonView.classList.remove('hidden');
+        practiceView.classList.add('hidden');
+        navLessonBtn.className = "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 transition";
+        navPracticeBtn.className = "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition border border-transparent";
+      } else {
+        lessonView.classList.add('hidden');
+        practiceView.classList.remove('hidden');
+        navPracticeBtn.className = "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 transition";
+        navLessonBtn.className = "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition border border-transparent";
+        // Re-run math rendering if new elements are unhidden
+        if (window.renderMathInElement) {
+          renderMathInElement(practiceView, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '$', right: '$', display: false}
+            ],
+            throwOnError : false
+          });
+        }
+      }
+    }
+
+    function filterPractice(category) {
+      const cards = document.querySelectorAll('.practice-card');
+      const buttons = document.querySelectorAll('.filter-btn');
+
+      buttons.forEach(btn => {
+        if (btn.getAttribute('data-filter') === category) {
+          btn.className = "filter-btn px-3 py-1.5 rounded-full font-bold bg-slate-900 text-white transition whitespace-nowrap";
+        } else {
+          btn.className = "filter-btn px-3 py-1.5 rounded-full font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition whitespace-nowrap";
+        }
+      });
+
+      cards.forEach(card => {
+        if (category === 'all' || card.getAttribute('data-category') === category) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    function revealAllPractice() {
+      document.querySelectorAll('.practice-sol').forEach(el => el.classList.remove('hidden'));
+    }
+
+    function hideAllPractice() {
+      document.querySelectorAll('.practice-sol').forEach(el => el.classList.add('hidden'));
+    }
+
     function toggleSection(id) {
       const el = document.getElementById(id);
       if (el) {
@@ -535,7 +810,6 @@
       }
     }
 
-    // Bulk reveal / hide solutions
     function revealAllSolutions() {
       document.querySelectorAll('.solution-block').forEach(el => {
         el.classList.remove('hidden');
@@ -548,7 +822,6 @@
       });
     }
 
-    // Classroom Countdown Timer (50 min default)
     let totalSeconds = 50 * 60;
     let timerInterval = null;
     let isRunning = false;
