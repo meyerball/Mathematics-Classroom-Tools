@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Year 11 Advanced to Year 12 Standard Mathematics Bridge</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- KaTeX for mathematical and financial notation -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    
+    .code-font {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body {
+        background: #fff;
+        color: #000;
+      }
+      .card-print {
+        box-shadow: none !important;
+        border: 1px solid #cbd5e1 !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-teal-500 selection:text-white min-h-screen flex flex-col">
+
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-600 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-teal-100">
+          <i class="fa-solid fa-bridge-water text-lg"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg font-bold text-slate-900 tracking-tight">Advanced &rarr; Standard 2 Mathematics</h1>
+            <span class="text-xs px-2 py-0.5 rounded-full font-semibold bg-amber-100 text-amber-800">Bridge Course</span>
+          </div>
+          <p class="text-xs text-slate-500">Fast-Track Mastery: Catching Up on Missed Year 11 Content Before Year 12</p>
+        </div>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="flex items-center gap-3 no-print">
+        <div id="timerContainer" class="flex items-center bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 text-sm font-medium text-slate-700">
+          <i class="fa-regular fa-clock mr-2 text-teal-600"></i>
+          <span id="timerDisplay" class="code-font font-semibold">50:00</span>
+          <button id="timerToggleBtn" class="ml-2.5 text-xs text-teal-600 hover:text-teal-800 font-bold focus:outline-none" onclick="toggleTimer()">Start</button>
+          <button class="ml-1.5 text-xs text-slate-400 hover:text-slate-600" onclick="resetTimer()" title="Reset Timer"><i class="fa-solid fa-rotate-right"></i></button>
+        </div>
+
+        <button onclick="window.print()" class="px-3.5 py-1.5 rounded-lg bg-white border border-slate-300 hover:border-slate-400 text-slate-700 text-sm font-semibold transition flex items-center shadow-xs">
+          <i class="fa-solid fa-print mr-2 text-slate-500"></i> Print Handout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="bg-white border-b border-slate-200 sticky top-[65px] z-30 shadow-xs no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-2 sm:space-x-4 py-2">
+      <button id="navOverviewBtn" onclick="switchView('overview')" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-teal-700 bg-teal-50 border border-teal-200 transition">
+        <i class="fa-solid fa-book-bookmark"></i>
+        <span>Part 1: The Missed Topics Guide</span>
+      </button>
+      <button id="navPracticeBtn" onclick="switchView('practice')" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition border border-transparent">
+        <i class="fa-solid fa-clipboard-question text-teal-500"></i>
+        <span>Part 2: Practice Vault (9 Questions)</span>
+        <span class="ml-1 px-2 py-0.5 rounded-full text-xs bg-teal-100 text-teal-800 font-bold">Self-Check</span>
+      </button>
+      <button id="navRoadmapBtn" onclick="switchView('roadmap')" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition border border-transparent">
+        <i class="fa-solid fa-map-location-dot text-teal-500"></i>
+        <span>Year 12 Standard Roadmap</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+
+    <!-- VIEW 1: PART 1 - WHAT YOU MISSED & CORE CONCEPTS -->
+    <div id="overviewView" class="space-y-10">
+      
+      <!-- Welcome Hero Banner -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-teal-950 to-slate-900 text-white p-6 sm:p-8 shadow-xl">
+        <div class="relative z-10 max-w-3xl space-y-3">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-teal-200 text-xs font-semibold backdrop-blur-md border border-white/10">
+            <i class="fa-solid fa-bullseye text-amber-300"></i> Transition Strategy Guide
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Bridging the Gap from Advanced to Standard 2</h2>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            Good news: your Advanced background gives you a huge algebraic and graphical advantage! However, <strong>Year 11 Standard 2 covers several practical real-world modules that Advanced never touched</strong>. Review the four essential topics below before Year 12 begins.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 no-print">
+        <a href="#topic-tax" class="p-4 rounded-xl border border-teal-200 bg-white hover:border-teal-400 transition shadow-xs flex items-center justify-between group">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-teal-100 text-teal-800 flex items-center justify-center font-bold">1</div>
+            <div>
+              <div class="font-bold text-slate-900 group-hover:text-teal-600 transition text-sm">Tax & Money</div>
+              <div class="text-[11px] text-slate-500">PAYG, Loading & Deductions</div>
+            </div>
+          </div>
+          <i class="fa-solid fa-arrow-down text-slate-400 group-hover:text-teal-600"></i>
+        </a>
+
+        <a href="#topic-measurement" class="p-4 rounded-xl border border-emerald-200 bg-white hover:border-emerald-400 transition shadow-xs flex items-center justify-between group">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">2</div>
+            <div>
+              <div class="font-bold text-slate-900 group-hover:text-emerald-600 transition text-sm">Measurement Error</div>
+              <div class="text-[11px] text-slate-500">Precision & Trapezoidal Rule</div>
+            </div>
+          </div>
+          <i class="fa-solid fa-arrow-down text-slate-400 group-hover:text-emerald-600"></i>
+        </a>
+
+        <a href="#topic-stats" class="p-4 rounded-xl border border-amber-200 bg-white hover:border-amber-400 transition shadow-xs flex items-center justify-between group">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold">3</div>
+            <div>
+              <div class="font-bold text-slate-900 group-hover:text-amber-600 transition text-sm">Outlier Fences</div>
+              <div class="text-[11px] text-slate-500">$1.5 \times \text{IQR}$ & Box Plots</div>
+            </div>
+          </div>
+          <i class="fa-solid fa-arrow-down text-slate-400 group-hover:text-amber-600"></i>
+        </a>
+
+        <a href="#topic-deprec" class="p-4 rounded-xl border border-indigo-200 bg-white hover:border-indigo-400 transition shadow-xs flex items-center justify-between group">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-800 flex items-center justify-center font-bold">4</div>
+            <div>
+              <div class="font-bold text-slate-900 group-hover:text-indigo-600 transition text-sm">Depreciation</div>
+              <div class="text-[11px] text-slate-500">Straight-line vs Declining</div>
+            </div>
+          </div>
+          <i class="fa-solid fa-arrow-down text-slate-400 group-hover:text-indigo-600"></i>
+        </a>
+      </div>
+
+      <section id="topic-tax" class="space-y-6 scroll-mt-24">
+        <div class="border-b border-slate-200 pb-3 flex items-center justify-between">
+          <div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-600 text-white">Missed Topic 1</span>
+            <h3 class="text-xl font-extrabold text-slate-900 mt-1">Financial Mathematics: Taxation, Pay & Allowances</h3>
+            <p class="text-xs text-slate-500">Advanced does not study the Australian progressive income tax system or holiday loading.</p>
+          </div>
+          <span class="text-xs font-semibold text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-200">High HSC Weighting</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Taxable Income & PAYG -->
+          <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-3 card-print">
+            <div class="flex items-center gap-2 text-teal-700 font-bold text-sm">
+              <i class="fa-solid fa-file-invoice-dollar"></i>
+              <span>1. Taxable Income, Medicare & Tax Payable</span>
+            </div>
+            <ul class="text-xs text-slate-700 space-y-2 leading-relaxed">
+              <li>
+                <strong>Taxable Income:</strong>
+                $$\text{Taxable Income} = \text{Gross Income} - \text{Allowable Deductions}$$
+                <em>Allowable deductions</em> include work-related gear, uniform expenses, donations $> \$2$, and union fees.
+              </li>
+              <li>
+                <strong>Medicare Levy:</strong> Usually a flat $2\%$ of your <strong>Taxable Income</strong>:
+                $$\text{Medicare Levy} = 0.02 \times \text{Taxable Income}$$
+              </li>
+              <li>
+                <strong>Total Tax Owed:</strong>
+                $$\text{Total Tax Owed} = \text{Gross Tax (from table)} + \text{Medicare Levy} - \text{Tax Offsets}$$
+              </li>
+              <li>
+                <strong>Tax Refund vs Tax Debt:</strong> Compare what you owe against the tax your employer withheld throughout the year (PAYG):
+                <ul class="list-disc pl-4 mt-1 space-y-1">
+                  <li>If $\text{Tax Withheld} > \text{Total Tax Owed} \implies \textbf{Tax Refund}$</li>
+                  <li>If $\text{Tax Withheld} < \text{Total Tax Owed} \implies \textbf{Tax Debt (Payable)}$</li>
+                </ul>
+              </li>
+            </ul>
+          </article>
+
+          <!-- Leave Loading & Overtime -->
+          <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-3 card-print">
+            <div class="flex items-center gap-2 text-teal-700 font-bold text-sm">
+              <i class="fa-solid fa-umbrella-beach"></i>
+              <span>2. Holiday Leave Loading & Earning Types</span>
+            </div>
+            <ul class="text-xs text-slate-700 space-y-2 leading-relaxed">
+              <li>
+                <strong>Annual Leave Loading:</strong> In Australia, workers receive an extra $17.5\%$ bonus on 4 weeks of standard pay when taking annual leave:
+                $$\text{Leave Loading} = 17.5\% \times (4 \times \text{Normal Weekly Pay}) = 0.175 \times 4 \times W$$
+                $$\text{Total Holiday Pay} = (4 \times \text{Normal Weekly Pay}) + \text{Leave Loading}$$
+              </li>
+              <li>
+                <strong>Overtime Rates:</strong>
+                <ul class="list-disc pl-4 mt-1 space-y-1">
+                  <li><em>Time-and-a-half:</em> $\text{Hourly Rate} \times 1.5$</li>
+                  <li><em>Double time:</em> $\text{Hourly Rate} \times 2.0$</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Piecework & Commission:</strong> Paid per unit produced ($\text{Rate} \times n$) or as a percentage of total sales made.
+              </li>
+              <li>
+                <strong>Royalties:</strong> Payment based on a percentage of the retail price of books, music, or patents sold.
+              </li>
+            </ul>
+          </article>
+        </div>
+
+        <!-- Sample Tax Table Callout -->
+        <div class="bg-slate-100 rounded-xl p-4 border border-slate-200 text-xs">
+          <h4 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-table-list text-teal-600"></i> Standard Australian Resident Tax Table Structure:
+          </h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left bg-white rounded-lg border border-slate-200">
+              <thead class="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold">
+                <tr>
+                  <th class="p-2.5">Taxable Income</th>
+                  <th class="p-2.5">Tax on this Income</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-600">
+                <tr><td class="p-2.5">$0 – $18,200</td><td class="p-2.5">Nil (Tax-Free Threshold)</td></tr>
+                <tr><td class="p-2.5">$18,201 – $45,000</td><td class="p-2.5">19c for each $1 over $18,200</td></tr>
+                <tr><td class="p-2.5">$45,001 – $120,000</td><td class="p-2.5">$5,092 plus 32.5c for each $1 over $45,000</td></tr>
+                <tr><td class="p-2.5">$120,001 – $180,000</td><td class="p-2.5">$29,467 plus 37c for each $1 over $120,000</td></tr>
+                <tr><td class="p-2.5">$180,001 and over</td><td class="p-2.5">$51,667 plus 45c for each $1 over $180,000</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="topic-measurement" class="space-y-6 scroll-mt-24">
+        <div class="border-b border-slate-200 pb-3 flex items-center justify-between">
+          <div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-600 text-white">Missed Topic 2</span>
+            <h3 class="text-xl font-extrabold text-slate-900 mt-1">Measurement: Limits of Accuracy & The Trapezoidal Rule</h3>
+            <p class="text-xs text-slate-500">Every measurement is an approximation. Standard examines precision, errors, and approximate area formulas.</p>
+          </div>
+          <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">Exclusive to Standard</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Absolute Error & Limits of Accuracy -->
+          <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-3 card-print">
+            <div class="flex items-center gap-2 text-emerald-700 font-bold text-sm">
+              <i class="fa-solid fa-ruler-combined"></i>
+              <span>1. Precision, Absolute Error & Bounds</span>
+            </div>
+            <ul class="text-xs text-slate-700 space-y-2 leading-relaxed">
+              <li>
+                <strong>Precision (Smallest Unit):</strong> The smallest division on the measuring tool (e.g., a ruler marked in millimeters has a precision of $1\text{ mm}$).
+              </li>
+              <li>
+                <strong>Absolute Error:</strong> Half of the precision:
+                $$\text{Absolute Error} = \pm \frac{1}{2} \times \text{Precision}$$
+                <em>Example:</em> A reading of $24\text{ cm}$ measured to the nearest $\text{cm}$ has an absolute error of $\pm 0.5\text{ cm}$.
+              </li>
+              <li>
+                <strong>Limits of Accuracy (Lower & Upper Bounds):</strong>
+                $$\text{Lower Bound} = \text{Measurement} - \text{Absolute Error}$$
+                $$\text{Upper Bound} = \text{Measurement} + \text{Absolute Error}$$
+              </li>
+              <li>
+                <strong>Percentage Error:</strong>
+                $$\text{Percentage Error} = \frac{\text{Absolute Error}}{\text{Measurement}} \times 100\%$$
+              </li>
+            </ul>
+          </article>
+
+          <!-- Trapezoidal Rule -->
+          <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-3 card-print">
+            <div class="flex items-center gap-2 text-emerald-700 font-bold text-sm">
+              <i class="fa-solid fa-chart-area"></i>
+              <span>2. The Trapezoidal Rule (Approximating Area)</span>
+            </div>
+            <ul class="text-xs text-slate-700 space-y-2 leading-relaxed">
+              <li>
+                In Advanced, you use definite integrals $\int_a^b f(x)dx$. In Standard, irregular regions (such as rivers or estates) are approximated using trapeziums:
+              </li>
+              <li>
+                <strong>Single Application:</strong>
+                $$A \approx \frac{h}{2}(d_f + d_l)$$
+                Where $h$ is the distance between offsets, $d_f$ is the first offset (first measurement), and $d_l$ is the last offset.
+              </li>
+              <li>
+                <strong>Multiple Applications (Two Trapezia):</strong>
+                $$A \approx \frac{h}{2}(d_f + d_m) + \frac{h}{2}(d_m + d_l) = \frac{h}{2}(d_f + 2d_m + d_l)$$
+                Where $d_m$ is the middle offset.
+              </li>
+              <li>
+                <strong>Boundary Note:</strong> If the river or plot tapers to a point at an end, that offset is $0$!
+              </li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="topic-stats" class="space-y-6 scroll-mt-24">
+        <div class="border-b border-slate-200 pb-3 flex items-center justify-between">
+          <div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-600 text-white">Missed Topic 3</span>
+            <h3 class="text-xl font-extrabold text-slate-900 mt-1">Data Analysis: Five-Number Summary & Formal Outlier Fences</h3>
+            <p class="text-xs text-slate-500">Advanced introduces statistics informally; Standard requires strict algebraic tests for outliers and parallel box plot comparisons.</p>
+          </div>
+          <span class="text-xs font-semibold text-amber-800 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">Guaranteed HSC Mark</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Formal Outlier Test -->
+          <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-3 card-print">
+            <div class="flex items-center gap-2 text-amber-700 font-bold text-sm">
+              <i class="fa-solid fa-chart-simple"></i>
+              <span>1. The Formal Outlier Fence Formula</span>
+            </div>
+            <ul class="text-xs text-slate-700 space-y-2 leading-relaxed">
+              <li>
+                A score is officially classified as an <strong>outlier</strong> if it lies outside the lower and upper fences:
+              </li>
+              <li class="bg-amber-50 p-2.5 rounded-lg border border-amber-200 text-amber-950 font-mono text-[11px]">
+                $$\text{Lower Fence} = Q_1 - 1.5 \times \text{IQR}$$
+                $$\text{Upper Fence} = Q_3 + 1.5 \times \text{IQR}$$
+              </li>
+              <li>
+                Where $\text{IQR} = Q_3 - Q_1$ (Interquartile Range).
+              </li>
+              <li>
+                <strong>On a Box Plot:</strong> Any outlier is indicated by a separate individual dot or cross ($\times$), and the whisker only extends to the next non-outlier value.
+              </li>
+            </ul>
+          </article>
+
+          <!-- Comparing Box Plots -->
+          <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-3 card-print">
+            <div class="flex items-center gap-2 text-amber-700 font-bold text-sm">
+              <i class="fa-solid fa-sliders"></i>
+              <span>2. Comparing Parallel Box Plots in Words</span>
+            </div>
+            <ul class="text-xs text-slate-700 space-y-2 leading-relaxed">
+              <li>
+                HSC markers award full marks for comparing distributions across <strong>three pillars</strong> with numerical backing:
+              </li>
+              <li>
+                <strong>1. Centre (Median):</strong> State which group scored higher on average using the medians (e.g., <em>"Group A had a higher median of 72 compared to Group B's 61"</em>).
+              </li>
+              <li>
+                <strong>2. Spread (IQR & Range):</strong> State which group was more consistent (smaller $\text{IQR} = \text{more consistent}$).
+              </li>
+              <li>
+                <strong>3. Shape & Skewness:</strong>
+                <ul class="list-disc pl-4 mt-1 space-y-1">
+                  <li>$\text{Symmetrical}$: Whiskers and boxes roughly equal.</li>
+                  <li>$\text{Positively Skewed}$: Long tail/whisker to the right.</li>
+                  <li>$\text{Negatively Skewed}$: Long tail/whisker to the left.</li>
+                </ul>
+              </li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="topic-deprec" class="space-y-6 scroll-mt-24">
+        <div class="border-b border-slate-200 pb-3 flex items-center justify-between">
+          <div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-600 text-white">Missed Topic 4</span>
+            <h3 class="text-xl font-extrabold text-slate-900 mt-1">Depreciation & Flat-Rate Loans</h3>
+            <p class="text-xs text-slate-500">How assets lose value over time and how non-reducing loans charge interest.</p>
+          </div>
+          <span class="text-xs font-semibold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200">Year 12 Foundation</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Straight-line vs Declining balance -->
+          <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-3 card-print">
+            <div class="flex items-center gap-2 text-indigo-700 font-bold text-sm">
+              <i class="fa-solid fa-arrow-trend-down"></i>
+              <span>1. Straight-Line vs Declining-Balance Depreciation</span>
+            </div>
+            <ul class="text-xs text-slate-700 space-y-2 leading-relaxed">
+              <li>
+                <strong>Straight-Line Depreciation:</strong> The asset loses the exact same dollar amount $D$ every time period:
+                $$S = V_0 - Dn$$
+                Where $S$ is salvage value, $V_0$ is initial cost, and $D = V_0 \times r$.
+              </li>
+              <li>
+                <strong>Declining-Balance Depreciation:</strong> The asset loses a percentage $r$ of its remaining value each year (compound decay):
+                $$S = V_0(1 - r)^n$$
+              </li>
+              <li>
+                Notice that declining-balance never reaches absolute zero, whereas straight-line eventually hits zero salvage value.
+              </li>
+            </ul>
+          </article>
+
+          <!-- Flat rate loans -->
+          <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-3 card-print">
+            <div class="flex items-center gap-2 text-indigo-700 font-bold text-sm">
+              <i class="fa-solid fa-credit-card"></i>
+              <span>2. Flat-Rate Personal Loans & Repayments</span>
+            </div>
+            <ul class="text-xs text-slate-700 space-y-2 leading-relaxed">
+              <li>
+                In a flat-rate loan, simple interest is charged on the <strong>original principal $P$</strong> for the entire duration, regardless of repayments made:
+                $$I = Prn$$
+              </li>
+              <li>
+                <strong>Total Amount to Repay:</strong>
+                $$A = P + I = P + Prn$$
+              </li>
+              <li>
+                <strong>Repayment Calculation:</strong>
+                $$\text{Periodic Repayment} = \frac{A}{\text{Total Number of Repayments}}$$
+                <em>(e.g., for a 4-year monthly loan, divide by $4 \times 12 = 48$).</em>
+              </li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- CTA to Practice Vault -->
+      <div class="p-5 rounded-2xl bg-gradient-to-r from-teal-900 to-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="space-y-1">
+          <h4 class="font-extrabold text-base">Ready to test these concepts?</h4>
+          <p class="text-xs text-teal-200">Work through the 9 curated bridge problems with step-by-step model solutions in Part 2.</p>
+        </div>
+        <button onclick="switchView('practice')" class="px-5 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-extrabold text-xs transition shadow-md whitespace-nowrap">
+          Launch Practice Vault &rarr;
+        </button>
+      </div>
+
+    </div><!-- END OVERVIEW VIEW -->
+
+    <!-- VIEW 2: PART 2 - PRACTICE VAULT (9 ESSENTIAL BRIDGE QUESTIONS) -->
+    <div id="practiceView" class="hidden space-y-8">
+      
+      <!-- Vault Header -->
+      <div class="bg-gradient-to-r from-slate-900 via-teal-950 to-slate-900 text-white rounded-2xl p-6 sm:p-8 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-2 max-w-2xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-teal-200 text-xs font-semibold backdrop-blur-md border border-white/10">
+            <i class="fa-solid fa-list-check text-amber-300"></i> Part 2 • Question Bank
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">The 9 Essential Bridge Practice Problems</h2>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            These questions target the exact gaps between Advanced and Standard. Work them out on paper, use the hints if you get stuck, and verify your answers against the worked solutions.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 no-print">
+          <button onclick="revealAllPractice()" class="px-3.5 py-2 rounded-lg bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold transition shadow-xs flex items-center">
+            <i class="fa-solid fa-eye mr-1.5"></i> Reveal All Solutions
+          </button>
+          <button onclick="hideAllPractice()" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition border border-slate-700 flex items-center">
+            <i class="fa-solid fa-eye-slash mr-1.5"></i> Hide All
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 text-xs no-print">
+        <span class="text-slate-500 font-semibold uppercase tracking-wider text-[11px] whitespace-nowrap mr-1">Filter:</span>
+        <button onclick="filterPractice('all')" class="filter-btn px-3 py-1.5 rounded-full font-bold bg-slate-900 text-white transition whitespace-nowrap" data-filter="all">All Gaps (9)</button>
+        <button onclick="filterPractice('tax')" class="filter-btn px-3 py-1.5 rounded-full font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition whitespace-nowrap" data-filter="tax">Taxation & Income</button>
+        <button onclick="filterPractice('measurement')" class="filter-btn px-3 py-1.5 rounded-full font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition whitespace-nowrap" data-filter="measurement">Measurement & Error</button>
+        <button onclick="filterPractice('stats')" class="filter-btn px-3 py-1.5 rounded-full font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition whitespace-nowrap" data-filter="stats">Outliers & Box Plots</button>
+        <button onclick="filterPractice('finance')" class="filter-btn px-3 py-1.5 rounded-full font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition whitespace-nowrap" data-filter="finance">Depreciation & Loans</button>
+      </div>
+
+      <!-- Practice Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="tax">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-teal-100 text-teal-800">Q1 • Taxation & Medicare</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">4 Marks</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Calculating Tax Payable & Refund</h4>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              Liam earns a gross annual salary of $\$84,000$. He claims $\$1,500$ in work-related travel and $\$500$ in union fees as allowable deductions.
+            </p>
+            <p class="text-xs text-slate-700 mt-2">
+              <strong>(a)</strong> Calculate Liam's taxable income.<br>
+              <strong>(b)</strong> Using the tax table above ($45,001–$120,000 bracket: $\$5,092$ plus $32.5\text{c}$ for each $\$1$ over $\$45,000$), calculate his gross tax payable.<br>
+              <strong>(c)</strong> If the Medicare levy is $2\%$ of taxable income, and Liam's employer has deducted $\$19,200$ in PAYG tax, determine if he receives a tax refund or owes tax, and calculate the amount.
+            </p>
+          </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintS1')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solS1')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintS1" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              Taxable income = Gross - Deductions. Add the 2% Medicare levy to the gross tax to find Total Tax Owed, then compare with PAYG tax paid ($19,200).
+            </div>
+            <div id="solS1" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p><strong>(a) Taxable Income:</strong><br>
+                $\text{Taxable Income} = 84000 - (1500 + 500) = \$82,000$.
+              </p>
+              <p><strong>(b) Gross Tax:</strong><br>
+                $\text{Excess over } 45000 = 82000 - 45000 = \$37,000$.<br>
+                $\text{Tax} = 5092 + (0.325 \times 37000) = 5092 + 12025 = \$17,117$.
+              </p>
+              <p><strong>(c) Medicare & Refund / Debt:</strong><br>
+                $\text{Medicare Levy} = 0.02 \times 82000 = \$1,640$.<br>
+                $\text{Total Tax Owed} = 17117 + 1640 = \$18,757$.<br>
+                Since Liam paid $\$19,200$ (which is greater than $\$18,757$), he receives a <strong>Tax Refund</strong>:<br>
+                $\text{Refund} = 19200 - 18757 = \mathbf{\$443}$.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="tax">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-teal-100 text-teal-800">Q2 • Holiday Leave Loading</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Four Weeks Annual Leave Calculation</h4>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              Zoe is paid a regular wage of $\$28.50$ per hour for a $38$-hour working week. She takes $4$ weeks of annual leave and is entitled to the standard $17.5\%$ annual leave loading.
+            </p>
+            <p class="text-xs text-slate-700 mt-2">
+              Calculate the total holiday pay Zoe will receive for her $4$-week vacation.
+            </p>
+          </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintS2')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solS2')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintS2" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              Find 1 week's wage ($28.50 \times 38$), then multiply by 4 for 4 weeks. Calculate 17.5% loading on this 4-week amount and add them together (or multiply 4 weeks by 1.175).
+            </div>
+            <div id="solS2" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p>1. Normal weekly wage = $28.50 \times 38 = \$1,083$.</p>
+              <p>2. Normal pay for 4 weeks = $4 \times 1083 = \$4,332$.</p>
+              <p>3. Leave loading ($17.5\%$) = $0.175 \times 4332 = \$758.10$.</p>
+              <p class="font-mono">$$\text{Total Holiday Pay} = 4332 + 758.10 = \mathbf{\$5,090.10}$$</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="measurement">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">Q3 • Limits of Accuracy</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Upper & Lower Bounds on Perimeter</h4>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              A rectangular room has its length measured as $8\text{ m}$ and its width measured as $5\text{ m}$, both to the <strong>nearest metre</strong>.
+            </p>
+            <p class="text-xs text-slate-700 mt-2">
+              <strong>(a)</strong> State the absolute error of these measurements.<br>
+              <strong>(b)</strong> Calculate the minimum (lower bound) possible perimeter of the room.<br>
+              <strong>(c)</strong> Calculate the maximum (upper bound) possible area of the room.
+            </p>
+          </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintS3')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solS3')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintS3" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              The precision is 1 m. Absolute error is half of this: $\pm 0.5\text{ m}$. For min perimeter, use the lower bounds of length and width. For max area, multiply the upper bounds.
+            </div>
+            <div id="solS3" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p><strong>(a) Absolute Error:</strong> $\pm \frac{1}{2} \times 1\text{ m} = \pm 0.5\text{ m}$.</p>
+              <p><strong>(b) Lower Bound Perimeter:</strong><br>
+                Length lower bound = $8 - 0.5 = 7.5\text{ m}$.<br>
+                Width lower bound = $5 - 0.5 = 4.5\text{ m}$.<br>
+                $\text{Min Perimeter} = 2(7.5 + 4.5) = 2(12) = \mathbf{24\text{ m}}$.
+              </p>
+              <p><strong>(c) Upper Bound Area:</strong><br>
+                Length upper bound = $8.5\text{ m}$; Width upper bound = $5.5\text{ m}$.<br>
+                $\text{Max Area} = 8.5 \times 5.5 = \mathbf{46.75\text{ m}^2}$.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="measurement">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">Q4 • Percentage Error</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">2 Marks</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Precision & Relative Accuracy</h4>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              A piece of copper wire is measured using digital calipers as $12.4\text{ mm}$ (measured to the nearest tenth of a millimetre).
+            </p>
+            <p class="text-xs text-slate-700 mt-2">
+              Find the percentage error of this measurement, correct to two decimal places.
+            </p>
+          </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintS4')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solS4')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintS4" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              Nearest tenth = $0.1\text{ mm}$. Absolute error = half of $0.1\text{ mm} = 0.05\text{ mm}$. Then divide by 12.4 and multiply by 100%.
+            </div>
+            <div id="solS4" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p>1. Precision = $0.1\text{ mm}$.</p>
+              <p>2. Absolute error = $\pm \frac{0.1}{2} = 0.05\text{ mm}$.</p>
+              <p class="font-mono">$$\text{Percentage Error} = \frac{0.05}{12.4} \times 100\% \approx \mathbf{0.40\%}$$</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="measurement">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">Q5 • Trapezoidal Rule</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Two-Application Area Approximation</h4>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              A council park borders a straight road and an irregular river. Measurements across the park are taken at equal intervals of $15\text{ m}$.
+            </p>
+            <p class="text-xs text-slate-700 mt-2">
+              The three parallel offset measurements perpendicular to the road are $18\text{ m}$, $26\text{ m}$, and $14\text{ m}$.<br>
+              Use two applications of the trapezoidal rule to estimate the total surface area of the park.
+            </p>
+          </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintS5')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solS5')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintS5" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              Apply $A \approx \frac{h}{2}(d_f + 2d_m + d_l)$ where $h = 15\text{ m}$, $d_f = 18$, $d_m = 26$, and $d_l = 14$.
+            </div>
+            <div id="solS5" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p class="font-mono">$$A_1 = \frac{15}{2}(18 + 26) = 7.5(44) = 330\text{ m}^2$$</p>
+              <p class="font-mono">$$A_2 = \frac{15}{2}(26 + 14) = 7.5(40) = 300\text{ m}^2$$</p>
+              <p class="font-mono">$$\text{Total Area} = 330 + 300 = \mathbf{630\text{ m}^2}$$</p>
+              <p class="text-slate-500 text-[11px]">(Or via formula: $A \approx \frac{15}{2}(18 + 2(26) + 14) = 7.5(84) = 630\text{ m}^2$.)</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="stats">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800">Q6 • Outlier Fences</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Formal Algebraic Test for Outliers</h4>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              The test marks for a class of students have a five-number summary of:
+            </p>
+            <div class="my-1 text-xs bg-slate-50 p-2 rounded border border-slate-200 font-mono">
+              $\text{Min} = 34, \quad Q_1 = 52, \quad \text{Median} = 66, \quad Q_3 = 74, \quad \text{Max} = 98$
+            </div>
+            <p class="text-xs text-slate-700 mt-2">
+              Determine mathematically whether the score of $34$ is an outlier. Show full working using the outlier rule.
+            </p>
+          </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintS6')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solS6')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintS6" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              Calculate $\text{IQR} = Q_3 - Q_1$. Then find the lower fence $= Q_1 - 1.5 \times \text{IQR}$. If $34$ is less than this boundary, it is an outlier.
+            </div>
+            <div id="solS6" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p>1. $\text{IQR} = Q_3 - Q_1 = 74 - 52 = 22$.</p>
+              <p>2. $\text{Lower Fence} = Q_1 - 1.5 \times \text{IQR} = 52 - (1.5 \times 22) = 52 - 33 = 19$.</p>
+              <p>3. Comparing score: Since $34 > 19$, the score of $34$ is above the lower threshold.</p>
+              <p class="font-bold text-teal-800">$$\therefore 34 \text{ is NOT an outlier.}$$</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="stats">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800">Q7 • Comparing Box Plots</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">HSC Criteria Writing: Centre, Spread & Shape</h4>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              Two athletes recorded their running times over 20 training sprints:
+            </p>
+            <ul class="text-xs text-slate-700 list-disc pl-4 mt-1 space-y-1">
+              <li><strong>Runner A:</strong> $\text{Median} = 11.2\text{ s}, \quad \text{IQR} = 0.4\text{ s}$, symmetrical distribution.</li>
+              <li><strong>Runner B:</strong> $\text{Median} = 11.6\text{ s}, \quad \text{IQR} = 1.1\text{ s}$, positively skewed.</li>
+            </ul>
+            <p class="text-xs text-slate-700 mt-2">
+              Compare the performance of the two runners with reference to both <strong>centre</strong> and <strong>spread</strong>. State who is more consistent.
+            </p>
+          </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintS7')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solS7')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintS7" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              For sprint times, lower is faster! Runner A has a lower median. Consistency relates to smaller IQR.
+            </div>
+            <div id="solS7" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution (Model HSC Response):</strong></p>
+              <p><strong>1. Centre (Speed):</strong> Runner A was generally faster on average, recording a lower median sprint time of $11.2\text{ s}$ compared to Runner B's median of $11.6\text{ s}$.</p>
+              <p><strong>2. Spread (Consistency):</strong> Runner A was significantly <strong>more consistent</strong> because their interquartile range ($\text{IQR} = 0.4\text{ s}$) is much smaller than Runner B's ($\text{IQR} = 1.1\text{ s}$).</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="finance">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-indigo-100 text-indigo-800">Q8 • Depreciation Comparison</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">4 Marks</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Straight-Line vs Declining-Balance</h4>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              A company purchases a machine for $\$40,000$.
+            </p>
+            <p class="text-xs text-slate-700 mt-2">
+              <strong>(a)</strong> If the machine depreciates by straight-line method at $\$4,500$ per year, calculate its salvage value after $5$ years.<br>
+              <strong>(b)</strong> If an alternative machine costs $\$40,000$ and depreciates using declining-balance at a rate of $15\%$ p.a., find its salvage value after $5$ years (nearest dollar).
+            </p>
+          </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintS8')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solS8')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintS8" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              For straight-line: $S = V_0 - Dn$. For declining-balance: $S = V_0(1 - r)^n$.
+            </div>
+            <div id="solS8" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p><strong>(a) Straight-Line:</strong><br>
+                $$S = 40000 - (4500 \times 5) = 40000 - 22500 = \mathbf{\$17,500}$$
+              </p>
+              <p><strong>(b) Declining-Balance:</strong><br>
+                $$S = 40000(1 - 0.15)^5 = 40000(0.85)^5 \approx \mathbf{\$17,748}$$
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="practice-card bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4" data-category="finance">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-indigo-100 text-indigo-800">Q9 • Flat-Rate Personal Loan</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">3 Marks</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Simple Interest Total Repayment</h4>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              Maya borrows $\$12,000$ to buy a used car with a flat-rate personal loan over $3$ years at a simple interest rate of $8.5\%$ p.a.
+            </p>
+            <p class="text-xs text-slate-700 mt-2">
+              <strong>(a)</strong> Calculate the total interest charged on the loan.<br>
+              <strong>(b)</strong> Calculate the monthly repayment Maya must make.
+            </p>
+          </div>
+          <div class="pt-2 flex flex-col gap-2">
+            <div class="flex gap-2">
+              <button onclick="toggleSection('hintS9')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition"><i class="fa-regular fa-lightbulb mr-1"></i> Hint</button>
+              <button onclick="toggleSection('solS9')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-100 transition"><i class="fa-solid fa-check-double mr-1"></i> Solution</button>
+            </div>
+            <div id="hintS9" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              Interest $I = Prn$. Total to repay $A = P + I$. Then divide by the total number of months ($3 \times 12 = 36$).
+            </div>
+            <div id="solS9" class="practice-sol hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <p><strong>Worked Solution:</strong></p>
+              <p><strong>(a) Interest:</strong><br>
+                $$I = 12000 \times 0.085 \times 3 = \mathbf{\$3,060}$$
+              </p>
+              <p><strong>(b) Monthly Repayment:</strong><br>
+                Total to repay $A = 12000 + 3060 = \$15,060$.<br>
+                Total months = $3 \times 12 = 36$.<br>
+                $$\text{Monthly Repayment} = \frac{15060}{36} = \mathbf{\$418.33}$$
+              </p>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div><!-- END PRACTICE VIEW -->
+
+    <!-- VIEW 3: YEAR 12 STANDARD 2 ROADMAP -->
+    <div id="roadmapView" class="hidden space-y-8">
+      <div class="bg-gradient-to-r from-teal-950 via-slate-900 to-teal-950 text-white rounded-2xl p-6 sm:p-8 shadow-lg space-y-3">
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-500 text-slate-950">Strategic Blueprint</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Year 12 Mathematics Standard 2 Roadmap</h2>
+        <p class="text-slate-300 text-sm max-w-2xl leading-relaxed">
+          See exactly how catching up on these four topics sets you up for top band success in Year 12 Standard 2.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-800 flex items-center justify-center font-bold text-lg">1</div>
+          <h4 class="font-extrabold text-slate-900 text-sm">Financial Mathematics</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Builds from Year 11 Tax into <strong>Annuities, Compound Interest Tables, and Home Loan Reducing-Balance Tables</strong>.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-lg">2</div>
+          <h4 class="font-extrabold text-slate-900 text-sm">Networks & Paths</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Brand new topic for everyone! <strong>Kruskal's algorithm for minimum spanning trees, Eulerian trails, and Critical Path Analysis (float times)</strong>.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-lg">3</div>
+          <h4 class="font-extrabold text-slate-900 text-sm">Statistical Analysis</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Builds on Outliers and Box Plots to include <strong>Bivariate Data, Pearson's Correlation Coefficient ($r$), and The Normal Distribution (68-95-99.7 rule & $z$-scores)</strong>.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-800 flex items-center justify-center font-bold text-lg">4</div>
+          <h4 class="font-extrabold text-slate-900 text-sm">Non-Linear Relationships</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Your Advanced algebra will make this a breeze! Models with <strong>exponential growth/decay, hyperbolas, and inverse variation</strong>.
+          </p>
+        </div>
+      </div>
+    </div><!-- END ROADMAP VIEW -->
+
+  </main>
+
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-12 no-print">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>NSW Stage 6 Mathematics Standard 2 Transition Resource & Diagnostic Vault</p>
+      <p class="text-slate-400">Consolidate before starting Year 12 Term 1</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError : false
+        });
+      }
+    });
+
+    function switchView(viewName) {
+      const overview = document.getElementById('overviewView');
+      const practice = document.getElementById('practiceView');
+      const roadmap = document.getElementById('roadmapView');
+      
+      const navOverview = document.getElementById('navOverviewBtn');
+      const navPractice = document.getElementById('navPracticeBtn');
+      const navRoadmap = document.getElementById('navRoadmapBtn');
+
+      overview.classList.add('hidden');
+      practice.classList.add('hidden');
+      roadmap.classList.add('hidden');
+
+      const activeClass = "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-teal-700 bg-teal-50 border border-teal-200 transition";
+      const inactiveClass = "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition border border-transparent";
+
+      navOverview.className = inactiveClass;
+      navPractice.className = inactiveClass;
+      navRoadmap.className = inactiveClass;
+
+      if (viewName === 'overview') {
+        overview.classList.remove('hidden');
+        navOverview.className = activeClass;
+      } else if (viewName === 'practice') {
+        practice.classList.remove('hidden');
+        navPractice.className = activeClass;
+      } else if (viewName === 'roadmap') {
+        roadmap.classList.remove('hidden');
+        navRoadmap.className = activeClass;
+      }
+
+      // Re-trigger KaTeX rendering
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError : false
+        });
+      }
+    }
+
+    function filterPractice(category) {
+      const cards = document.querySelectorAll('.practice-card');
+      const buttons = document.querySelectorAll('.filter-btn');
+
+      buttons.forEach(btn => {
+        if (btn.getAttribute('data-filter') === category) {
+          btn.className = "filter-btn px-3 py-1.5 rounded-full font-bold bg-slate-900 text-white transition whitespace-nowrap";
+        } else {
+          btn.className = "filter-btn px-3 py-1.5 rounded-full font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition whitespace-nowrap";
+        }
+      });
+
+      cards.forEach(card => {
+        if (category === 'all' || card.getAttribute('data-category') === category) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    function revealAllPractice() {
+      document.querySelectorAll('.practice-sol').forEach(el => el.classList.remove('hidden'));
+    }
+
+    function hideAllPractice() {
+      document.querySelectorAll('.practice-sol').forEach(el => el.classList.add('hidden'));
+    }
+
+    function toggleSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.toggle('hidden');
+      }
+    }
+
+    let totalSeconds = 50 * 60;
+    let timerInterval = null;
+    let isRunning = false;
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function updateTimerDisplay() {
+      const display = document.getElementById('timerDisplay');
+      if (display) {
+        display.textContent = formatTime(totalSeconds);
+      }
+    }
+
+    function toggleTimer() {
+      const btn = document.getElementById('timerToggleBtn');
+      if (isRunning) {
+        clearInterval(timerInterval);
+        isRunning = false;
+        btn.textContent = 'Start';
+        btn.classList.remove('text-rose-600');
+        btn.classList.add('text-teal-600');
+      } else {
+        isRunning = true;
+        btn.textContent = 'Pause';
+        btn.classList.remove('text-teal-600');
+        btn.classList.add('text-rose-600');
+        timerInterval = setInterval(() => {
+          if (totalSeconds > 0) {
+            totalSeconds--;
+            updateTimerDisplay();
+          } else {
+            clearInterval(timerInterval);
+            isRunning = false;
+            btn.textContent = 'Done';
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      isRunning = false;
+      totalSeconds = 50 * 60;
+      updateTimerDisplay();
+      const btn = document.getElementById('timerToggleBtn');
+      btn.textContent = 'Start';
+      btn.classList.remove('text-rose-600');
+      btn.classList.add('text-teal-600');
+    }
+  </script>
+</body>
+</html>
