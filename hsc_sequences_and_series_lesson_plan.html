@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Year 12 HSC Advanced Mathematics - Sequences and Series</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- MathJax CDN for crisp mathematical formulas -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0f172a;
+      color: #334155;
+    }
+    .math-font {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Printable page simulation */
+    .sheet-page {
+      min-height: 940px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+    }
+    /* Ensure formula containers do not clip or overflow */
+    .formula-display {
+      font-size: 1.05rem;
+      line-height: 1.25;
+    }
+    @media (min-width: 768px) {
+      .formula-display {
+        font-size: 1.15rem;
+      }
+    }
+    @media print {
+      body {
+        background-color: white !important;
+        color: black !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .sheet-page {
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 20px !important;
+        page-break-after: always;
+        min-height: auto !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen py-8 px-3 sm:px-6 flex flex-col items-center">
+
+  <!-- Top Navigation & Page Controller Bar -->
+  <header class="no-print w-full max-w-5xl bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-2xl p-4 mb-6 sticky top-4 z-50 shadow-xl">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold uppercase tracking-wider">
+          <span>NSW Stage 6 Syllabus</span>
+        </div>
+        <h1 class="text-lg md:text-xl font-bold text-white mt-1">Year 12 HSC Advanced Mathematics: Sequences &amp; Series</h1>
+      </div>
+
+      <!-- Page Selector Tabs -->
+      <div class="flex flex-wrap items-center justify-center gap-1.5 bg-slate-950/70 p-1.5 rounded-xl border border-slate-800">
+        <button onclick="goToPage(1)" id="tab-1" class="page-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-blue-600 text-white shadow-md">Page 1: Formulas</button>
+        <button onclick="goToPage(2)" id="tab-2" class="page-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-all">Page 2: Intro</button>
+        <button onclick="goToPage(3)" id="tab-3" class="page-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-all">Page 3: Guided</button>
+        <button onclick="goToPage(4)" id="tab-4" class="page-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-all">Page 4: Practice A</button>
+        <button onclick="goToPage(5)" id="tab-5" class="page-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-all">Page 5: Practice B</button>
+        <button onclick="goToPage(6)" id="tab-6" class="page-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-all">Page 6: Word Problems</button>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="flex items-center gap-2">
+        <button onclick="toggleAllSolutions()" class="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-lg text-xs font-medium transition flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.264 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          <span id="global-toggle-text">Toggle Solutions</span>
+        </button>
+        <button onclick="window.print()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-medium transition flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          Print
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN DOCUMENT CONTAINER -->
+  <main class="w-full max-w-5xl">
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 1: FORMULA BLUEPRINT & EXPLANATIONS                                  -->
+    <!-- ========================================================================= -->
+    <article id="page-1" class="sheet-page bg-white rounded-2xl p-6 sm:p-10 mb-8 border border-slate-200">
+      <div class="border-b-2 border-slate-900 pb-4 mb-6">
+        <div class="flex justify-between items-start">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2 py-0.5 rounded">HSC Reference Sheet Study Guide</span>
+            <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Page 1: The 5 Core Sequences &amp; Series Formulas</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Understand what each formula calculates and the meaning of every variable.</p>
+          </div>
+          <div class="text-right">
+            <span class="inline-block px-3 py-1 bg-slate-100 rounded-lg text-xs font-bold text-slate-700">1 of 6</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout Requirement:
+           Top Left: Arithmetic Term
+           Top Right: Geometric Term
+           Bottom Left: Arithmetic Sum
+           Bottom Right: Geometric Sum
+           Under all four on the right-hand side: Limiting Sum
+      -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+        
+        <!-- ARITHMETIC TERM -->
+        <section class="bg-amber-50/50 border-2 border-amber-200 rounded-xl p-5 relative shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-amber-800 uppercase tracking-wider">Arithmetic</span>
+            <span class="text-[11px] bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded">Term Value</span>
+          </div>
+          <h3 class="text-base md:text-lg font-bold text-slate-900 mb-1">Arithmetic Term ($n^{\text{th}}$ Term)</h3>
+          
+          <div class="bg-white border border-amber-200 rounded-lg py-2 px-3 text-center my-2 shadow-inner overflow-x-auto">
+            <div class="formula-display font-bold text-slate-900 tracking-wide">
+              $$T_n = a + (n - 1)d$$
+            </div>
+          </div>
+
+          <div class="text-xs text-slate-700 space-y-2">
+            <p class="font-medium text-slate-900"><strong>What it does:</strong> Finds any term in a sequence where consecutive terms differ by adding or subtracting the exact same constant value.</p>
+            <div class="bg-amber-100/60 p-2.5 rounded-lg space-y-1">
+              <p>• <strong class="text-slate-900">$T_n$:</strong> Value of the $n$-th term</p>
+              <p>• <strong class="text-slate-900">$a$:</strong> First term ($T_1$)</p>
+              <p>• <strong class="text-slate-900">$n$:</strong> Position / term number ($n \in \{1, 2, 3, \dots\}$)</p>
+              <p>• <strong class="text-slate-900">$d$:</strong> Common difference, where $d = T_2 - T_1 = T_n - T_{n-1}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- GEOMETRIC TERM -->
+        <section class="bg-sky-50/50 border-2 border-sky-200 rounded-xl p-5 relative shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-sky-800 uppercase tracking-wider">Geometric</span>
+            <span class="text-[11px] bg-sky-100 text-sky-800 font-semibold px-2 py-0.5 rounded">Term Value</span>
+          </div>
+          <h3 class="text-base md:text-lg font-bold text-slate-900 mb-1">Geometric Term ($n^{\text{th}}$ Term)</h3>
+
+          <div class="bg-white border border-sky-200 rounded-lg py-2 px-3 text-center my-2 shadow-inner overflow-x-auto">
+            <div class="formula-display font-bold text-slate-900 tracking-wide">
+              $$T_n = a r^{n - 1}$$
+            </div>
+          </div>
+
+          <div class="text-xs text-slate-700 space-y-2">
+            <p class="font-medium text-slate-900"><strong>What it does:</strong> Finds any term in a sequence where consecutive terms are formed by multiplying by the exact same constant ratio.</p>
+            <div class="bg-sky-100/60 p-2.5 rounded-lg space-y-1">
+              <p>• <strong class="text-slate-900">$T_n$:</strong> Value of the $n$-th term</p>
+              <p>• <strong class="text-slate-900">$a$:</strong> First term ($T_1$)</p>
+              <p>• <strong class="text-slate-900">$r$:</strong> Common ratio, where $r = \frac{T_2}{T_1} = \frac{T_n}{T_{n-1}}$</p>
+              <p>• <strong class="text-slate-900">$n$:</strong> Position / term number</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ARITHMETIC SUM -->
+        <section class="bg-amber-50/50 border-2 border-amber-200 rounded-xl p-5 relative shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-amber-800 uppercase tracking-wider">Arithmetic</span>
+            <span class="text-[11px] bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded">Series Sum</span>
+          </div>
+          <h3 class="text-base md:text-lg font-bold text-slate-900 mb-1">Arithmetic Sum ($S_n$)</h3>
+
+          <div class="bg-white border border-amber-200 rounded-lg py-2 px-2 text-center my-2 shadow-inner overflow-x-auto">
+            <div class="formula-display font-bold text-slate-900 tracking-wide">
+              $$S_n = \frac{n}{2}[2a + (n - 1)d] = \frac{n}{2}(a + l)$$
+            </div>
+          </div>
+
+          <div class="text-xs text-slate-700 space-y-2">
+            <p class="font-medium text-slate-900"><strong>What it does:</strong> Computes the total sum of the first $n$ arithmetic terms added together ($T_1 + T_2 + \dots + T_n$).</p>
+            <div class="bg-amber-100/60 p-2.5 rounded-lg space-y-1">
+              <p>• <strong class="text-slate-900">$S_n$:</strong> Sum of the first $n$ terms</p>
+              <p>• <strong class="text-slate-900">$n$:</strong> How many terms are being summed</p>
+              <p>• <strong class="text-slate-900">$a$:</strong> First term &nbsp;|&nbsp; <strong class="text-slate-900">$d$:</strong> Common difference</p>
+              <p>• <strong class="text-slate-900">$l$:</strong> Last term ($l = T_n$). Use $\frac{n}{2}(a + l)$ when the last term is known!</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- GEOMETRIC SUM -->
+        <section class="bg-sky-50/50 border-2 border-sky-200 rounded-xl p-5 relative shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-sky-800 uppercase tracking-wider">Geometric</span>
+            <span class="text-[11px] bg-sky-100 text-sky-800 font-semibold px-2 py-0.5 rounded">Series Sum</span>
+          </div>
+          <h3 class="text-base md:text-lg font-bold text-slate-900 mb-1">Geometric Sum ($S_n$)</h3>
+
+          <div class="bg-white border border-sky-200 rounded-lg py-2 px-2 text-center my-2 shadow-inner overflow-x-auto">
+            <div class="formula-display font-bold text-slate-900 tracking-wide">
+              $$S_n = \frac{a(1 - r^n)}{1 - r} = \frac{a(r^n - 1)}{r - 1}, \quad r \neq 1$$
+            </div>
+          </div>
+
+          <div class="text-xs text-slate-700 space-y-2">
+            <p class="font-medium text-slate-900"><strong>What it does:</strong> Computes the sum of the first $n$ terms in a geometric series.</p>
+            <div class="bg-sky-100/60 p-2.5 rounded-lg space-y-1">
+              <p>• <strong class="text-slate-900">$S_n$:</strong> Sum of the first $n$ terms</p>
+              <p>• <strong class="text-slate-900">$a$:</strong> First term</p>
+              <p>• <strong class="text-slate-900">$r$:</strong> Common ratio ($r \neq 1$ because division by 0 is undefined)</p>
+              <p>• <strong class="text-slate-900">Tip:</strong> Both versions give the exact same answer!</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- LIMITING SUM -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="hidden md:flex flex-col justify-center p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600">
+          <span class="font-bold text-slate-800 text-sm mb-1">💡 Pro-Tip for HSC Reference Sheet:</span>
+          Always remember that arithmetic sequences can grow forever without bound, but geometric sequences can converge to a single steady value if each step gets smaller ($|r| < 1$). That is why the Limiting Sum lives under the Geometric formulas!
+        </div>
+
+        <section class="bg-indigo-50/50 border-2 border-indigo-200 rounded-xl p-5 relative shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-indigo-800 uppercase tracking-wider">Geometric</span>
+            <span class="text-[11px] bg-indigo-100 text-indigo-800 font-semibold px-2 py-0.5 rounded">Infinite Series</span>
+          </div>
+          <h3 class="text-base md:text-lg font-bold text-slate-900 mb-1">Limiting Sum (Sum to Infinity)</h3>
+
+          <div class="bg-white border border-indigo-200 rounded-lg py-2 px-3 text-center my-2 shadow-inner overflow-x-auto">
+            <div class="formula-display font-bold text-slate-900 tracking-wide">
+              $$S = \frac{a}{1 - r}, \quad |r| < 1$$
+            </div>
+          </div>
+
+          <div class="text-xs text-slate-700 space-y-2">
+            <p class="font-medium text-slate-900"><strong>What it does:</strong> Finds the finite numerical sum of infinitely many terms added forever.</p>
+            <div class="bg-indigo-100/60 p-2.5 rounded-lg space-y-1">
+              <p>• <strong class="text-slate-900">$S$:</strong> The limiting sum ($S_{\infty}$)</p>
+              <p>• <strong class="text-slate-900">$a$:</strong> First term</p>
+              <p>• <strong class="text-slate-900">$|r| < 1$:</strong> <strong>Crucial Condition!</strong> This series converges only when $-1 < r < 1$. If $|r| \ge 1$, the sum is infinite / diverges.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </article>
+
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 2: INTRODUCTORY BASIC WORKED EXAMPLES                                -->
+    <!-- ========================================================================= -->
+    <article id="page-2" class="sheet-page bg-white rounded-2xl p-6 sm:p-10 mb-8 border border-slate-200">
+      <div class="border-b-2 border-slate-900 pb-4 mb-6">
+        <div class="flex justify-between items-start">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2 py-0.5 rounded">Beginner Application</span>
+            <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Page 2: Basic Introductory Examples</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Same layout! Each box demonstrates simple parameter identification and substitution.</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="togglePageSolutions(2)" class="px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg text-xs font-semibold transition">
+              Toggle Page 2 Solutions
+            </button>
+            <span class="px-3 py-1 bg-slate-100 rounded-lg text-xs font-bold text-slate-700">2 of 6</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2x2 Grid Layout -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+        
+        <!-- Basic AP Term -->
+        <section class="bg-amber-50/40 border border-amber-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold text-amber-800 mb-1">
+              <span>ARITHMETIC TERM</span>
+              <span class="math-font text-slate-600">$T_n = a + (n-1)d$</span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-sm">Example 1</h4>
+            <p class="text-xs text-slate-700 mt-1">Find the <strong>$10^{\text{th}}$ term</strong> of the sequence: $4, 7, 10, 13, \dots$</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-amber-200/60">
+            <button onclick="toggleSingleSolution('p2-s1')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2 flex items-center gap-1">
+              <span>Show / Hide Solution</span>
+            </button>
+            <div id="p2-s1" class="solution-content bg-white p-3 rounded-lg border border-amber-200 text-xs text-slate-800 space-y-1">
+              <p><strong>Step 1: Identify values</strong></p>
+              <p>$a = 4$</p>
+              <p>$d = 7 - 4 = 3$</p>
+              <p>$n = 10$</p>
+              <p><strong>Step 2: Substitute into formula</strong></p>
+              <p>$T_{10} = 4 + (10 - 1)(3) = 4 + (9)(3) = 4 + 27 = \mathbf{31}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Basic GP Term -->
+        <section class="bg-sky-50/40 border border-sky-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold text-sky-800 mb-1">
+              <span>GEOMETRIC TERM</span>
+              <span class="math-font text-slate-600">$T_n = ar^{n-1}$</span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-sm">Example 2</h4>
+            <p class="text-xs text-slate-700 mt-1">Find the <strong>$6^{\text{th}}$ term</strong> of the sequence: $3, 6, 12, 24, \dots$</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-sky-200/60">
+            <button onclick="toggleSingleSolution('p2-s2')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2 flex items-center gap-1">
+              <span>Show / Hide Solution</span>
+            </button>
+            <div id="p2-s2" class="solution-content bg-white p-3 rounded-lg border border-sky-200 text-xs text-slate-800 space-y-1">
+              <p><strong>Step 1: Identify values</strong></p>
+              <p>$a = 3$</p>
+              <p>$r = \frac{6}{3} = 2$</p>
+              <p>$n = 6$</p>
+              <p><strong>Step 2: Substitute into formula</strong></p>
+              <p>$T_6 = 3 \times 2^{6 - 1} = 3 \times 2^5 = 3 \times 32 = \mathbf{96}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Basic AP Sum -->
+        <section class="bg-amber-50/40 border border-amber-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold text-amber-800 mb-1">
+              <span>ARITHMETIC SUM</span>
+              <span class="math-font text-slate-600">$S_n = \frac{n}{2}[2a+(n-1)d]$</span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-sm">Example 3</h4>
+            <p class="text-xs text-slate-700 mt-1">Find the sum of the first <strong>$12$ terms</strong> of: $2 + 5 + 8 + 11 + \dots$</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-amber-200/60">
+            <button onclick="toggleSingleSolution('p2-s3')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2 flex items-center gap-1">
+              <span>Show / Hide Solution</span>
+            </button>
+            <div id="p2-s3" class="solution-content bg-white p-3 rounded-lg border border-amber-200 text-xs text-slate-800 space-y-1">
+              <p><strong>Step 1: Identify values</strong></p>
+              <p>$a = 2, \quad d = 5 - 2 = 3, \quad n = 12$</p>
+              <p><strong>Step 2: Substitute into formula</strong></p>
+              <p>$S_{12} = \frac{12}{2}\,[2(2) + (12 - 1)(3)]$</p>
+              <p>$S_{12} = 6 \times [4 + (11)(3)] = 6 \times [4 + 33] = 6 \times 37 = \mathbf{222}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Basic GP Sum -->
+        <section class="bg-sky-50/40 border border-sky-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold text-sky-800 mb-1">
+              <span>GEOMETRIC SUM</span>
+              <span class="math-font text-slate-600">$S_n = \frac{a(r^n - 1)}{r - 1}$</span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-sm">Example 4</h4>
+            <p class="text-xs text-slate-700 mt-1">Find the sum of the first <strong>$5$ terms</strong> of: $2 + 6 + 18 + 54 + \dots$</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-sky-200/60">
+            <button onclick="toggleSingleSolution('p2-s4')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2 flex items-center gap-1">
+              <span>Show / Hide Solution</span>
+            </button>
+            <div id="p2-s4" class="solution-content bg-white p-3 rounded-lg border border-sky-200 text-xs text-slate-800 space-y-1">
+              <p><strong>Step 1: Identify values</strong></p>
+              <p>$a = 2, \quad r = \frac{6}{2} = 3, \quad n = 5$</p>
+              <p><strong>Step 2: Substitute into formula</strong></p>
+              <p>$S_5 = \frac{2(3^5 - 1)}{3 - 1} = \frac{2(243 - 1)}{2} = 243 - 1 = \mathbf{242}$</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Limiting Sum -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="hidden md:flex flex-col justify-center p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-500">
+          <p><strong>Notice:</strong> In Example 5, each term is halved ($r = 0.5$). Since $|0.5| < 1$, the terms get microscopically small and the sum never escapes $32$.</p>
+        </div>
+
+        <section class="bg-indigo-50/40 border border-indigo-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold text-indigo-800 mb-1">
+              <span>LIMITING SUM</span>
+              <span class="math-font text-slate-600">$S = \frac{a}{1 - r}$</span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-sm">Example 5</h4>
+            <p class="text-xs text-slate-700 mt-1">Find the limiting sum of: $16 + 8 + 4 + 2 + \dots$</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-indigo-200/60">
+            <button onclick="toggleSingleSolution('p2-s5')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2 flex items-center gap-1">
+              <span>Show / Hide Solution</span>
+            </button>
+            <div id="p2-s5" class="solution-content bg-white p-3 rounded-lg border border-indigo-200 text-xs text-slate-800 space-y-1">
+              <p><strong>Step 1: Check conditions</strong></p>
+              <p>$a = 16, \quad r = \frac{8}{16} = \frac{1}{2} = 0.5$</p>
+              <p>Since $|r| = 0.5 < 1$, the limiting sum exists!</p>
+              <p><strong>Step 2: Calculate sum</strong></p>
+              <p>$S = \frac{16}{1 - 0.5} = \frac{16}{0.5} = \mathbf{32}$</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </article>
+
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 3: GUIDED PRACTICE EXAMPLES                                         -->
+    <!-- ========================================================================= -->
+    <article id="page-3" class="sheet-page bg-white rounded-2xl p-6 sm:p-10 mb-8 border border-slate-200">
+      <div class="border-b-2 border-slate-900 pb-4 mb-6">
+        <div class="flex justify-between items-start">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2 py-0.5 rounded">Active Learning</span>
+            <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Page 3: Guided Practice (Try It First!)</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Fill in your answers or write them on your own paper. Click reveal to check your steps.</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="togglePageSolutions(3)" class="px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg text-xs font-semibold transition">
+              Toggle Page 3 Solutions
+            </button>
+            <span class="px-3 py-1 bg-slate-100 rounded-lg text-xs font-bold text-slate-700">3 of 6</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+        
+        <!-- AP Term -->
+        <section class="bg-amber-50/30 border border-amber-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-amber-800">ARITHMETIC TERM</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Question 1</h4>
+            <p class="text-xs text-slate-700 mt-1">Given the sequence: $9, 14, 19, 24, \dots$</p>
+            <ul class="text-xs text-slate-600 list-disc list-inside mt-2 space-y-0.5">
+              <li>State $a$ and $d$.</li>
+              <li>Find the $15^{\text{th}}$ term ($T_{15}$).</li>
+            </ul>
+          </div>
+          <div class="mt-4 pt-3 border-t border-amber-200/60">
+            <button onclick="toggleSingleSolution('p3-s1')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p3-s1" class="solution-content hidden bg-white p-3 rounded-lg border border-amber-200 text-xs text-slate-800 space-y-1">
+              <p>$a = 9, \quad d = 14 - 9 = 5$</p>
+              <p>$T_{15} = 9 + (15 - 1)(5) = 9 + (14)(5) = 9 + 70 = \mathbf{79}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- GP Term -->
+        <section class="bg-sky-50/30 border border-sky-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-sky-800">GEOMETRIC TERM</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Question 2</h4>
+            <p class="text-xs text-slate-700 mt-1">Given the sequence: $5, 15, 45, 135, \dots$</p>
+            <ul class="text-xs text-slate-600 list-disc list-inside mt-2 space-y-0.5">
+              <li>State $a$ and $r$.</li>
+              <li>Find the $7^{\text{th}}$ term ($T_{7}$).</li>
+            </ul>
+          </div>
+          <div class="mt-4 pt-3 border-t border-sky-200/60">
+            <button onclick="toggleSingleSolution('p3-s2')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p3-s2" class="solution-content hidden bg-white p-3 rounded-lg border border-sky-200 text-xs text-slate-800 space-y-1">
+              <p>$a = 5, \quad r = \frac{15}{5} = 3$</p>
+              <p>$T_7 = 5 \times 3^{7 - 1} = 5 \times 3^6 = 5 \times 729 = \mathbf{3645}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- AP Sum -->
+        <section class="bg-amber-50/30 border border-amber-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-amber-800">ARITHMETIC SUM</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Question 3</h4>
+            <p class="text-xs text-slate-700 mt-1">Calculate the sum of the first <strong>$20$ terms</strong> of the series:</p>
+            <p class="math-font text-xs text-slate-900 font-bold mt-1">$$1 + 5 + 9 + 13 + \dots$$</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-amber-200/60">
+            <button onclick="toggleSingleSolution('p3-s3')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p3-s3" class="solution-content hidden bg-white p-3 rounded-lg border border-amber-200 text-xs text-slate-800 space-y-1">
+              <p>$a = 1, \quad d = 4, \quad n = 20$</p>
+              <p>$S_{20} = \frac{20}{2}[2(1) + (20 - 1)(4)] = 10 \times [2 + (19)(4)] = 10 \times [2 + 76] = 10 \times 78 = \mathbf{780}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- GP Sum -->
+        <section class="bg-sky-50/30 border border-sky-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-sky-800">GEOMETRIC SUM</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Question 4</h4>
+            <p class="text-xs text-slate-700 mt-1">Calculate the sum of the first <strong>$6$ terms</strong> of the series:</p>
+            <p class="math-font text-xs text-slate-900 font-bold mt-1">$$4 + 8 + 16 + 32 + \dots$$</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-sky-200/60">
+            <button onclick="toggleSingleSolution('p3-s4')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p3-s4" class="solution-content hidden bg-white p-3 rounded-lg border border-sky-200 text-xs text-slate-800 space-y-1">
+              <p>$a = 4, \quad r = \frac{8}{4} = 2, \quad n = 6$</p>
+              <p>$S_6 = \frac{4(2^6 - 1)}{2 - 1} = 4(64 - 1) = 4 \times 63 = \mathbf{252}$</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Limiting Sum -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="hidden md:flex items-center p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-500">
+          Remember: When checking whether a series has a limiting sum, $r$ can be negative or positive, but its size $|r|$ must remain strictly under $1$.
+        </div>
+
+        <section class="bg-indigo-50/30 border border-indigo-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-indigo-800">LIMITING SUM</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Question 5</h4>
+            <p class="text-xs text-slate-700 mt-1">Find the limiting sum of the series:</p>
+            <p class="math-font text-xs text-slate-900 font-bold mt-1">$$54 + 18 + 6 + 2 + \dots$$</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-indigo-200/60">
+            <button onclick="toggleSingleSolution('p3-s5')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p3-s5" class="solution-content hidden bg-white p-3 rounded-lg border border-indigo-200 text-xs text-slate-800 space-y-1">
+              <p>$a = 54, \quad r = \frac{18}{54} = \frac{1}{3}$</p>
+              <p>Since $\left|\frac{1}{3}\right| < 1$, sum exists.</p>
+              <p>$S = \frac{54}{1 - \frac{1}{3}} = \frac{54}{\frac{2}{3}} = 54 \times \frac{3}{2} = \mathbf{81}$</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </article>
+
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 4: INDEPENDENT PRACTICE WORKSHEET (EASY & ACCESSIBLE)               -->
+    <!-- ========================================================================= -->
+    <article id="page-4" class="sheet-page bg-white rounded-2xl p-6 sm:p-10 mb-8 border border-slate-200">
+      <div class="border-b-2 border-slate-900 pb-4 mb-6">
+        <div class="flex justify-between items-start">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2 py-0.5 rounded">Formula Substitution</span>
+            <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Page 4: Direct Substitution Practice (Set A)</h2>
+            <p class="text-xs text-slate-500 mt-0.5">No word problems! Simply determine the variables and substitute directly into the formulas.</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="togglePageSolutions(4)" class="px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg text-xs font-semibold transition">
+              Toggle Page 4 Solutions
+            </button>
+            <span class="px-3 py-1 bg-slate-100 rounded-lg text-xs font-bold text-slate-700">4 of 6</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+        
+        <!-- AP Term -->
+        <section class="bg-amber-50/20 border border-amber-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-amber-800">ARITHMETIC TERM</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Question 1</h4>
+            <p class="text-xs text-slate-700 mt-1">Given the arithmetic sequence: $2, 6, 10, 14, \dots$</p>
+            <p class="text-xs text-slate-600 mt-1">Find the $8^{\text{th}}$ term ($T_{8}$) using $T_n = a + (n-1)d$.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-amber-200/60">
+            <button onclick="toggleSingleSolution('p4-s1')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p4-s1" class="solution-content hidden bg-white p-3 rounded-lg border border-amber-200 text-xs text-slate-800 space-y-1">
+              <p>$a = 2, \quad d = 6 - 2 = 4, \quad n = 8$</p>
+              <p>$T_{8} = 2 + (8 - 1)(4) = 2 + (7)(4) = 2 + 28 = \mathbf{30}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- GP Term -->
+        <section class="bg-sky-50/20 border border-sky-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-sky-800">GEOMETRIC TERM</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Question 2</h4>
+            <p class="text-xs text-slate-700 mt-1">Given the geometric sequence: $2, 4, 8, 16, \dots$</p>
+            <p class="text-xs text-slate-600 mt-1">Find the $6^{\text{th}}$ term ($T_{6}$) using $T_n = ar^{n-1}$.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-sky-200/60">
+            <button onclick="toggleSingleSolution('p4-s2')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p4-s2" class="solution-content hidden bg-white p-3 rounded-lg border border-sky-200 text-xs text-slate-800 space-y-1">
+              <p>$a = 2, \quad r = \frac{4}{2} = 2, \quad n = 6$</p>
+              <p>$T_6 = 2 \times 2^{6 - 1} = 2 \times 2^5 = 2 \times 32 = \mathbf{64}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- AP Sum -->
+        <section class="bg-amber-50/20 border border-amber-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-amber-800">ARITHMETIC SUM</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Question 3</h4>
+            <p class="text-xs text-slate-700 mt-1">Find the sum of the first <strong>$10$ terms</strong> of:</p>
+            <p class="math-font text-xs text-slate-900 font-bold mt-1">$$3 + 6 + 9 + 12 + \dots$$</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-amber-200/60">
+            <button onclick="toggleSingleSolution('p4-s3')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p4-s3" class="solution-content hidden bg-white p-3 rounded-lg border border-amber-200 text-xs text-slate-800 space-y-1">
+              <p>$a = 3, \quad d = 3, \quad n = 10$</p>
+              <p>$S_{10} = \frac{10}{2}[2(3) + (10 - 1)(3)] = 5 \times [6 + 27] = 5 \times 33 = \mathbf{165}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- GP Sum -->
+        <section class="bg-sky-50/20 border border-sky-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-sky-800">GEOMETRIC SUM</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Question 4</h4>
+            <p class="text-xs text-slate-700 mt-1">Find the sum of the first <strong>$4$ terms</strong> of:</p>
+            <p class="math-font text-xs text-slate-900 font-bold mt-1">$$3 + 6 + 12 + 24 + \dots$$</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-sky-200/60">
+            <button onclick="toggleSingleSolution('p4-s4')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p4-s4" class="solution-content hidden bg-white p-3 rounded-lg border border-sky-200 text-xs text-slate-800 space-y-1">
+              <p>$a = 3, \quad r = 2, \quad n = 4$</p>
+              <p>$S_4 = \frac{3(2^4 - 1)}{2 - 1} = \frac{3(16 - 1)}{1} = 3 \times 15 = \mathbf{45}$</p>
+              <p class="text-slate-500 italic">(Check: 3 + 6 + 12 + 24 = 45 ✓)</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Limiting Sum -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="hidden md:flex items-center p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-500">
+          Notice how dividing each term by 2 means $r = \frac{1}{2} = 0.5$. Because $0.5 < 1$, the sum is finite and clean!
+        </div>
+
+        <section class="bg-indigo-50/20 border border-indigo-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-indigo-800">LIMITING SUM</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Question 5</h4>
+            <p class="text-xs text-slate-700 mt-1">Find the limiting sum of:</p>
+            <p class="math-font text-xs text-slate-900 font-bold mt-1">$$40 + 20 + 10 + 5 + \dots$$</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-indigo-200/60">
+            <button onclick="toggleSingleSolution('p4-s5')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p4-s5" class="solution-content hidden bg-white p-3 rounded-lg border border-indigo-200 text-xs text-slate-800 space-y-1">
+              <p>$a = 40, \quad r = \frac{20}{40} = 0.5$</p>
+              <p>Since $|r| = 0.5 < 1$, the limiting sum exists.</p>
+              <p>$S = \frac{40}{1 - 0.5} = \frac{40}{0.5} = \mathbf{80}$</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </article>
+
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 5: DIRECT SUBSTITUTION PRACTICE (SET B)                              -->
+    <!-- ========================================================================= -->
+    <article id="page-5" class="sheet-page bg-white rounded-2xl p-6 sm:p-10 mb-8 border border-slate-200">
+      <div class="border-b-2 border-slate-900 pb-4 mb-6">
+        <div class="flex justify-between items-start">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2 py-0.5 rounded">Reinforcement</span>
+            <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Page 5: Direct Substitution Practice (Set B)</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Another clean set of basic substitutions. Reinforce muscle memory with the five formulas.</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="togglePageSolutions(5)" class="px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg text-xs font-semibold transition">
+              Toggle Page 5 Solutions
+            </button>
+            <span class="px-3 py-1 bg-slate-100 rounded-lg text-xs font-bold text-slate-700">5 of 6</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+        
+        <!-- AP Term -->
+        <section class="bg-amber-50/20 border border-amber-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-amber-800">ARITHMETIC TERM</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Question 1</h4>
+            <p class="text-xs text-slate-700 mt-1">Given the arithmetic sequence: $10, 15, 20, 25, \dots$</p>
+            <p class="text-xs text-slate-600 mt-1">Find the $12^{\text{th}}$ term ($T_{12}$).</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-amber-200/60">
+            <button onclick="toggleSingleSolution('p5-s1')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p5-s1" class="solution-content hidden bg-white p-3 rounded-lg border border-amber-200 text-xs text-slate-800 space-y-1">
+              <p>$a = 10, \quad d = 15 - 10 = 5, \quad n = 12$</p>
+              <p>$T_{12} = 10 + (12 - 1)(5) = 10 + (11)(5) = 10 + 55 = \mathbf{65}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- GP Term -->
+        <section class="bg-sky-50/20 border border-sky-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-sky-800">GEOMETRIC TERM</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Question 2</h4>
+            <p class="text-xs text-slate-700 mt-1">Given the geometric sequence: $1, 3, 9, 27, \dots$</p>
+            <p class="text-xs text-slate-600 mt-1">Find the $5^{\text{th}}$ term ($T_5$).</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-sky-200/60">
+            <button onclick="toggleSingleSolution('p5-s2')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p5-s2" class="solution-content hidden bg-white p-3 rounded-lg border border-sky-200 text-xs text-slate-800 space-y-1">
+              <p>$a = 1, \quad r = \frac{3}{1} = 3, \quad n = 5$</p>
+              <p>$T_5 = 1 \times 3^{5 - 1} = 3^4 = \mathbf{81}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- AP Sum -->
+        <section class="bg-amber-50/20 border border-amber-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-amber-800">ARITHMETIC SUM</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Question 3</h4>
+            <p class="text-xs text-slate-700 mt-1">Calculate the sum of the first <strong>$8$ terms</strong> of:</p>
+            <p class="math-font text-xs text-slate-900 font-bold mt-1">$$7 + 10 + 13 + 16 + \dots$$</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-amber-200/60">
+            <button onclick="toggleSingleSolution('p5-s3')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p5-s3" class="solution-content hidden bg-white p-3 rounded-lg border border-amber-200 text-xs text-slate-800 space-y-1">
+              <p>$a = 7, \quad d = 10 - 7 = 3, \quad n = 8$</p>
+              <p>$S_8 = \frac{8}{2}[2(7) + (8 - 1)(3)] = 4 \times [14 + (7)(3)] = 4 \times [14 + 21] = 4 \times 35 = \mathbf{140}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- GP Sum -->
+        <section class="bg-sky-50/20 border border-sky-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-sky-800">GEOMETRIC SUM</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Question 4</h4>
+            <p class="text-xs text-slate-700 mt-1">Calculate the sum of the first <strong>$5$ terms</strong> of:</p>
+            <p class="math-font text-xs text-slate-900 font-bold mt-1">$$1 + 2 + 4 + 8 + \dots$$</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-sky-200/60">
+            <button onclick="toggleSingleSolution('p5-s4')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p5-s4" class="solution-content hidden bg-white p-3 rounded-lg border border-sky-200 text-xs text-slate-800 space-y-1">
+              <p>$a = 1, \quad r = 2, \quad n = 5$</p>
+              <p>$S_5 = \frac{1(2^5 - 1)}{2 - 1} = \frac{32 - 1}{1} = \mathbf{31}$</p>
+              <p class="text-slate-500 italic">(Check: 1 + 2 + 4 + 8 + 16 = 31 ✓)</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Limiting Sum -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="hidden md:flex items-center p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-500">
+          Remember: When $r = \frac{1}{3}$, $1 - r = \frac{2}{3}$. Dividing by $\frac{2}{3}$ is the same as multiplying by $\frac{3}{2}$!
+        </div>
+
+        <section class="bg-indigo-50/20 border border-indigo-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-indigo-800">LIMITING SUM</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Question 5</h4>
+            <p class="text-xs text-slate-700 mt-1">Find the limiting sum of:</p>
+            <p class="math-font text-xs text-slate-900 font-bold mt-1">$$18 + 6 + 2 + \frac{2}{3} + \dots$$</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-indigo-200/60">
+            <button onclick="toggleSingleSolution('p5-s5')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p5-s5" class="solution-content hidden bg-white p-3 rounded-lg border border-indigo-200 text-xs text-slate-800 space-y-1">
+              <p>$a = 18, \quad r = \frac{6}{18} = \frac{1}{3}$</p>
+              <p>Since $\left|\frac{1}{3}\right| < 1$, the sum exists.</p>
+              <p>$S = \frac{18}{1 - \frac{1}{3}} = \frac{18}{\frac{2}{3}} = 18 \times \frac{3}{2} = \mathbf{27}$</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </article>
+
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 6: CHALLENGE PAGE - EASY WORD PROBLEMS                               -->
+    <!-- ========================================================================= -->
+    <article id="page-6" class="sheet-page bg-white rounded-2xl p-6 sm:p-10 mb-8 border border-slate-200">
+      <div class="border-b-2 border-slate-900 pb-4 mb-6">
+        <div class="flex justify-between items-start">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded">Optional Challenge</span>
+            <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Page 6: Real-Life Word Problems Challenge</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Now see how these 5 formulas appear in everyday life situations. Just find $a, d/r, n$ first!</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="togglePageSolutions(6)" class="px-3 py-1 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-lg text-xs font-semibold transition">
+              Toggle Page 6 Solutions
+            </button>
+            <span class="px-3 py-1 bg-slate-100 rounded-lg text-xs font-bold text-slate-700">6 of 6</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+        
+        <!-- AP Term Challenge -->
+        <section class="bg-amber-50/20 border border-amber-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-amber-800">ARITHMETIC TERM CHALLENGE</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Challenge 1: Pocket Money Growth</h4>
+            <p class="text-xs text-slate-700 mt-1">Liam gets $\$10$ in Week 1, and his parents increase it by $\$3$ each week ($10, 13, 16, \dots$).</p>
+            <p class="text-xs text-slate-600 mt-1">How much will he receive in <strong>Week 8</strong>?</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-amber-200/60">
+            <button onclick="toggleSingleSolution('p6-s1')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p6-s1" class="solution-content hidden bg-white p-3 rounded-lg border border-amber-200 text-xs text-slate-800 space-y-1">
+              <p>Identify values: $a = 10, \quad d = 3, \quad n = 8$</p>
+              <p>$T_8 = 10 + (8 - 1)(3) = 10 + (7)(3) = 10 + 21 = \mathbf{\$31}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- GP Term Challenge -->
+        <section class="bg-sky-50/20 border border-sky-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-sky-800">GEOMETRIC TERM CHALLENGE</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Challenge 2: Doubling Colony</h4>
+            <p class="text-xs text-slate-700 mt-1">A science experiment starts with $4$ cells. The count doubles every hour ($4, 8, 16, \dots$).</p>
+            <p class="text-xs text-slate-600 mt-1">How many cells are there in the <strong>$5^{\text{th}}$ hour</strong>?</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-sky-200/60">
+            <button onclick="toggleSingleSolution('p6-s2')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p6-s2" class="solution-content hidden bg-white p-3 rounded-lg border border-sky-200 text-xs text-slate-800 space-y-1">
+              <p>Identify values: $a = 4, \quad r = 2, \quad n = 5$</p>
+              <p>$T_5 = 4 \times 2^{5 - 1} = 4 \times 2^4 = 4 \times 16 = \mathbf{64\text{ cells}}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- AP Sum Challenge -->
+        <section class="bg-amber-50/20 border border-amber-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-amber-800">ARITHMETIC SUM CHALLENGE</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Challenge 3: Daily Reading</h4>
+            <p class="text-xs text-slate-700 mt-1">Chloe reads $5$ pages on Day 1, $7$ on Day 2, $9$ on Day 3, and continues increasing by $2$ pages daily.</p>
+            <p class="text-xs text-slate-600 mt-1">How many total pages does she read in <strong>$6$ days</strong>?</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-amber-200/60">
+            <button onclick="toggleSingleSolution('p6-s3')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p6-s3" class="solution-content hidden bg-white p-3 rounded-lg border border-amber-200 text-xs text-slate-800 space-y-1">
+              <p>Identify values: $a = 5, \quad d = 2, \quad n = 6$</p>
+              <p>$S_6 = \frac{6}{2}[2(5) + (6 - 1)(2)] = 3 \times [10 + (5)(2)] = 3 \times 20 = \mathbf{60\text{ pages}}$</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- GP Sum Challenge -->
+        <section class="bg-sky-50/20 border border-sky-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-sky-800">GEOMETRIC SUM CHALLENGE</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Challenge 4: Fitness Step Bonus</h4>
+            <p class="text-xs text-slate-700 mt-1">A fitness app awards $100$ bonus points on Day 1, and triples the bonus each day ($100, 300, 900$).</p>
+            <p class="text-xs text-slate-600 mt-1">What is the total sum of points over the first <strong>$3$ days</strong>?</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-sky-200/60">
+            <button onclick="toggleSingleSolution('p6-s4')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p6-s4" class="solution-content hidden bg-white p-3 rounded-lg border border-sky-200 text-xs text-slate-800 space-y-1">
+              <p>Identify values: $a = 100, \quad r = 3, \quad n = 3$</p>
+              <p>$S_3 = \frac{100(3^3 - 1)}{3 - 1} = \frac{100(26)}{2} = \mathbf{1300\text{ points}}$</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Limiting Sum Challenge -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 flex flex-col justify-center">
+          <span class="font-bold text-slate-900 mb-1">🎉 Lesson Complete!</span>
+          <p>You have mastered basic formula substitution and even tackled real-world word problems. You are ready for HSC Advanced Sequences and Series!</p>
+        </div>
+
+        <section class="bg-indigo-50/20 border border-indigo-200 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-indigo-800">LIMITING SUM CHALLENGE</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-1">Challenge 5: Bouncing Ball Drop</h4>
+            <p class="text-xs text-slate-700 mt-1">A rubber ball is dropped from a height of $10\text{ m}$. Each bounce is half as high ($10 + 5 + 2.5 + \dots$).</p>
+            <p class="text-xs text-slate-600 mt-1">Find the total downward distance dropped.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-indigo-200/60">
+            <button onclick="toggleSingleSolution('p6-s5')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold mb-2">Show / Hide Answer</button>
+            <div id="p6-s5" class="solution-content hidden bg-white p-3 rounded-lg border border-indigo-200 text-xs text-slate-800 space-y-1">
+              <p>Identify values: $a = 10, \quad r = 0.5$</p>
+              <p>Since $|0.5| < 1$, the sum exists.</p>
+              <p>$S = \frac{10}{1 - 0.5} = \frac{10}{0.5} = \mathbf{20\text{ metres}}$</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- Interactive Logic Script -->
+  <script>
+    // State management for solution toggles: default false for student mode
+    let allSolutionsVisible = false;
+
+    // Toggle individual solution box
+    function toggleSingleSolution(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        if (el.classList.contains('hidden')) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      }
+    }
+
+    // Toggle all solutions on a specific page
+    function togglePageSolutions(pageNum) {
+      const page = document.getElementById('page-' + pageNum);
+      if (!page) return;
+      const solutions = page.querySelectorAll('.solution-content');
+      
+      // Determine if at least one is hidden
+      let anyHidden = false;
+      solutions.forEach(s => {
+        if (s.classList.contains('hidden')) anyHidden = true;
+      });
+
+      solutions.forEach(s => {
+        if (anyHidden) {
+          s.classList.remove('hidden');
+        } else {
+          s.classList.add('hidden');
+        }
+      });
+    }
+
+    // Global toggle for all solutions on Pages 2-6
+    function toggleAllSolutions() {
+      const allSolutions = document.querySelectorAll('.solution-content');
+      const toggleText = document.getElementById('global-toggle-text');
+      
+      allSolutionsVisible = !allSolutionsVisible;
+
+      allSolutions.forEach(s => {
+        if (allSolutionsVisible) {
+          s.classList.remove('hidden');
+        } else {
+          s.classList.add('hidden');
+        }
+      });
+
+      if (toggleText) {
+        toggleText.textContent = allSolutionsVisible ? 'Hide All Solutions' : 'Show All Solutions';
+      }
+    }
+
+    // Page navigation scroll & highlight
+    function goToPage(num) {
+      const target = document.getElementById('page-' + num);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // Update active tab styles
+        document.querySelectorAll('.page-tab').forEach((tab, index) => {
+          if (index + 1 === num) {
+            tab.className = "page-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-blue-600 text-white shadow-md";
+          } else {
+            tab.className = "page-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-all";
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>
