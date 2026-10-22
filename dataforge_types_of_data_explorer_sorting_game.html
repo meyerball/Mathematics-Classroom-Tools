@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DataForge: Master Data Types</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              500: '#10b981',
+              600: '#059669',
+            },
+            nominal: '#3b82f6',
+            ordinal: '#8b5cf6',
+            discrete: '#f59e0b',
+            continuous: '#10b981',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      user-select: none;
+    }
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+    .data-card {
+      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+      touch-action: none;
+    }
+    .data-card:active {
+      cursor: grabbing;
+    }
+    .bin-zone {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .bin-zone.drag-hover {
+      transform: scale(1.03);
+      filter: brightness(1.15);
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+      50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.6); }
+    }
+    .active-card-glow {
+      animation: pulseGlow 2.5s infinite;
+    }
+    @keyframes floatSoft {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .float-anim {
+      animation: floatSoft 3s ease-in-out infinite;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-4 lg:px-8 py-3.5">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-white font-black text-xl">
+          <i class="fa-solid fa-layer-group"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            DataForge <span class="text-xs uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-mono font-semibold border border-emerald-500/20">Data Types Lab</span>
+          </h1>
+          <p class="text-xs text-slate-400 hidden sm:block">Master Categorical vs Numerical Data with Interactive Play</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="flex items-center gap-2 bg-slate-800/80 p-1.5 rounded-xl border border-slate-700/60 text-xs sm:text-sm font-medium">
+        <button id="tabLearnBtn" onclick="switchView('learn')" class="px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 bg-emerald-500 text-white font-semibold shadow">
+          <i class="fa-solid fa-graduation-cap"></i> <span>Learn Guide</span>
+        </button>
+        <button id="tabGameBtn" onclick="switchView('game')" class="px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-slate-700/50">
+          <i class="fa-solid fa-gamepad"></i> <span>Sorting Arcade</span>
+        </button>
+        <button id="tabTreeBtn" onclick="switchView('tree')" class="px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-slate-700/50">
+          <i class="fa-solid fa-diagram-project"></i> <span>Decision Tree</span>
+        </button>
+      </div>
+
+      <!-- Sound Toggle -->
+      <div class="flex items-center gap-2">
+        <button id="audioToggle" onclick="toggleAudio()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-750 border border-slate-750 flex items-center justify-center text-slate-300 hover:text-emerald-400 transition" title="Toggle Sound">
+          <i id="audioIcon" class="fa-solid fa-volume-high"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8 flex flex-col">
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: INTERACTIVE CONCEPT EXPLORER (LEARN) -->
+    <!-- ========================================== -->
+    <div id="viewLearn" class="space-y-8 animate-fadeIn">
+      <!-- Intro Hero Banner -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-850 to-slate-900 border border-slate-800 p-6 sm:p-8">
+        <div class="absolute -right-20 -top-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-3xl">
+          <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full mb-3">
+            <i class="fa-solid fa-sparkles text-emerald-400"></i> The Core Foundation of Statistics & Data Science
+          </span>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">
+            All data in the universe boils down to <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-teal-300 to-emerald-400">Words vs Numbers</span>.
+          </h2>
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+            Before running any graph, machine learning model, or calculation, you must ask: 
+            <strong>"Is this variable measuring an amount (numbers) or describing a category (labels)?"</strong> 
+            Let's break down the 4 essential subtypes you will encounter every day.
+          </p>
+        </div>
+
+        <!-- Quick 2-Way Master Split -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Categorical Master Card -->
+          <div class="rounded-2xl bg-slate-900/90 border border-blue-500/30 p-5 relative group hover:border-blue-500/60 transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="px-2.5 py-0.5 rounded-lg text-xs font-mono font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">QUALITATIVE</span>
+              <i class="fa-solid fa-tags text-blue-400 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-1">Categorical Data</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Describes characteristics, labels, qualities, or groupings. You <strong>cannot</strong> calculate a meaningful arithmetic mean directly (e.g. what is the average of Blue and Red?).
+            </p>
+            <div class="mt-3 flex gap-2 text-xs font-medium">
+              <span class="px-2 py-1 rounded bg-blue-950 text-blue-300 border border-blue-800/50">1. Nominal (Names)</span>
+              <span class="px-2 py-1 rounded bg-purple-950 text-purple-300 border border-purple-800/50">2. Ordinal (Order)</span>
+            </div>
+          </div>
+
+          <!-- Numerical Master Card -->
+          <div class="rounded-2xl bg-slate-900/90 border border-emerald-500/30 p-5 relative group hover:border-emerald-500/60 transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="px-2.5 py-0.5 rounded-lg text-xs font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">QUANTITATIVE</span>
+              <i class="fa-solid fa-calculator text-emerald-400 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-1">Numerical Data</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Real counts or measurements where math operations make total sense (e.g. sums, averages, differences). Answers <em>"How many?"</em> or <em>"How much?"</em>.
+            </p>
+            <div class="mt-3 flex gap-2 text-xs font-medium">
+              <span class="px-2 py-1 rounded bg-amber-950 text-amber-300 border border-amber-800/50">3. Discrete (Counted)</span>
+              <span class="px-2 py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-800/50">4. Continuous (Measured)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="text-lg font-bold text-white flex items-center gap-2">
+        <i class="fa-solid fa-microscope text-emerald-400"></i> The 4 Subtypes In-Depth (Click any example to inspect)
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- 1. NOMINAL -->
+        <div class="rounded-2xl bg-slate-900 border border-slate-800 hover:border-blue-500/60 p-5 flex flex-col transition hover:shadow-lg hover:shadow-blue-500/5">
+          <div class="flex items-center justify-between mb-3">
+            <span class="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center font-bold text-sm">
+              <i class="fa-solid fa-fingerprint"></i>
+            </span>
+            <span class="text-[11px] font-mono font-bold text-blue-400 uppercase tracking-wider">Categorical</span>
+          </div>
+          <h4 class="text-base font-bold text-white mb-1">Nominal Data</h4>
+          <p class="text-xs text-slate-400 mb-3 font-medium">
+            <span class="text-blue-300 font-bold">"Nom" = Name.</span> Categories with <strong>NO natural rank or sequence</strong>.
+          </p>
+
+          <div class="bg-slate-950/60 rounded-xl p-3 border border-slate-800/80 mb-3 text-xs space-y-1.5 flex-1">
+            <div class="text-slate-400 font-semibold text-[11px] uppercase tracking-wide">The Litmus Test:</div>
+            <p class="text-slate-300">Does order matter? <strong>No.</strong> Is "Blue" greater than "Green"? No, they are just distinct labels.</p>
+          </div>
+
+          <div class="space-y-1.5 text-xs">
+            <div class="text-slate-400 font-medium text-[11px]">Real Examples:</div>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-300 border border-blue-500/20">Eye Colors</span>
+              <span class="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-300 border border-blue-500/20">Blood Types</span>
+              <span class="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-300 border border-blue-500/20">Postal ZIP codes*</span>
+            </div>
+            <p class="text-[10px] text-slate-500 italic mt-1">*Notice: ZIP codes use digits, but they are nominal labels!</p>
+          </div>
+        </div>
+
+        <!-- 2. ORDINAL -->
+        <div class="rounded-2xl bg-slate-900 border border-slate-800 hover:border-purple-500/60 p-5 flex flex-col transition hover:shadow-lg hover:shadow-purple-500/5">
+          <div class="flex items-center justify-between mb-3">
+            <span class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center font-bold text-sm">
+              <i class="fa-solid fa-arrow-down-short-wide"></i>
+            </span>
+            <span class="text-[11px] font-mono font-bold text-purple-400 uppercase tracking-wider">Categorical</span>
+          </div>
+          <h4 class="text-base font-bold text-white mb-1">Ordinal Data</h4>
+          <p class="text-xs text-slate-400 mb-3 font-medium">
+            <span class="text-purple-300 font-bold">"Ord" = Order.</span> Categories with a <strong>clear, defined rank</strong>, but spacing isn't uniform.
+          </p>
+
+          <div class="bg-slate-950/60 rounded-xl p-3 border border-slate-800/80 mb-3 text-xs space-y-1.5 flex-1">
+            <div class="text-slate-400 font-semibold text-[11px] uppercase tracking-wide">The Litmus Test:</div>
+            <p class="text-slate-300">Can you say A &gt; B? <strong>Yes.</strong> But the gap between 1st and 2nd place may not equal 2nd and 3rd.</p>
+          </div>
+
+          <div class="space-y-1.5 text-xs">
+            <div class="text-slate-400 font-medium text-[11px]">Real Examples:</div>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-300 border border-purple-500/20">T-Shirt Sizes (S, M, L)</span>
+              <span class="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-300 border border-purple-500/20">Race Medals (Gold/Silver)</span>
+              <span class="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-300 border border-purple-500/20">Customer Satisfaction (1-5★)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. DISCRETE -->
+        <div class="rounded-2xl bg-slate-900 border border-slate-800 hover:border-amber-500/60 p-5 flex flex-col transition hover:shadow-lg hover:shadow-amber-500/5">
+          <div class="flex items-center justify-between mb-3">
+            <span class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center font-bold text-sm">
+              <i class="fa-solid fa-cubes-stacked"></i>
+            </span>
+            <span class="text-[11px] font-mono font-bold text-amber-400 uppercase tracking-wider">Numerical</span>
+          </div>
+          <h4 class="text-base font-bold text-white mb-1">Discrete Data</h4>
+          <p class="text-xs text-slate-400 mb-3 font-medium">
+            <span class="text-amber-300 font-bold">Counted Values.</span> Distinct values with <strong>gaps in between</strong> (usually whole integers).
+          </p>
+
+          <div class="bg-slate-950/60 rounded-xl p-3 border border-slate-800/80 mb-3 text-xs space-y-1.5 flex-1">
+            <div class="text-slate-400 font-semibold text-[11px] uppercase tracking-wide">The Litmus Test:</div>
+            <p class="text-slate-300">Can you have 2.37 of these? <strong>Usually No!</strong> You count them in jumps: 0, 1, 2, 3...</p>
+          </div>
+
+          <div class="space-y-1.5 text-xs">
+            <div class="text-slate-400 font-medium text-[11px]">Real Examples:</div>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20">Number of siblings</span>
+              <span class="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20">Cars in a parking lot</span>
+              <span class="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20">Website clicks</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. CONTINUOUS -->
+        <div class="rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500/60 p-5 flex flex-col transition hover:shadow-lg hover:shadow-emerald-500/5">
+          <div class="flex items-center justify-between mb-3">
+            <span class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold text-sm">
+              <i class="fa-solid fa-ruler-combined"></i>
+            </span>
+            <span class="text-[11px] font-mono font-bold text-emerald-400 uppercase tracking-wider">Numerical</span>
+          </div>
+          <h4 class="text-base font-bold text-white mb-1">Continuous Data</h4>
+          <p class="text-xs text-slate-400 mb-3 font-medium">
+            <span class="text-emerald-300 font-bold">Measured Values.</span> Any value on a continuum with <strong>infinite precision</strong>.
+          </p>
+
+          <div class="bg-slate-950/60 rounded-xl p-3 border border-slate-800/80 mb-3 text-xs space-y-1.5 flex-1">
+            <div class="text-slate-400 font-semibold text-[11px] uppercase tracking-wide">The Litmus Test:</div>
+            <p class="text-slate-300">Can you add more decimal places with a finer instrument? <strong>Yes!</strong> (e.g. 72.482 kg).</p>
+          </div>
+
+          <div class="space-y-1.5 text-xs">
+            <div class="text-slate-400 font-medium text-[11px]">Real Examples:</div>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">Exact runner marathon time</span>
+              <span class="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">Body temperature (°C)</span>
+              <span class="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">Weight of an apple</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Self-Check Callout -->
+      <div class="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <h4 class="text-white font-bold text-base mb-1">Ready to test your classification instincts?</h4>
+          <p class="text-xs sm:text-sm text-slate-400">Put real-world examples into the correct bins and rack up a high streak combo.</p>
+        </div>
+        <button onclick="switchView('game')" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 font-bold text-white shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition transform active:scale-95">
+          <i class="fa-solid fa-play"></i> Start The Sorting Game
+        </button>
+      </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: DATA SORTING GAME (THE ARCADE)    -->
+    <!-- ========================================== -->
+    <div id="viewGame" class="hidden flex-1 flex flex-col space-y-6">
+
+      <!-- Game HUD Bar -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-md">
+        <!-- Player Stats -->
+        <div class="flex items-center gap-5 sm:gap-8">
+          <div>
+            <div class="text-[11px] font-mono uppercase text-slate-400">Score</div>
+            <div id="gameScore" class="text-2xl font-black text-white font-mono">0</div>
+          </div>
+          <div>
+            <div class="text-[11px] font-mono uppercase text-slate-400">Streak</div>
+            <div class="flex items-center gap-1.5">
+              <span id="gameStreak" class="text-2xl font-black text-amber-400 font-mono">0</span>
+              <span id="streakFire" class="text-base text-amber-500 hidden animate-bounce"><i class="fa-solid fa-fire"></i></span>
+            </div>
+          </div>
+          <div>
+            <div class="text-[11px] font-mono uppercase text-slate-400">Progress</div>
+            <div class="text-sm font-bold text-slate-200 mt-1 font-mono">
+              <span id="cardCountCurrent" class="text-emerald-400">1</span> / <span id="cardCountTotal">20</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode & Controls -->
+        <div class="flex items-center gap-2">
+          <button id="hintBtn" onclick="showCardHint()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-amber-300 text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5">
+            <i class="fa-regular fa-lightbulb"></i> <span>Need Hint?</span>
+          </button>
+          <button onclick="restartGame()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5">
+            <i class="fa-solid fa-rotate-right"></i> <span>Restart</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Stage: Center Active Card Conveyor -->
+      <div class="flex-1 flex flex-col items-center justify-center min-h-[260px] py-4 relative">
+
+        <!-- Hint Overlay Dialog (Floating) -->
+        <div id="hintBubble" class="hidden absolute top-0 bg-amber-500/15 border border-amber-500/40 text-amber-200 px-4 py-2.5 rounded-xl text-xs max-w-md text-center backdrop-blur shadow-xl z-20 animate-fadeIn">
+          <i class="fa-solid fa-lightbulb text-amber-400 mr-1.5"></i>
+          <span id="hintText">Think about whether you count this or measure it.</span>
+        </div>
+
+        <!-- The Target Active Card -->
+        <div id="activeCardContainer" class="w-full max-w-md perspective-1000 flex justify-center">
+          <div id="activeDataCard" 
+               draggable="true" 
+               class="data-card active-card-glow w-full bg-gradient-to-b from-slate-850 to-slate-900 border-2 border-slate-750 hover:border-slate-500 rounded-3xl p-6 sm:p-7 shadow-2xl cursor-grab text-center relative overflow-hidden">
+            
+            <!-- Category Tag Placeholder -->
+            <div class="flex items-center justify-center gap-2 mb-3">
+              <span class="text-xs uppercase font-mono px-3 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700" id="cardContextTag">
+                Variable to classify
+              </span>
+            </div>
+
+            <!-- Big Icon -->
+            <div id="cardIcon" class="w-16 h-16 mx-auto my-3 rounded-2xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-3xl text-emerald-400 float-anim">
+              <i class="fa-solid fa-car"></i>
+            </div>
+
+            <!-- Card Label -->
+            <h3 id="cardTitle" class="text-xl sm:text-2xl font-black text-white tracking-tight mb-2">
+              Color of Cars in a Lot
+            </h3>
+
+            <!-- Card Sub-description -->
+            <p id="cardDescription" class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-4">
+              Recording values like "Red", "Silver", "Black", or "Blue".
+            </p>
+
+            <div class="text-[11px] text-slate-500 font-medium">
+              <span class="hidden sm:inline"><i class="fa-solid fa-hand-pointer mr-1"></i> Drag to bin OR tap a bucket below</span>
+              <span class="sm:hidden"><i class="fa-solid fa-hand-point-down mr-1"></i> Tap a bucket below to sort</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feedback Alert Overlay -->
+        <div id="feedbackBox" class="mt-4 opacity-0 transition-opacity duration-300 min-h-[44px] flex items-center">
+          <div id="feedbackContent" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2"></div>
+        </div>
+      </div>
+
+      <!-- The 4 Categorical and Numerical Sorting Buckets -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+
+        <!-- BIN 1: NOMINAL -->
+        <div data-type="nominal" 
+             onclick="selectBucket('nominal')" 
+             ondragover="handleDragOver(event)" 
+             ondragleave="handleDragLeave(event)" 
+             ondrop="handleDrop(event, 'nominal')"
+             class="bin-zone cursor-pointer rounded-2xl p-4 sm:p-5 bg-slate-900 border-2 border-blue-500/30 hover:border-blue-500 flex flex-col items-center justify-between text-center group transition shadow-lg hover:shadow-blue-500/10">
+          <div class="w-full">
+            <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/30 flex items-center justify-center text-xl mx-auto mb-2 group-hover:scale-110 transition">
+              <i class="fa-solid fa-tag"></i>
+            </div>
+            <div class="text-[10px] font-mono uppercase font-bold text-blue-400">Categorical</div>
+            <h4 class="text-sm sm:text-base font-extrabold text-white">Nominal</h4>
+            <p class="text-[11px] text-slate-400 mt-1">Names / Labels<br><span class="text-slate-500">Order doesn't matter</span></p>
+          </div>
+          <button class="mt-3 w-full py-1.5 rounded-lg bg-blue-500/20 group-hover:bg-blue-600 text-blue-300 group-hover:text-white text-xs font-bold transition">
+            Drop Here
+          </button>
+        </div>
+
+        <!-- BIN 2: ORDINAL -->
+        <div data-type="ordinal" 
+             onclick="selectBucket('ordinal')" 
+             ondragover="handleDragOver(event)" 
+             ondragleave="handleDragLeave(event)" 
+             ondrop="handleDrop(event, 'ordinal')"
+             class="bin-zone cursor-pointer rounded-2xl p-4 sm:p-5 bg-slate-900 border-2 border-purple-500/30 hover:border-purple-500 flex flex-col items-center justify-between text-center group transition shadow-lg hover:shadow-purple-500/10">
+          <div class="w-full">
+            <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/30 flex items-center justify-center text-xl mx-auto mb-2 group-hover:scale-110 transition">
+              <i class="fa-solid fa-ranking-star"></i>
+            </div>
+            <div class="text-[10px] font-mono uppercase font-bold text-purple-400">Categorical</div>
+            <h4 class="text-sm sm:text-base font-extrabold text-white">Ordinal</h4>
+            <p class="text-[11px] text-slate-400 mt-1">Ordered Ranks<br><span class="text-slate-500">Unequal gaps</span></p>
+          </div>
+          <button class="mt-3 w-full py-1.5 rounded-lg bg-purple-500/20 group-hover:bg-purple-600 text-purple-300 group-hover:text-white text-xs font-bold transition">
+            Drop Here
+          </button>
+        </div>
+
+        <!-- BIN 3: DISCRETE -->
+        <div data-type="discrete" 
+             onclick="selectBucket('discrete')" 
+             ondragover="handleDragOver(event)" 
+             ondragleave="handleDragLeave(event)" 
+             ondrop="handleDrop(event, 'discrete')"
+             class="bin-zone cursor-pointer rounded-2xl p-4 sm:p-5 bg-slate-900 border-2 border-amber-500/30 hover:border-amber-500 flex flex-col items-center justify-between text-center group transition shadow-lg hover:shadow-amber-500/10">
+          <div class="w-full">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center justify-center text-xl mx-auto mb-2 group-hover:scale-110 transition">
+              <i class="fa-solid fa-list-ol"></i>
+            </div>
+            <div class="text-[10px] font-mono uppercase font-bold text-amber-400">Numerical</div>
+            <h4 class="text-sm sm:text-base font-extrabold text-white">Discrete</h4>
+            <p class="text-[11px] text-slate-400 mt-1">Counted Items<br><span class="text-slate-500">Whole units / Gaps</span></p>
+          </div>
+          <button class="mt-3 w-full py-1.5 rounded-lg bg-amber-500/20 group-hover:bg-amber-600 text-amber-300 group-hover:text-white text-xs font-bold transition">
+            Drop Here
+          </button>
+        </div>
+
+        <!-- BIN 4: CONTINUOUS -->
+        <div data-type="continuous" 
+             onclick="selectBucket('continuous')" 
+             ondragover="handleDragOver(event)" 
+             ondragleave="handleDragLeave(event)" 
+             ondrop="handleDrop(event, 'continuous')"
+             class="bin-zone cursor-pointer rounded-2xl p-4 sm:p-5 bg-slate-900 border-2 border-emerald-500/30 hover:border-emerald-500 flex flex-col items-center justify-between text-center group transition shadow-lg hover:shadow-emerald-500/10">
+          <div class="w-full">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xl mx-auto mb-2 group-hover:scale-110 transition">
+              <i class="fa-solid fa-wave-square"></i>
+            </div>
+            <div class="text-[10px] font-mono uppercase font-bold text-emerald-400">Numerical</div>
+            <h4 class="text-sm sm:text-base font-extrabold text-white">Continuous</h4>
+            <p class="text-[11px] text-slate-400 mt-1">Measured Amounts<br><span class="text-slate-500">Infinite decimals possible</span></p>
+          </div>
+          <button class="mt-3 w-full py-1.5 rounded-lg bg-emerald-500/20 group-hover:bg-emerald-600 text-emerald-300 group-hover:text-white text-xs font-bold transition">
+            Drop Here
+          </button>
+        </div>
+      </div>
+
+      <!-- Game Over Modal Overlay -->
+      <div id="gameOverModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 sm:p-8 text-center shadow-2xl relative">
+          <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center text-4xl mx-auto mb-4 shadow-xl shadow-emerald-500/20">
+            <i class="fa-solid fa-trophy"></i>
+          </div>
+          <h3 class="text-2xl font-black text-white mb-1">Session Complete!</h3>
+          <p class="text-sm text-slate-400 mb-6">You've tested your knowledge across real data scenarios.</p>
+
+          <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="bg-slate-850 p-3 rounded-2xl border border-slate-800">
+              <div class="text-[11px] text-slate-400 uppercase font-mono">Final Score</div>
+              <div id="modalFinalScore" class="text-2xl font-black text-white font-mono mt-0.5">0</div>
+            </div>
+            <div class="bg-slate-850 p-3 rounded-2xl border border-slate-800">
+              <div class="text-[11px] text-slate-400 uppercase font-mono">Best Streak</div>
+              <div id="modalBestStreak" class="text-2xl font-black text-amber-400 font-mono mt-0.5">0</div>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <button onclick="restartGame()" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-bold transition shadow-lg shadow-emerald-500/25">
+              Play Again (New Order)
+            </button>
+            <button onclick="switchView('tree')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-300 font-semibold text-sm transition">
+              View Classification Decision Tree
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- VIEW 3: INTERACTIVE DECISION TREE          -->
+    <!-- ========================================== -->
+    <div id="viewTree" class="hidden space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8">
+        <h2 class="text-xl sm:text-2xl font-black text-white mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-sitemap text-emerald-400"></i> The 2-Question Data Classifier
+        </h2>
+        <p class="text-sm text-slate-400 max-w-2xl mb-8">
+          Whenever you encounter a column in a spreadsheet, walk down this exact mental decision flow.
+        </p>
+
+        <!-- Visual Flow Diagram -->
+        <div class="flex flex-col items-center">
+          
+          <!-- Root Node -->
+          <div class="bg-gradient-to-r from-slate-800 to-slate-850 border border-slate-700 px-6 py-4 rounded-2xl shadow-lg text-center max-w-xs w-full">
+            <span class="text-[10px] font-mono uppercase text-emerald-400 font-bold">START HERE</span>
+            <h4 class="text-base font-bold text-white">What does the data describe?</h4>
+          </div>
+
+          <!-- Branch Lines -->
+          <div class="w-1 h-8 bg-slate-700 my-1"></div>
+          <div class="grid grid-cols-2 w-full max-w-2xl gap-4 relative">
+            <div class="h-0.5 bg-slate-750 absolute top-0 left-1/4 right-1/4"></div>
+          </div>
+
+          <!-- Level 1 Splits: Categorical vs Numerical -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl mt-3">
+
+            <!-- LEFT: Categorical Path -->
+            <div class="flex flex-col items-center bg-slate-950/40 p-5 rounded-2xl border border-blue-500/20">
+              <div class="bg-blue-900/40 border border-blue-500/40 px-5 py-3 rounded-xl text-center w-full mb-3">
+                <span class="text-[11px] font-bold text-blue-400 uppercase">Path A: Categories / Labels</span>
+                <h5 class="text-sm font-extrabold text-white">Categorical Data</h5>
+                <p class="text-[11px] text-slate-400 mt-1">"Are these values qualities, labels, or groups?"</p>
+              </div>
+
+              <div class="w-1 h-6 bg-blue-500/45 my-1"></div>
+
+              <!-- Question for Categorical -->
+              <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl text-center text-xs text-slate-300 w-full mb-4">
+                <strong>Ask:</strong> Is there a natural, meaningful rank/order?
+              </div>
+
+              <!-- Categorical Leaves -->
+              <div class="grid grid-cols-2 gap-3 w-full">
+                <!-- Nominal Leaf -->
+                <div class="bg-blue-950/30 border border-blue-500/30 p-3.5 rounded-xl text-center">
+                  <div class="text-[10px] font-bold text-red-400 uppercase">NO ORDER</div>
+                  <div class="font-bold text-blue-300 text-sm mt-0.5">Nominal</div>
+                  <p class="text-[11px] text-slate-400 mt-1">Colors, Dog Breeds, Gender, Yes/No</p>
+                </div>
+                <!-- Ordinal Leaf -->
+                <div class="bg-purple-950/30 border border-purple-500/30 p-3.5 rounded-xl text-center">
+                  <div class="text-[10px] font-bold text-emerald-400 uppercase">YES, ORDERED</div>
+                  <div class="font-bold text-purple-300 text-sm mt-0.5">Ordinal</div>
+                  <p class="text-[11px] text-slate-400 mt-1">Star ratings, School grades (A, B, C), Belt ranks</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT: Numerical Path -->
+            <div class="flex flex-col items-center bg-slate-950/40 p-5 rounded-2xl border border-emerald-500/20">
+              <div class="bg-emerald-900/40 border border-emerald-500/40 px-5 py-3 rounded-xl text-center w-full mb-3">
+                <span class="text-[11px] font-bold text-emerald-400 uppercase">Path B: Quantities / Numbers</span>
+                <h5 class="text-sm font-extrabold text-white">Numerical Data</h5>
+                <p class="text-[11px] text-slate-400 mt-1">"Can you do arithmetic math (averages, totals)?"</p>
+              </div>
+
+              <div class="w-1 h-6 bg-emerald-500/40 my-1"></div>
+
+              <!-- Question for Numerical -->
+              <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl text-center text-xs text-slate-300 w-full mb-4">
+                <strong>Ask:</strong> Is it counted in distinct steps, or measured on a continuum?
+              </div>
+
+              <!-- Numerical Leaves -->
+              <div class="grid grid-cols-2 gap-3 w-full">
+                <!-- Discrete Leaf -->
+                <div class="bg-amber-950/30 border border-amber-500/30 p-3.5 rounded-xl text-center">
+                  <div class="text-[10px] font-bold text-amber-400 uppercase">COUNTED (GAPS)</div>
+                  <div class="font-bold text-amber-300 text-sm mt-0.5">Discrete</div>
+                  <p class="text-[11px] text-slate-400 mt-1">Number of pets, Eggs in carton, Goals scored</p>
+                </div>
+                <!-- Continuous Leaf -->
+                <div class="bg-emerald-950/30 border border-emerald-500/30 p-3.5 rounded-xl text-center">
+                  <div class="text-[10px] font-bold text-emerald-400 uppercase">MEASURED (SMOOTH)</div>
+                  <div class="font-bold text-emerald-300 text-sm mt-0.5">Continuous</div>
+                  <p class="text-[11px] text-slate-400 mt-1">Height, Temperature, Sprint time, Distance</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Pro Tip Box -->
+          <div class="mt-8 max-w-2xl w-full bg-slate-850 border border-slate-800 rounded-2xl p-4 flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="text-xs text-slate-300">
+              <strong class="text-white">Watch out for the "Numeric ID" Trap:</strong> Phone numbers, credit cards, and student ID numbers consist of digits, but they are <strong>Nominal</strong> data because adding or averaging them makes zero sense!
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // ==========================================
+    // AUDIO ENGINE (Tone.js Synthesizer FX)
+    // ==========================================
+    let isSoundEnabled = true;
+    let synth = null;
+
+    function initAudio() {
+      if (!synth && window.Tone) {
+        try {
+          synth = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: "triangle" },
+            envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.2 }
+          }).toDestination();
+          synth.volume.value = -6;
+        } catch(e) {
+          console.warn("Audio Context setup deferred", e);
+        }
+      }
+    }
+
+    function playSound(type) {
+      if (!isSoundEnabled) return;
+      try {
+        if (Tone.context.state !== 'running') {
+          Tone.start();
+        }
+        initAudio();
+        if (!synth) return;
+
+        const now = Tone.now();
+        if (type === 'correct') {
+          synth.triggerAttackRelease(["E5", "G#5", "B5"], "16n", now);
+        } else if (type === 'wrong') {
+          synth.triggerAttackRelease(["C3", "F#2"], "8n", now);
+        } else if (type === 'streak') {
+          synth.triggerAttackRelease(["C5", "E5", "G5", "C6"], "16n", now);
+        } else if (type === 'complete') {
+          synth.triggerAttackRelease(["C4", "G4", "C5", "E5", "G5", "C6"], "8n", now);
+        } else if (type === 'click') {
+          synth.triggerAttackRelease("A4", "32n", now);
+        }
+      } catch (err) {
+        // Fallback gracefully without throwing
+      }
+    }
+
+    function toggleAudio() {
+      isSoundEnabled = !isSoundEnabled;
+      const icon = document.getElementById('audioIcon');
+      if (isSoundEnabled) {
+        icon.className = 'fa-solid fa-volume-high';
+        playSound('click');
+      } else {
+        icon.className = 'fa-solid fa-volume-xmark text-slate-500';
+      }
+    }
+
+    // ==========================================
+    // DATASET REPOSITORY (Carefully curated items)
+    // ==========================================
+    const DATASET = [
+      // --- NOMINAL (13 items) ---
+      {
+        id: 1,
+        title: "Hair Colors of Students",
+        description: "Recorded as Blonde, Brown, Black, Red, or Dyed.",
+        type: "nominal",
+        icon: "fa-solid fa-user",
+        context: "Demographics",
+        hint: "Are these labels or amounts? Does brown mathematically outrank blonde?",
+        explanation: "Nominal! Hair colors are categories with no inherent mathematical ranking."
+      },
+      {
+        id: 2,
+        title: "Blood Types of Donors",
+        description: "Type A, Type B, Type AB, Type O.",
+        type: "nominal",
+        icon: "fa-solid fa-droplet",
+        context: "Medicine",
+        hint: "Is Type A 'greater than' Type B in math?",
+        explanation: "Nominal! Categories with no hierarchical ranking order."
+      },
+      {
+        id: 3,
+        title: "Airport Flight Codes",
+        description: "JFK, LHR, SYD, HND, DXB.",
+        type: "nominal",
+        icon: "fa-solid fa-plane-departure",
+        context: "Aviation",
+        hint: "These are 3-letter identifier tags.",
+        explanation: "Nominal! Distinct labels used to identify places without any inherent mathematical order."
+      },
+      {
+        id: 4,
+        title: "Smartphone Operating System",
+        description: "iOS, Android, KaiOS, Ubuntu Touch.",
+        type: "nominal",
+        icon: "fa-solid fa-mobile-screen-button",
+        context: "Technology",
+        hint: "Labels of platforms without arithmetic value.",
+        explanation: "Nominal! Qualitative labels with no universal arithmetic order."
+      },
+      {
+        id: 5,
+        title: "Postal ZIP Codes / Postcodes",
+        description: "e.g., 90210, 2000, 10001.",
+        type: "nominal",
+        icon: "fa-solid fa-envelope",
+        context: "Geography",
+        hint: "They look like numbers, but does calculating an average ZIP code mean anything?",
+        explanation: "Nominal! Even though they are written with digits, they are geographic labels, not measurable values."
+      },
+      {
+        id: 6,
+        title: "Internet Web Browser",
+        description: "Chrome, Safari, Firefox, Edge.",
+        type: "nominal",
+        icon: "fa-solid fa-globe",
+        context: "Web Analytics",
+        hint: "Are these numerical quantities or software category names?",
+        explanation: "Nominal! Browser brands are unordered categorical labels."
+      },
+      {
+        id: 7,
+        title: "Credit Card Number",
+        description: "A 16-digit card identifier (e.g., 4111 2222 ...).",
+        type: "nominal",
+        icon: "fa-solid fa-credit-card",
+        context: "Finance / Identity",
+        hint: "Can you add two credit card numbers together to get a bigger card?",
+        explanation: "Nominal! Pure numeric identifiers function as labels; arithmetic on them is meaningless."
+      },
+      {
+        id: 8,
+        title: "Marital Status",
+        description: "Single, Married, Divorced, Widowed.",
+        type: "nominal",
+        icon: "fa-solid fa-ring",
+        context: "Demographics",
+        hint: "Is one marital status quantitatively ranked above another?",
+        explanation: "Nominal! Categorical buckets with no inherent ranking."
+      },
+      {
+        id: 9,
+        title: "Music Genres",
+        description: "Rock, Hip-Hop, Jazz, Electronic, Classical.",
+        type: "nominal",
+        icon: "fa-solid fa-music",
+        context: "Streaming Analytics",
+        hint: "Qualitative descriptive genres.",
+        explanation: "Nominal! Classifications representing distinct musical styles without rank."
+      },
+      {
+        id: 10,
+        title: "Student Identification Number",
+        description: "Unique student ID code (e.g., STU-94021).",
+        type: "nominal",
+        icon: "fa-solid fa-id-badge",
+        context: "School Admin",
+        hint: "It identifies a specific individual, like a digital name tag.",
+        explanation: "Nominal! Unique keys and identifiers are categorical labels."
+      },
+      {
+        id: 11,
+        title: "Computer Keyboard Layout",
+        description: "QWERTY, Dvorak, AZERTY, Colemak.",
+        type: "nominal",
+        icon: "fa-solid fa-keyboard",
+        context: "Hardware",
+        hint: "Alternative designs and names with no inherent hierarchy.",
+        explanation: "Nominal! Distinct named layouts."
+      },
+      {
+        id: 12,
+        title: "Pet Species",
+        description: "Dog, Cat, Bird, Reptile, Fish.",
+        type: "nominal",
+        icon: "fa-solid fa-paw",
+        context: "Veterinary Records",
+        hint: "Are dogs mathematically greater than cats?",
+        explanation: "Nominal! Mutually exclusive categories with no ranking."
+      },
+      {
+        id: 13,
+        title: "Car Exterior Color",
+        description: "Red, Midnight Black, Silver, Pearl White.",
+        type: "nominal",
+        icon: "fa-solid fa-car-side",
+        context: "Automotive",
+        hint: "Can you calculate the average color of a parking lot?",
+        explanation: "Nominal! Visual categorical attributes with no sequence."
+      },
+
+      // --- ORDINAL (12 items) ---
+      {
+        id: 14,
+        title: "Olympic Medal Standings",
+        description: "Gold, Silver, and Bronze.",
+        type: "ordinal",
+        icon: "fa-solid fa-medal",
+        context: "Sports Ranking",
+        hint: "There is a definite 1st, 2nd, 3rd rank, but medal differences are categorical.",
+        explanation: "Ordinal! Clear order (Gold > Silver > Bronze), but the difference between performances isn't a fixed scale."
+      },
+      {
+        id: 15,
+        title: "Customer Satisfaction Survey",
+        description: "Very Unsatisfied, Neutral, Satisfied, Very Satisfied.",
+        type: "ordinal",
+        icon: "fa-solid fa-face-smile",
+        context: "Feedback Form",
+        hint: "There is an ordered scale from worst to best, but the mental gap between neutral and happy isn't a physical ruler.",
+        explanation: "Ordinal! Likert scales have a natural sequence or hierarchy."
+      },
+      {
+        id: 16,
+        title: "Military Ranks",
+        description: "Private, Sergeant, Captain, General.",
+        type: "ordinal",
+        icon: "fa-solid fa-shield-halved",
+        context: "Organization",
+        hint: "There is a strict chain of hierarchy, but not an arithmetic calculation.",
+        explanation: "Ordinal! Ordered by seniority and authority, but without measurable numerical units between ranks."
+      },
+      {
+        id: 17,
+        title: "Clothing / T-Shirt Sizes",
+        description: "XS, S, M, L, XL, XXL.",
+        type: "ordinal",
+        icon: "fa-solid fa-shirt",
+        context: "Retail",
+        hint: "There is an obvious sequence from small to large.",
+        explanation: "Ordinal! Clear progression of size, but exact dimensions vary by brand."
+      },
+      {
+        id: 18,
+        title: "Movie Age Content Ratings",
+        description: "G, PG, PG-13, R, NC-17.",
+        type: "ordinal",
+        icon: "fa-solid fa-film",
+        context: "Media Ratings",
+        hint: "Each level represents strictly higher age restrictions.",
+        explanation: "Ordinal! Clearly ordered levels of maturity restrictions."
+      },
+      {
+        id: 19,
+        title: "Education Level Completed",
+        description: "High School, Bachelor's, Master's, Doctorate.",
+        type: "ordinal",
+        icon: "fa-solid fa-graduation-cap",
+        context: "Census Data",
+        hint: "A PhD requires more schooling than a Bachelor's, but the time differences aren't fixed uniform increments.",
+        explanation: "Ordinal! Clear hierarchy of educational attainment."
+      },
+      {
+        id: 20,
+        title: "Spicy Food Heat Rating",
+        description: "Mild, Medium, Hot, Extra Hot, Fire.",
+        type: "ordinal",
+        icon: "fa-solid fa-pepper-hot",
+        context: "Restaurant Menu",
+        hint: "Ordered scale of spiciness.",
+        explanation: "Ordinal! Clear ranks of intensity without fixed interval units."
+      },
+      {
+        id: 21,
+        title: "Pain Scale in Hospital",
+        description: "Rated on a clinical chart: No Pain, Mild, Moderate, Severe, Worst Possible.",
+        type: "ordinal",
+        icon: "fa-solid fa-heart-pulse",
+        context: "Healthcare",
+        hint: "Subjective patient feelings ranked sequentially from lowest to highest.",
+        explanation: "Ordinal! Qualitative hierarchy reflecting increasing discomfort."
+      },
+      {
+        id: 22,
+        title: "Hotel Star Classification",
+        description: "1-Star, 2-Star, 3-Star, 4-Star, 5-Star luxury.",
+        type: "ordinal",
+        icon: "fa-solid fa-hotel",
+        context: "Hospitality",
+        hint: "A 5-star hotel is ranked higher than a 3-star hotel.",
+        explanation: "Ordinal! Categorical tiers indicating ranked levels of service quality."
+      },
+      {
+        id: 23,
+        title: "Academic Letter Grades",
+        description: "Letter marks: A+, A, B, C, D, F.",
+        type: "ordinal",
+        icon: "fa-solid fa-square-poll-vertical",
+        context: "Academics",
+        hint: "Letter grades have a clear order, but an 'A' is a tier rather than a raw point measurement.",
+        explanation: "Ordinal! Ordered buckets representing graded tiers."
+      },
+      {
+        id: 24,
+        title: "Socioeconomic Status (SES)",
+        description: "Low Income, Middle Income, Upper Income.",
+        type: "ordinal",
+        icon: "fa-solid fa-coins",
+        context: "Sociology",
+        hint: "Broad societal groups arranged in hierarchical tiers.",
+        explanation: "Ordinal! Ranked classifications representing economic brackets."
+      },
+      {
+        id: 25,
+        title: "Martial Arts Belt Colors",
+        description: "White, Yellow, Green, Blue, Brown, Black.",
+        type: "ordinal",
+        icon: "fa-solid fa-user-ninja",
+        context: "Martial Arts",
+        hint: "Each color signifies a higher skill rank in order.",
+        explanation: "Ordinal! Standard progression hierarchy of mastery."
+      },
+
+      // --- DISCRETE (12 items) ---
+      {
+        id: 26,
+        title: "Number of Students in a Class",
+        description: "Counting human beings present in Room 304.",
+        type: "discrete",
+        icon: "fa-solid fa-users-rectangle",
+        context: "Attendance",
+        hint: "Can you have 24.3 students in a classroom?",
+        explanation: "Discrete! You count people in distinct, whole integer quantities."
+      },
+      {
+        id: 27,
+        title: "Number of Flips of a Coin",
+        description: "Counting flips until landing on heads.",
+        type: "discrete",
+        icon: "fa-solid fa-coins",
+        context: "Probability",
+        hint: "Flips happen in whole counts: 1 flip, 2 flips, 3 flips...",
+        explanation: "Discrete! Counted values without fractions."
+      },
+      {
+        id: 28,
+        title: "Books on a Library Shelf",
+        description: "Count of physical books present.",
+        type: "discrete",
+        icon: "fa-solid fa-book",
+        context: "Inventory",
+        hint: "You cannot have 14.8 books on the shelf inventory.",
+        explanation: "Discrete! Whole, countable objects."
+      },
+      {
+        id: 29,
+        title: "Goals Scored in a Soccer Match",
+        description: "Final match score: 2 goals to 1 goal.",
+        type: "discrete",
+        icon: "fa-solid fa-futbol",
+        context: "Match Stats",
+        hint: "Can a referee award 0.75 of a goal?",
+        explanation: "Discrete! Counted strictly in integer increments."
+      },
+      {
+        id: 30,
+        title: "Number of Siblings You Have",
+        description: "e.g., 0 brothers/sisters, 1 sibling, 2 siblings, etc.",
+        type: "discrete",
+        icon: "fa-solid fa-people-roof",
+        context: "Family Demographics",
+        hint: "Can you have 1.47 siblings?",
+        explanation: "Discrete! Family members are counted in distinct whole numbers."
+      },
+      {
+        id: 31,
+        title: "Number of Cars in a Parking Lot",
+        description: "Automated gate sensor tally: 142 vehicles.",
+        type: "discrete",
+        icon: "fa-solid fa-square-parking",
+        context: "Traffic Monitoring",
+        hint: "Vehicles entering or leaving are counted as individual units.",
+        explanation: "Discrete! You count vehicles with distinct integer steps."
+      },
+      {
+        id: 32,
+        title: "Website Pageviews / Clicks",
+        description: "Total clicks on a 'Buy Now' button: 4,891 clicks.",
+        type: "discrete",
+        icon: "fa-solid fa-arrow-pointer",
+        context: "Web Analytics",
+        hint: "Each click is an atomic event.",
+        explanation: "Discrete! Digital click events occur in integer counts."
+      },
+      {
+        id: 33,
+        title: "Hospital Bed Occupancy Count",
+        description: "38 of 50 patient beds currently occupied.",
+        type: "discrete",
+        icon: "fa-solid fa-bed",
+        context: "Healthcare Ops",
+        hint: "Can an occupied bed count be 38.64 beds?",
+        explanation: "Discrete! Physical furniture and rooms are counted whole."
+      },
+      {
+        id: 34,
+        title: "Number of Teeth in an Adult Mouth",
+        description: "A patient has 30 teeth remaining.",
+        type: "discrete",
+        icon: "fa-solid fa-tooth",
+        context: "Dentistry",
+        hint: "Counted anatomy units.",
+        explanation: "Discrete! Individual teeth are counted as whole entities."
+      },
+      {
+        id: 35,
+        title: "Eggs in an Egg Carton",
+        description: "Checking if a carton has 6, 12, or 18 eggs.",
+        type: "discrete",
+        icon: "fa-solid fa-egg",
+        context: "Grocery Packaging",
+        hint: "Counted items in a box.",
+        explanation: "Discrete! Whole items that don't come in continuous fractions in sales."
+      },
+      {
+        id: 36,
+        title: "Earthquake Tremors Felt This Month",
+        description: "Seismograph detected 7 separate tremor events.",
+        type: "discrete",
+        icon: "fa-solid fa-house-crack",
+        context: "Geology",
+        hint: "Count of distinct earthquake events.",
+        explanation: "Discrete! Counting the number of occurrences of an event."
+      },
+      {
+        id: 37,
+        title: "Languages Spoken Fluently",
+        description: "Number of spoken languages: 1, 2, or 3.",
+        type: "discrete",
+        icon: "fa-solid fa-language",
+        context: "Linguistics",
+        hint: "How many full languages does a polyglot speak?",
+        explanation: "Discrete! Whole countable skills."
+      },
+
+      // --- CONTINUOUS (13 items) ---
+      {
+        id: 38,
+        title: "Exact 100m Sprint Time",
+        description: "Recorded on digital laser timer: 9.58 seconds, 9.61 seconds.",
+        type: "continuous",
+        icon: "fa-solid fa-stopwatch",
+        context: "Athletics",
+        hint: "Can time be divided into finer decimals (milliseconds, microseconds)?",
+        explanation: "Continuous! Time is a smooth measurement that can have infinite precision."
+      },
+      {
+        id: 39,
+        title: "Coffee Temperature in Mug",
+        description: "Measured at 65.4°C, cooling slowly toward room temp.",
+        type: "continuous",
+        icon: "fa-solid fa-mug-hot",
+        context: "Thermodynamics",
+        hint: "Temperature flows along a continuous scale, not jumping in whole integer blocks.",
+        explanation: "Continuous! Measured along a seamless scale with decimal points."
+      },
+      {
+        id: 40,
+        title: "Weight of Luggage Bag",
+        description: "Digital airport scale showing 22.85 kilograms.",
+        type: "continuous",
+        icon: "fa-solid fa-suitcase-rolling",
+        context: "Airport Check-in",
+        hint: "Weight is measured, not counted.",
+        explanation: "Continuous! Measured physical attribute with potential decimal precision."
+      },
+      {
+        id: 41,
+        title: "Fuel Efficiency (Miles Per Gallon)",
+        description: "Car driving at 34.72 mpg on highway.",
+        type: "continuous",
+        icon: "fa-solid fa-gas-pump",
+        context: "Automotive",
+        hint: "A ratio of distance over volume; measured continuously.",
+        explanation: "Continuous! Measured continuous rate that can take any decimal value."
+      },
+      {
+        id: 42,
+        title: "Human Height",
+        description: "Measuring a person: 178.4 cm (or 5 ft 10.23 inches).",
+        type: "continuous",
+        icon: "fa-solid fa-ruler-vertical",
+        context: "Physical Exam",
+        hint: "Can someone grow by half a millimeter between measurements?",
+        explanation: "Continuous! Height flows seamlessly along a measurement scale."
+      },
+      {
+        id: 43,
+        title: "Volume of Water in a Swimming Pool",
+        description: "Meter reading: 45,210.75 Liters.",
+        type: "continuous",
+        icon: "fa-solid fa-water",
+        context: "Civil Engineering",
+        hint: "Liquid volume can be divided into infinitely smaller fractions.",
+        explanation: "Continuous! Fluid volume is measured with continuous decimals."
+      },
+      {
+        id: 44,
+        title: "Atmospheric Air Pressure",
+        description: "Barometer reading: 1013.25 millibars (hPa).",
+        type: "continuous",
+        icon: "fa-solid fa-gauge-high",
+        context: "Meteorology",
+        hint: "Pressure changes continuously as weather fronts move.",
+        explanation: "Continuous! Pressure is a measured physical continuum."
+      },
+      {
+        id: 45,
+        title: "Speed of a Pitch in Baseball",
+        description: "Radar gun detects 98.42 miles per hour.",
+        type: "continuous",
+        icon: "fa-solid fa-baseball",
+        context: "Sports Analytics",
+        hint: "Velocity is measured through physical distance over time.",
+        explanation: "Continuous! Velocity can exist anywhere along a continuous spectrum."
+      },
+      {
+        id: 46,
+        title: "Electricity Consumed (Kilowatt-Hours)",
+        description: "Utility meter records 314.89 kWh consumed.",
+        type: "continuous",
+        icon: "fa-solid fa-bolt",
+        context: "Utility Billing",
+        hint: "Power flows continuously over time.",
+        explanation: "Continuous! Energy consumption is a continuous measurement."
+      },
+      {
+        id: 47,
+        title: "Earthquake Magnitude (Richter Scale)",
+        description: "Seismograph calculates 6.42 on the Richter scale.",
+        type: "continuous",
+        icon: "fa-solid fa-volcano",
+        context: "Seismology",
+        hint: "The energy release is measured on a continuous logarithmic scale.",
+        explanation: "Continuous! Magnitude is a measured continuous value with decimals."
+      },
+      {
+        id: 48,
+        title: "Percentage of Battery Remaining",
+        description: "Phone reports 67.3% battery health remaining.",
+        type: "continuous",
+        icon: "fa-solid fa-battery-half",
+        context: "Electronics",
+        hint: "Battery chemical charge drains on a seamless gradient.",
+        explanation: "Continuous! Electrical charge drains continuously across real numbers."
+      },
+      {
+        id: 49,
+        title: "Blood Glucose Level",
+        description: "Finger prick monitor reads 95.6 mg/dL.",
+        type: "continuous",
+        icon: "fa-solid fa-syringe",
+        context: "Endocrinology",
+        hint: "Concentration of molecules in a fluid.",
+        explanation: "Continuous! Chemical concentration is a measured physical quantity."
+      },
+      {
+        id: 50,
+        title: "Distance Between Two GPS Points",
+        description: "Drone telemetry shows 14.832 kilometers to destination.",
+        type: "continuous",
+        icon: "fa-solid fa-location-crosshairs",
+        context: "Navigation",
+        hint: "Spatial distance can be measured with infinite decimal accuracy.",
+        explanation: "Continuous! Distance is continuous space measured with arbitrary precision."
+      }
+    ];
+
+    // ==========================================
+    // GAME STATE & CONTROLLER
+    // ==========================================
+    let gameCards = [];
+    let currentCardIndex = 0;
+    let score = 0;
+    let streak = 0;
+    let maxStreak = 0;
+    let isProcessing = false;
+
+    function shuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function initGame() {
+      gameCards = shuffle(DATASET);
+      currentCardIndex = 0;
+      score = 0;
+      streak = 0;
+      maxStreak = 0;
+      isProcessing = false;
+
+      document.getElementById('cardCountTotal').textContent = gameCards.length;
+      document.getElementById('gameOverModal').classList.add('hidden');
+      updateHUD();
+      renderCurrentCard();
+      hideHint();
+    }
+
+    function updateHUD() {
+      document.getElementById('gameScore').textContent = score;
+      document.getElementById('gameStreak').textContent = streak;
+      document.getElementById('cardCountCurrent').textContent = Math.min(currentCardIndex + 1, gameCards.length);
+
+      const fire = document.getElementById('streakFire');
+      if (streak >= 3) {
+        fire.classList.remove('hidden');
+      } else {
+        fire.classList.add('hidden');
+      }
+    }
+
+    function renderCurrentCard() {
+      if (currentCardIndex >= gameCards.length) {
+        endGame();
+        return;
+      }
+
+      const card = gameCards[currentCardIndex];
+      const cardEl = document.getElementById('activeDataCard');
+
+      // Animate card entrance
+      cardEl.style.transform = 'translateY(20px) scale(0.95)';
+      cardEl.style.opacity = '0';
+
+      setTimeout(() => {
+        document.getElementById('cardContextTag').textContent = card.context;
+        document.getElementById('cardIcon').innerHTML = `<i class="${card.icon}"></i>`;
+        document.getElementById('cardTitle').textContent = card.title;
+        document.getElementById('cardDescription').textContent = card.description;
+
+        cardEl.style.transform = 'translateY(0) scale(1)';
+        cardEl.style.opacity = '1';
+      }, 150);
+
+      hideHint();
+    }
+
+    function showCardHint() {
+      if (currentCardIndex >= gameCards.length) return;
+      const card = gameCards[currentCardIndex];
+      const bubble = document.getElementById('hintBubble');
+      const text = document.getElementById('hintText');
+      text.textContent = card.hint;
+      bubble.classList.remove('hidden');
+      playSound('click');
+    }
+
+    function hideHint() {
+      document.getElementById('hintBubble').classList.add('hidden');
+    }
+
+    function showFeedback(isCorrect, message) {
+      const feedbackBox = document.getElementById('feedbackBox');
+      const feedbackContent = document.getElementById('feedbackContent');
+
+      if (isCorrect) {
+        feedbackContent.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+        feedbackContent.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> ${message}`;
+      } else {
+        feedbackContent.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 bg-rose-500/20 text-rose-300 border border-rose-500/30';
+        feedbackContent.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400"></i> ${message}`;
+      }
+
+      feedbackBox.classList.remove('opacity-0');
+      setTimeout(() => {
+        feedbackBox.classList.add('opacity-0');
+      }, 2400);
+    }
+
+    function selectBucket(chosenType) {
+      if (isProcessing || currentCardIndex >= gameCards.length) return;
+      isProcessing = true;
+
+      const currentItem = gameCards[currentCardIndex];
+      const isCorrect = (chosenType === currentItem.type);
+
+      if (isCorrect) {
+        streak++;
+        if (streak > maxStreak) maxStreak = streak;
+        const multiplier = Math.min(streak, 5);
+        const pts = 100 * multiplier;
+        score += pts;
+
+        if (streak >= 3) {
+          playSound('streak');
+        } else {
+          playSound('correct');
+        }
+
+        showFeedback(true, `Spot on! +${pts} pts. ${currentItem.explanation}`);
+      } else {
+        streak = 0;
+        playSound('wrong');
+        showFeedback(false, `Not quite! It was ${currentItem.type.toUpperCase()}. ${currentItem.explanation}`);
+      }
+
+      updateHUD();
+
+      // Card exit animation
+      const cardEl = document.getElementById('activeDataCard');
+      cardEl.style.transform = isCorrect ? 'scale(1.08) translateY(-25px)' : 'translateX(15px) scale(0.95)';
+      cardEl.style.opacity = '0';
+
+      setTimeout(() => {
+        currentCardIndex++;
+        renderCurrentCard();
+        isProcessing = false;
+      }, 450);
+    }
+
+    function endGame() {
+      playSound('complete');
+      document.getElementById('modalFinalScore').textContent = score;
+      document.getElementById('modalBestStreak').textContent = maxStreak;
+      document.getElementById('gameOverModal').classList.remove('hidden');
+    }
+
+    function restartGame() {
+      initGame();
+    }
+
+    // ==========================================
+    // DRAG AND DROP HANDLERS
+    // ==========================================
+    const activeCard = document.getElementById('activeDataCard');
+
+    activeCard.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', 'card-dragging');
+      activeCard.classList.add('opacity-60');
+      playSound('click');
+    });
+
+    activeCard.addEventListener('dragend', () => {
+      activeCard.classList.remove('opacity-60');
+    });
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add('drag-hover');
+    }
+
+    function handleDragLeave(e) {
+      e.currentTarget.classList.remove('drag-hover');
+    }
+
+    function handleDrop(e, bucketType) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('drag-hover');
+      selectBucket(bucketType);
+    }
+
+    // ==========================================
+    // VIEW SWITCHER
+    // ==========================================
+    function switchView(viewName) {
+      playSound('click');
+
+      const learnView = document.getElementById('viewLearn');
+      const gameView = document.getElementById('viewGame');
+      const treeView = document.getElementById('viewTree');
+
+      const learnBtn = document.getElementById('tabLearnBtn');
+      const gameBtn = document.getElementById('tabGameBtn');
+      const treeBtn = document.getElementById('tabTreeBtn');
+
+      // Hide all views
+      learnView.classList.add('hidden');
+      gameView.classList.add('hidden');
+      treeView.classList.add('hidden');
+
+      // Reset button styles
+      [learnBtn, gameBtn, treeBtn].forEach(btn => {
+        btn.className = "px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-slate-700/50";
+      });
+
+      const activeStyle = "px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 bg-emerald-500 text-white font-semibold shadow";
+
+      if (viewName === 'learn') {
+        learnView.classList.remove('hidden');
+        learnBtn.className = activeStyle;
+      } else if (viewName === 'game') {
+        gameView.classList.remove('hidden');
+        gameBtn.className = activeStyle;
+        if (gameCards.length === 0) {
+          initGame();
+        }
+      } else if (viewName === 'tree') {
+        treeView.classList.remove('hidden');
+        treeBtn.className = activeStyle;
+      }
+    }
+
+    // ==========================================
+    // INITIALIZATION ON LOAD
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', () => {
+      initGame();
+    });
+  </script>
+</body>
+</html>
