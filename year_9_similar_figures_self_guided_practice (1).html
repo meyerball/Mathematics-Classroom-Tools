@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Year 9 Maths: Similar Figures (Sides & Angles)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .svg-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      fill: #1e293b;
+      user-select: none;
+    }
+    .svg-pronumeral {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      fill: #2563eb;
+      font-style: italic;
+      user-select: none;
+    }
+    .svg-angle-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      fill: #0f766e;
+      user-select: none;
+    }
+    .svg-angle-pronumeral {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      fill: #d97706;
+      font-style: italic;
+      user-select: none;
+    }
+    .transition-all-smooth {
+      transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.95); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-pop {
+      animation: popIn 0.25s ease-out forwards;
+    }
+    /* Remove any browser spinner arrows completely */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation & Progress Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-extrabold text-lg shadow-sm">
+          ~
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">Similar Figures: Sides &amp; Angles</h1>
+          <p class="text-xs text-slate-500">Year 9 Mathematics • Self-Guided Practice</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button id="toggleRecapBtn" onclick="toggleRecap()" class="px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100 transition flex items-center gap-1.5">
+          <span>💡</span>
+          <span id="recapBtnText">Show Rules Recap</span>
+        </button>
+        <div id="headerScoreBadge" class="hidden sm:flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+          <span class="text-xs font-medium text-slate-600">Score:</span>
+          <span id="headerScoreText" class="text-sm font-bold text-indigo-600">0 / 9</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Collapsible Quick Recap Banner -->
+    <div id="recapBanner" class="hidden bg-slate-900 text-white border-t border-slate-800">
+      <div class="max-w-5xl mx-auto px-4 py-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-amber-400">3 Golden Rules of Similar Figures</h2>
+          <button onclick="toggleRecap()" class="text-xs text-slate-400 hover:text-white underline">Hide Recap</button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Rule 1 -->
+          <div class="bg-slate-800/90 rounded-xl p-4 border border-slate-700">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-300 font-bold text-xs flex items-center justify-center border border-teal-500/40">1</span>
+              <h3 class="font-bold text-sm text-teal-300">Angles Stay Equal</h3>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Corresponding angles in similar shapes are <strong>identical</strong>. Never multiply or divide angles by the scale factor!
+            </p>
+          </div>
+          <!-- Rule 2 -->
+          <div class="bg-slate-800/90 rounded-xl p-4 border border-slate-700">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-300 font-bold text-xs flex items-center justify-center border border-indigo-500/40">2</span>
+              <h3 class="font-bold text-sm text-indigo-300">Scale Factor (<em class="font-serif">k</em>)</h3>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Find <strong class="text-white"><em class="font-serif">k</em> = Target Side ÷ Known Side</strong> using two matching sides. Watch out for shapes that are rotated or flipped!
+            </p>
+          </div>
+          <!-- Rule 3 -->
+          <div class="bg-slate-800/90 rounded-xl p-4 border border-slate-700">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-300 font-bold text-xs flex items-center justify-center border border-amber-500/40">3</span>
+              <h3 class="font-bold text-sm text-amber-300">Nested Triangles</h3>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              When one triangle sits inside another, <strong>add the segments together</strong> to get the full side length of the large triangle.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
+
+    <!-- SCREEN 1: Welcome & Quick Recap -->
+    <section id="welcomeScreen" class="max-w-3xl mx-auto animate-pop">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-7 text-white">
+          <span class="inline-block px-2.5 py-1 rounded-full bg-white/15 text-xs font-semibold tracking-wide mb-2">
+            Independent Lesson Activity
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold mb-2">Finding Sides &amp; Angles of Similar Figures</h2>
+          <p class="text-indigo-100 text-sm sm:text-base">
+            Work through the 3 levels below at your own pace. Built-in hints, visual tools, and worked solutions will guide you every step of the way.
+          </p>
+        </div>
+
+        <div class="p-6 space-y-6">
+          <!-- Rules Cards -->
+          <div>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-3">Quick Recap Before You Start</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+              <div class="p-4 rounded-xl bg-teal-50/70 border border-teal-200/80">
+                <div class="text-teal-700 font-bold text-sm mb-1">1. Matching Angles = Equal</div>
+                <p class="text-xs text-slate-700 leading-relaxed">
+                  Enlarging or shrinking a shape does <strong>not</strong> change its angles. If an angle is 65° in the small shape, the matching angle is 65° in the big shape.
+                </p>
+              </div>
+              <div class="p-4 rounded-xl bg-indigo-50/70 border border-indigo-200/80">
+                <div class="text-indigo-700 font-bold text-sm mb-1">2. Scale Factor (<em class="font-serif">k</em>)</div>
+                <p class="text-xs text-slate-700 leading-relaxed">
+                  Match up corresponding sides (check angle symbols!). Divide the side in the shape you <strong>want</strong> by the matching side you <strong>know</strong>.
+                </p>
+              </div>
+              <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200/80">
+                <div class="text-amber-800 font-bold text-sm mb-1">3. Overlapping Shapes</div>
+                <p class="text-xs text-slate-700 leading-relaxed">
+                  For triangles inside triangles, sketch or separate them! Remember to <strong>add</strong> the two parts of a long side together.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Level Preview -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 flex items-start gap-2.5">
+              <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">Lvl 1</span>
+              <div>
+                <div class="font-bold text-slate-800">Rotated &amp; Flipped</div>
+                <div class="text-slate-500">3 Qs • Multi-variable + Align tool</div>
+              </div>
+            </div>
+            <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 flex items-start gap-2.5">
+              <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-bold">Lvl 2</span>
+              <div>
+                <div class="font-bold text-slate-800">Nested Triangles</div>
+                <div class="text-slate-500">3 Qs • Segment sums + Split tool</div>
+              </div>
+            </div>
+            <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 flex items-start gap-2.5">
+              <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-bold">Lvl 3</span>
+              <div>
+                <div class="font-bold text-slate-800">Bowtie &amp; Inverted</div>
+                <div class="text-slate-500">3 Qs • Stage 5.2/5.3 extension</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Student Name Input & Start Button -->
+          <div class="pt-2 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-end justify-between gap-4">
+            <div class="flex-1">
+              <label for="studentNameInput" class="block text-xs font-bold text-slate-700 mb-1">
+                Your Name (for your end-of-lesson certificate):
+              </label>
+              <input
+                type="text"
+                id="studentNameInput"
+                placeholder="e.g. Alex Taylor"
+                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              />
+            </div>
+            <button
+              onclick="startPractice()"
+              class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white font-bold text-sm shadow-sm transition flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>Start Level 1</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: Active Question Interface -->
+    <section id="practiceScreen" class="hidden space-y-5">
+
+      <!-- Level Stepper & Progress Bar -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div class="flex items-center gap-2">
+            <span id="levelBadge" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800">
+              Level 1: Rotated &amp; Flipped
+            </span>
+            <span id="questionCounterText" class="text-sm font-semibold text-slate-700">
+              Question 1 of 3
+            </span>
+          </div>
+          <div class="flex items-center gap-1.5" id="progressDots">
+            <!-- Dots injected by JS -->
+          </div>
+        </div>
+        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+          <div id="overallProgressBar" class="bg-indigo-600 h-full transition-all duration-500" style="width: 8%"></div>
+        </div>
+      </div>
+
+      <!-- Main Question Workspace (2 Columns on Desktop) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+        <!-- Left Column: Interactive SVG Diagram Card -->
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+          <div class="px-5 py-3.5 border-b border-slate-100 bg-slate-50/70 flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Similar Figures Diagram</span>
+            <!-- Interactive Visual Aid Button (Appears in Level 2 & Level 3) -->
+            <button
+              id="visualAidBtn"
+              onclick="toggleVisualAid()"
+              class="hidden px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition flex items-center gap-1.5 cursor-pointer"
+            >
+              <span id="visualAidIcon">🔄</span>
+              <span id="visualAidLabel">Align Shapes</span>
+            </button>
+          </div>
+
+          <!-- SVG Viewport -->
+          <div class="p-4 sm:p-6 flex items-center justify-center bg-white min-h-[290px] sm:min-h-[330px] relative">
+            <div id="svgContainer" class="w-full max-w-[500px] flex items-center justify-center">
+              <!-- Dynamic SVG rendered here -->
+            </div>
+          </div>
+
+          <!-- Diagram Caption / Note -->
+          <div id="diagramNote" class="px-5 py-3 bg-slate-50 border-t border-slate-100 text-xs text-slate-600 flex items-center justify-between">
+            <span>Note: Diagrams are not drawn to exact scale.</span>
+            <span id="visualAidStatus" class="font-semibold text-indigo-600 hidden"></span>
+          </div>
+        </div>
+
+        <!-- Right Column: Step-by-Step Questions & Scaffolding -->
+        <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5">
+          <div>
+            <h3 id="questionPrompt" class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+              The two triangles are similar. Find the values of the pronumerals.
+            </h3>
+            <p class="text-xs text-slate-500 mt-1">
+              Enter decimals or fractions (e.g. <code class="bg-slate-100 px-1 rounded">7.5</code> or <code class="bg-slate-100 px-1 rounded">15/2</code>).
+            </p>
+          </div>
+
+          <!-- Dynamic Multi-Variable Inputs Container -->
+          <div id="stepsContainer" class="space-y-3.5">
+            <!-- Step boxes rendered dynamically for 2 or 3 pronumerals -->
+          </div>
+
+          <!-- Feedback Message Box -->
+          <div id="feedbackBox" class="hidden p-3.5 rounded-xl text-xs sm:text-sm leading-relaxed border"></div>
+
+          <!-- Progressive Hint Box -->
+          <div id="hintBox" class="hidden p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs space-y-1.5">
+            <div class="font-bold flex items-center gap-1.5">
+              <span>💡</span>
+              <span id="hintTitle">Hint 1</span>
+            </div>
+            <p id="hintText" class="leading-relaxed"></p>
+          </div>
+
+          <!-- Worked Solution Box (Unlocked after 2 attempts or completion) -->
+          <div id="solutionBox" class="hidden p-4 rounded-xl bg-indigo-50 border border-indigo-200 text-slate-800 text-xs space-y-2">
+            <div class="font-bold text-indigo-900 flex items-center gap-1.5">
+              <span>📝</span>
+              <span>Step-by-Step Worked Solution</span>
+            </div>
+            <div id="solutionText" class="space-y-1.5 leading-relaxed text-slate-700"></div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="pt-1 flex flex-wrap items-center gap-2.5">
+            <button
+              id="checkBtn"
+              onclick="checkAnswers()"
+              class="flex-1 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-sm transition cursor-pointer"
+            >
+              Check Answer
+            </button>
+
+            <button
+              id="nextBtn"
+              onclick="nextQuestion()"
+              class="hidden flex-1 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-sm transition cursor-pointer"
+            >
+              Next Question →
+            </button>
+          </div>
+
+          <!-- Secondary Help Bar -->
+          <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
+            <button
+              id="hintBtn"
+              onclick="revealHint()"
+              class="text-amber-700 hover:text-amber-900 font-semibold flex items-center gap-1 py-1 cursor-pointer"
+            >
+              <span>💡</span>
+              <span id="hintBtnLabel">Need a Hint? (0/2)</span>
+            </button>
+
+            <button
+              id="showSolutionBtn"
+              onclick="revealSolution()"
+              class="hidden text-indigo-600 hover:text-indigo-800 font-semibold underline py-1 cursor-pointer"
+            >
+              Show Worked Solution
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: Level Transition Banner -->
+    <section id="levelCompleteScreen" class="hidden max-w-xl mx-auto animate-pop">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 text-center space-y-5">
+        <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto">
+          🎉
+        </div>
+        <div>
+          <span id="lvlCompleteTag" class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider">
+            Level 1 Complete
+          </span>
+          <h2 id="lvlCompleteTitle" class="text-2xl font-extrabold text-slate-900 mt-2">Awesome work!</h2>
+          <p id="lvlCompleteDesc" class="text-sm text-slate-600 mt-1">
+            You've mastered standard similar figures. Ready for rotated and flipped shapes?
+          </p>
+        </div>
+
+        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 inline-block min-w-[200px]">
+          <div class="text-xs text-slate-500 font-semibold uppercase">Level Score</div>
+          <div id="lvlCompleteScore" class="text-2xl font-extrabold text-indigo-600 mt-0.5">3 / 3</div>
+        </div>
+
+        <div>
+          <button
+            id="startNextLevelBtn"
+            onclick="proceedToNextLevel()"
+            class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-sm transition cursor-pointer"
+          >
+            Continue to Level 2 →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 4: Final Completion Certificate -->
+    <section id="certificateScreen" class="hidden max-w-2xl mx-auto animate-pop">
+      <div class="bg-white rounded-2xl border-2 border-indigo-600 shadow-md overflow-hidden">
+        <div class="bg-indigo-600 px-6 py-5 text-white text-center">
+          <p class="text-xs uppercase tracking-widest text-indigo-200 font-bold">Year 9 Mathematics • NSW Stage 5.2 / 5.3</p>
+          <h2 class="text-2xl sm:text-3xl font-extrabold mt-1">Certificate of Completion</h2>
+        </div>
+
+        <div class="p-6 sm:p-8 text-center space-y-6">
+          <div>
+            <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">This certifies that</p>
+            <div id="certStudentName" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1 border-b-2 border-slate-200 inline-block px-6 pb-1">
+              Year 9 Student
+            </div>
+            <p class="text-sm text-slate-600 mt-3">
+              has completed the self-guided revision module on <strong>Finding Sides &amp; Angles of Similar Figures</strong>.
+            </p>
+          </div>
+
+          <!-- Score Breakdown Grid -->
+          <div class="grid grid-cols-3 gap-3 text-left">
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="text-xs font-bold text-emerald-700">Level 1: Rotated</div>
+              <div id="certLvl1Score" class="text-lg font-extrabold text-slate-900 mt-1">3 / 3</div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="text-xs font-bold text-blue-700">Level 2: Nested</div>
+              <div id="certLvl2Score" class="text-lg font-extrabold text-slate-900 mt-1">3 / 3</div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="text-xs font-bold text-purple-700">Level 3: Bowtie/Inv</div>
+              <div id="certLvl3Score" class="text-lg font-extrabold text-slate-900 mt-1">3 / 3</div>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-between">
+            <div class="text-left">
+              <div class="text-xs font-bold text-indigo-800 uppercase">Total Module Score</div>
+              <div id="certTimestamp" class="text-xs text-indigo-600 mt-0.5">Completed on ...</div>
+            </div>
+            <div id="certTotalScore" class="text-2xl sm:text-3xl font-extrabold text-indigo-700">
+              9 / 9
+            </div>
+          </div>
+
+          <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 font-medium">
+            📸 <strong>Show this screen to your relief teacher</strong> or take a screenshot as proof of your completed work!
+          </div>
+
+          <div class="pt-2 flex flex-wrap justify-center gap-3">
+            <button
+              onclick="restartAll()"
+              class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-xs sm:text-sm transition cursor-pointer"
+            >
+              ↻ Practice Again
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // =========================================================================
+    // QUESTION BANK (9 Challenging Multi-Variable Questions • 3 Per Level)
+    // =========================================================================
+    const QUESTIONS = [
+      // =======================================================================
+      // LEVEL 1: ROTATED & REFLECTED MULTI-VARIABLE FIGURES (Q1–Q3)
+      // =======================================================================
+      {
+        level: 1,
+        levelName: "Level 1: Rotated & Flipped",
+        levelColor: "bg-emerald-100 text-emerald-800",
+        hasVisualAid: true,
+        aidLabel: "Rotate & Align",
+        aidActiveLabel: "Reset Rotation",
+        prompt: "These two scalene triangles are similar, but the second is rotated. Find angle x and sides a and b.",
+        steps: [
+          { type: "angle", label: "Part 1: Find unknown angle x", varName: "x =", answer: 38, displayAnswer: "38°", unit: "°" },
+          { type: "side", label: "Part 2: Find side a (matching 6 cm)", varName: "a =", answer: 9, displayAnswer: "9 cm", unit: "cm" },
+          { type: "side", label: "Part 3: Find side b (matching 10 cm)", varName: "b =", answer: 15, displayAnswer: "15 cm", unit: "cm" }
+        ],
+        hints: [
+          "Click 'Rotate & Align' above the diagram! Notice the dot marks the 38° angle, and the double-arc marks 62°.",
+          "The side between the dot (38°) and double-arc (62°) goes from 8 cm to 12 cm. Scale factor k = 12 ÷ 8 = 1.5. Multiply 6 cm and 10 cm by 1.5!"
+        ],
+        solution: [
+          "<strong>Angle x:</strong> The dot marks corresponding angles, so <strong>x = 38°</strong>.",
+          "<strong>Scale Factor (k):</strong> Side between the dot (38°) and double-arc (62°) goes from 8 cm to 12 cm: k = 12 ÷ 8 = <strong>1.5</strong>.",
+          "<strong>Side a:</strong> Opposite the double-arc (62°): a = 6 × 1.5 = <strong>9 cm</strong>.",
+          "<strong>Side b:</strong> Opposite the dot (38°): b = 10 × 1.5 = <strong>15 cm</strong>."
+        ],
+        renderSVG: (aidActive) => aidActive ? `
+          <svg width="470" height="235" viewBox="0 0 470 235" class="w-full h-auto animate-pop">
+            <!-- Small Reference Triangle -->
+            <polygon points="35,185 155,185 60,85" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="67" cy="112" r="3.5" fill="#0f766e"/>
+            <text x="75" y="122" class="svg-angle-label">38°</text>
+            <path d="M 131,185 A 24,24 0 0,1 138,167" fill="none" stroke="#0f766e" stroke-width="1.8"/>
+            <path d="M 126,185 A 29,29 0 0,1 134,163" fill="none" stroke="#0f766e" stroke-width="1.8"/>
+            <text x="103" y="177" class="svg-angle-label">62°</text>
+            <text x="8" y="138" class="svg-label">6 cm</text>
+            <text x="82" y="205" class="svg-label">8 cm</text>
+            <text x="112" y="128" class="svg-label">10 cm</text>
+
+            <!-- Large Triangle (Aligned Side-by-Side) -->
+            <polygon points="225,200 405,200 262,50" fill="#f0fdf4" stroke="#059669" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="272" cy="86" r="4" fill="#d97706"/>
+            <text x="282" y="98" class="svg-angle-pronumeral">x°</text>
+            <path d="M 372,200 A 33,33 0 0,1 382,176" fill="none" stroke="#0f766e" stroke-width="1.8"/>
+            <path d="M 366,200 A 39,39 0 0,1 377,172" fill="none" stroke="#0f766e" stroke-width="1.8"/>
+            <text x="336" y="190" class="svg-angle-label">62°</text>
+            <text x="200" y="125" class="svg-pronumeral">a cm</text>
+            <text x="300" y="218" class="svg-label">12 cm</text>
+            <text x="342" y="118" class="svg-pronumeral">b cm</text>
+          </svg>
+        ` : `
+          <svg width="470" height="235" viewBox="0 0 470 235" class="w-full h-auto">
+            <!-- Small Reference Triangle -->
+            <polygon points="35,185 155,185 60,85" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="67" cy="112" r="3.5" fill="#0f766e"/>
+            <text x="75" y="122" class="svg-angle-label">38°</text>
+            <path d="M 131,185 A 24,24 0 0,1 138,167" fill="none" stroke="#0f766e" stroke-width="1.8"/>
+            <path d="M 126,185 A 29,29 0 0,1 134,163" fill="none" stroke="#0f766e" stroke-width="1.8"/>
+            <text x="103" y="177" class="svg-angle-label">62°</text>
+            <text x="8" y="138" class="svg-label">6 cm</text>
+            <text x="82" y="205" class="svg-label">8 cm</text>
+            <text x="112" y="128" class="svg-label">10 cm</text>
+
+            <!-- Large Rotated Triangle (Explicitly Plotted Coordinates) -->
+            <polygon points="415,50 235,95 360,205" fill="#f0fdf4" stroke="#059669" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="355" cy="184" r="4" fill="#d97706"/>
+            <text x="332" y="176" class="svg-angle-pronumeral">x°</text>
+            <path d="M 262,88 A 28,28 0 0,1 255,112" fill="none" stroke="#0f766e" stroke-width="1.8"/>
+            <path d="M 268,87 A 34,34 0 0,1 260,116" fill="none" stroke="#0f766e" stroke-width="1.8"/>
+            <text x="275" y="112" class="svg-angle-label">62°</text>
+            <text x="396" y="138" class="svg-pronumeral">a cm</text>
+            <text x="275" y="168" class="svg-label">12 cm</text>
+            <text x="305" y="62" class="svg-pronumeral">b cm</text>
+          </svg>
+        `
+      },
+      {
+        level: 1,
+        levelName: "Level 1: Rotated & Flipped",
+        levelColor: "bg-emerald-100 text-emerald-800",
+        hasVisualAid: true,
+        aidLabel: "Rotate & Align",
+        aidActiveLabel: "Reset Rotation",
+        prompt: "These two right-angled triangles are similar, but the second is rotated. Find angle y and sides c and d.",
+        steps: [
+          { type: "angle", label: "Part 1: Find unknown angle y", varName: "y =", answer: 53, displayAnswer: "53°", unit: "°" },
+          { type: "side", label: "Part 2: Find side c", varName: "c =", answer: 15, displayAnswer: "15 cm", unit: "cm" },
+          { type: "side", label: "Part 3: Find side d", varName: "d =", answer: 8, displayAnswer: "8 cm", unit: "cm" }
+        ],
+        hints: [
+          "Click 'Rotate & Align'! In a right-angled triangle, the two acute angles add to 90° (90° − 37° = 53°).",
+          "The hypotenuse (opposite the right angle) goes from 10 cm to 25 cm, so scale factor k = 25 ÷ 10 = 2.5. Multiply 6 cm by 2.5 to get c, and divide 20 cm by 2.5 to get d!"
+        ],
+        solution: [
+          "<strong>Angle y:</strong> Acute angles in a right triangle add to 90°: 90° − 37° = 53°. Corresponding angle <strong>y = 53°</strong>.",
+          "<strong>Scale Factor (k):</strong> Hypotenuses: k = 25 ÷ 10 = <strong>2.5</strong>.",
+          "<strong>Side c (on large triangle):</strong> Opposite 37°: c = 6 × 2.5 = <strong>15 cm</strong>.",
+          "<strong>Side d (on small triangle):</strong> Adjacent to 37°: d = 20 ÷ 2.5 = <strong>8 cm</strong>."
+        ],
+        renderSVG: (aidActive) => aidActive ? `
+          <svg width="470" height="230" viewBox="0 0 470 230" class="w-full h-auto animate-pop">
+            <!-- Small Right Triangle -->
+            <polygon points="35,185 135,185 135,110" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+            <polyline points="122,185 122,172 135,172" fill="none" stroke="#64748b" stroke-width="2"/>
+            <text x="64" y="177" class="svg-angle-label">37°</text>
+            <text x="74" y="204" class="svg-pronumeral">d cm</text>
+            <text x="142" y="152" class="svg-label">6 cm</text>
+            <text x="54" y="138" class="svg-label">10 cm</text>
+
+            <!-- Large Right Triangle (Aligned) -->
+            <polygon points="210,195 395,195 395,55" fill="#f0fdf4" stroke="#059669" stroke-width="2.5" stroke-linejoin="round"/>
+            <polyline points="380,195 380,180 395,180" fill="none" stroke="#64748b" stroke-width="2"/>
+            <text x="245" y="186" class="svg-angle-label">37°</text>
+            <text x="368" y="95" class="svg-angle-pronumeral">y°</text>
+            <text x="285" y="214" class="svg-label">20 cm</text>
+            <text x="403" y="130" class="svg-pronumeral">c cm</text>
+            <text x="275" y="112" class="svg-label">25 cm</text>
+          </svg>
+        ` : `
+          <svg width="470" height="230" viewBox="0 0 470 230" class="w-full h-auto">
+            <!-- Small Right Triangle -->
+            <polygon points="35,185 135,185 135,110" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+            <polyline points="122,185 122,172 135,172" fill="none" stroke="#64748b" stroke-width="2"/>
+            <text x="64" y="177" class="svg-angle-label">37°</text>
+            <text x="74" y="204" class="svg-pronumeral">d cm</text>
+            <text x="142" y="152" class="svg-label">6 cm</text>
+            <text x="54" y="138" class="svg-label">10 cm</text>
+
+            <!-- Large Rotated Right Triangle (Hypotenuse at Bottom) -->
+            <polygon points="205,185 425,185 285,65" fill="#f0fdf4" stroke="#059669" stroke-width="2.5" stroke-linejoin="round"/>
+            <polyline points="274,75 284,86 295,76" fill="none" stroke="#64748b" stroke-width="2"/>
+            <text x="235" y="177" class="svg-angle-pronumeral">y°</text>
+            <text x="372" y="177" class="svg-angle-label">37°</text>
+            <text x="215" y="122" class="svg-pronumeral">c cm</text>
+            <text x="362" y="122" class="svg-label">20 cm</text>
+            <text x="298" y="204" class="svg-label">25 cm</text>
+          </svg>
+        `
+      },
+      {
+        level: 1,
+        levelName: "Level 1: Rotated & Flipped",
+        levelColor: "bg-emerald-100 text-emerald-800",
+        hasVisualAid: true,
+        aidLabel: "Rotate & Align",
+        aidActiveLabel: "Reset Rotation",
+        prompt: "Like Q11 on your worksheet, these two trapeziums are similar and flipped. Find angle q and sides g and h.",
+        steps: [
+          { type: "angle", label: "Part 1: Find unknown angle q", varName: "q =", answer: 58, displayAnswer: "58°", unit: "°" },
+          { type: "side", label: "Part 2: Find side g", varName: "g =", answer: 7.5, displayAnswer: "7.5 m (or 15/2)", unit: "m" },
+          { type: "side", label: "Part 3: Find side h", varName: "h =", answer: 12, displayAnswer: "12 m", unit: "m" }
+        ],
+        hints: [
+          "Click 'Rotate & Align' to match the two trapeziums! Remember co-interior angles between parallel lines add to 180° (180° − 122° = 58°).",
+          "Compare the shorter parallel sides: 6 m and 9 m, so k = 9 ÷ 6 = 1.5. Multiply 5 m by 1.5 to get g, and divide 18 m by 1.5 to get h!"
+        ],
+        solution: [
+          "<strong>Angle q:</strong> Co-interior angles on parallel lines add to 180°: 180° − 122° = 58°. Matching angle <strong>q = 58°</strong>.",
+          "<strong>Scale Factor (k):</strong> Shorter parallel sides: k = 9 ÷ 6 = <strong>1.5</strong>.",
+          "<strong>Side g (on large shape):</strong> g = 5 × 1.5 = <strong>7.5 m</strong> (or 15/2).",
+          "<strong>Side h (on small shape):</strong> h = 18 ÷ 1.5 = <strong>12 m</strong>."
+        ],
+        renderSVG: (aidActive) => aidActive ? `
+          <svg width="470" height="230" viewBox="0 0 470 230" class="w-full h-auto animate-pop">
+            <!-- Small Trapezium -->
+            <polygon points="35,185 155,185 125,115 55,115" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+            <polyline points="86,111 93,115 86,119" fill="none" stroke="#2563eb" stroke-width="2"/>
+            <polyline points="90,181 97,185 90,189" fill="none" stroke="#2563eb" stroke-width="2"/>
+            <text x="62" y="135" class="svg-angle-label">122°</text>
+            <text x="122" y="177" class="svg-angle-label">58°</text>
+            <text x="80" y="105" class="svg-label">6 m</text>
+            <text x="82" y="204" class="svg-pronumeral">h m</text>
+            <text x="145" y="150" class="svg-label">5 m</text>
+
+            <!-- Large Trapezium (Aligned) -->
+            <polygon points="220,195 400,195 355,90 250,90" fill="#f0fdf4" stroke="#059669" stroke-width="2.5" stroke-linejoin="round"/>
+            <polyline points="298,86 305,90 298,94" fill="none" stroke="#059669" stroke-width="2"/>
+            <polyline points="304,191 311,195 304,199" fill="none" stroke="#059669" stroke-width="2"/>
+            <text x="258" y="114" class="svg-angle-label">122°</text>
+            <text x="358" y="185" class="svg-angle-pronumeral">q°</text>
+            <text x="292" y="78" class="svg-label">9 m</text>
+            <text x="295" y="214" class="svg-label">18 m</text>
+            <text x="385" y="142" class="svg-pronumeral">g m</text>
+          </svg>
+        ` : `
+          <svg width="470" height="230" viewBox="0 0 470 230" class="w-full h-auto">
+            <!-- Small Trapezium -->
+            <polygon points="35,185 155,185 125,115 55,115" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+            <polyline points="86,111 93,115 86,119" fill="none" stroke="#2563eb" stroke-width="2"/>
+            <polyline points="90,181 97,185 90,189" fill="none" stroke="#2563eb" stroke-width="2"/>
+            <text x="62" y="135" class="svg-angle-label">122°</text>
+            <text x="122" y="177" class="svg-angle-label">58°</text>
+            <text x="80" y="105" class="svg-label">6 m</text>
+            <text x="82" y="204" class="svg-pronumeral">h m</text>
+            <text x="145" y="150" class="svg-label">5 m</text>
+
+            <!-- Large Inverted Trapezium (180° Flipped) -->
+            <polygon points="220,75 400,75 370,180 265,180" fill="#f0fdf4" stroke="#059669" stroke-width="2.5" stroke-linejoin="round"/>
+            <polyline points="304,71 311,75 304,79" fill="none" stroke="#059669" stroke-width="2"/>
+            <polyline points="312,176 319,180 312,184" fill="none" stroke="#059669" stroke-width="2"/>
+            <text x="238" y="96" class="svg-angle-pronumeral">q°</text>
+            <text x="336" y="170" class="svg-angle-label">122°</text>
+            <text x="295" y="64" class="svg-label">18 m</text>
+            <text x="305" y="198" class="svg-label">9 m</text>
+            <text x="212" y="132" class="svg-pronumeral">g m</text>
+          </svg>
+        `
+      },
+
+      // =======================================================================
+      // LEVEL 2: NESTED PARALLEL-LINE TRIANGLES (Q4–Q6)
+      // =======================================================================
+      {
+        level: 2,
+        levelName: "Level 2: Nested Triangles",
+        levelColor: "bg-blue-100 text-blue-800",
+        hasVisualAid: true,
+        aidLabel: "Separate Triangles",
+        aidActiveLabel: "Combine Triangles",
+        prompt: "Two similar right triangles overlap (like Q15 on your sheet). Add the base segments to find angle r and sides m and n.",
+        steps: [
+          { type: "angle", label: "Part 1: Find unknown angle r", varName: "r =", answer: 53, displayAnswer: "53°", unit: "°" },
+          { type: "side", label: "Part 2: Find vertical side m", varName: "m =", answer: 20, displayAnswer: "20 m", unit: "m" },
+          { type: "side", label: "Part 3: Find sloped hypotenuse n", varName: "n =", answer: 25, displayAnswer: "25 m", unit: "m" }
+        ],
+        hints: [
+          "Click 'Separate Triangles'! Because the two vertical sides are parallel, angle r and 53° are corresponding angles.",
+          "Add the bottom segments to get the full base of the large triangle: 12 m + 18 m = 30 m! Scale factor k = 30 ÷ 12 = 2.5. Multiply 8 m and 10 m by 2.5!"
+        ],
+        solution: [
+          "<strong>Angle r:</strong> Corresponding angles on parallel vertical lines are equal, so <strong>r = 53°</strong>.",
+          "<strong>Full Base of Large Triangle:</strong> Add segments: 12 + 18 = <strong>30 m</strong>. Scale factor k = 30 ÷ 12 = <strong>2.5</strong>.",
+          "<strong>Side m:</strong> m = 8 × 2.5 = <strong>20 m</strong>.",
+          "<strong>Side n (full hypotenuse):</strong> n = 10 × 2.5 = <strong>25 m</strong>."
+        ],
+        renderSVG: (aidActive) => aidActive ? `
+          <svg width="470" height="225" viewBox="0 0 470 225" class="w-full h-auto animate-pop">
+            <!-- Small Triangle -->
+            <polygon points="30,185 130,185 130,118" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+            <polyline points="118,185 118,173 130,173" fill="none" stroke="#64748b" stroke-width="2"/>
+            <text x="102" y="148" class="svg-angle-label">53°</text>
+            <text x="65" y="203" class="svg-label">12 m</text>
+            <text x="137" y="156" class="svg-label">8 m</text>
+            <text x="55" y="142" class="svg-label">10 m</text>
+
+            <!-- Large Full Triangle -->
+            <polygon points="195,185 415,185 415,35" fill="#f0fdf4" stroke="#059669" stroke-width="2.5" stroke-linejoin="round"/>
+            <polyline points="401,185 401,171 415,171" fill="none" stroke="#64748b" stroke-width="2"/>
+            <text x="385" y="75" class="svg-angle-pronumeral">r°</text>
+            <text x="260" y="203" class="svg-label">12 + 18 = 30 m</text>
+            <text x="422" y="115" class="svg-pronumeral">m m</text>
+            <text x="275" y="102" class="svg-pronumeral">n m</text>
+          </svg>
+        ` : `
+          <svg width="470" height="225" viewBox="0 0 470 225" class="w-full h-auto">
+            <polygon points="55,185 405,185 405,30" fill="#f0fdf4" stroke="#0f172a" stroke-width="2.5" stroke-linejoin="round"/>
+            <line x1="195" y1="185" x2="195" y2="123" stroke="#2563eb" stroke-width="2.5"/>
+            <polyline points="183,185 183,173 195,173" fill="none" stroke="#64748b" stroke-width="2"/>
+            <polyline points="391,185 391,171 405,171" fill="none" stroke="#64748b" stroke-width="2"/>
+            <text x="168" y="152" class="svg-angle-label">53°</text>
+            <text x="376" y="72" class="svg-angle-pronumeral">r°</text>
+            <text x="110" y="203" class="svg-label">12 m</text>
+            <text x="285" y="203" class="svg-label">18 m</text>
+            <text x="202" y="158" class="svg-label" fill="#2563eb">8 m</text>
+            <text x="102" y="145" class="svg-label" fill="#2563eb">10 m</text>
+            <text x="412" y="112" class="svg-pronumeral">m m</text>
+            <text x="265" y="88" class="svg-pronumeral">n m (full)</text>
+          </svg>
+        `
+      },
+      {
+        level: 2,
+        levelName: "Level 2: Nested Triangles",
+        levelColor: "bg-blue-100 text-blue-800",
+        hasVisualAid: true,
+        aidLabel: "Separate Triangles",
+        aidActiveLabel: "Combine Triangles",
+        prompt: "Inspired by Q12 on your worksheet: Find angle s, the lower-left partial segment x, and the bottom base y.",
+        steps: [
+          { type: "angle", label: "Part 1: Find unknown angle s", varName: "s =", answer: 68, displayAnswer: "68°", unit: "°" },
+          { type: "side", label: "Part 2: Find lower segment x", varName: "x =", answer: 6, displayAnswer: "6 cm", unit: "cm" },
+          { type: "side", label: "Part 3: Find bottom base y", varName: "y =", answer: 15, displayAnswer: "15 cm", unit: "cm" }
+        ],
+        hints: [
+          "Click 'Separate Triangles'! On the right side, the small triangle has length 6 cm and the full large triangle has length 6 + 9 = 15 cm. Scale factor k = 15 ÷ 6 = 2.5!",
+          "To find x: the full left side is 4 × 2.5 = 10 cm, so subtract the top 4 cm (10 − 4 = 6 cm). For base y: multiply 6 cm by 2.5!"
+        ],
+        solution: [
+          "<strong>Angle s:</strong> Corresponding angles on parallel lines are equal, so <strong>s = 68°</strong>.",
+          "<strong>Scale Factor (k):</strong> Full right side = 6 + 9 = 15 cm. k = 15 ÷ 6 = <strong>2.5</strong>.",
+          "<strong>Segment x:</strong> Full left side = 4 × 2.5 = 10 cm. Subtract top 4 cm: x = 10 − 4 = <strong>6 cm</strong>.",
+          "<strong>Base y:</strong> Multiply small base by 2.5: y = 6 × 2.5 = <strong>15 cm</strong>."
+        ],
+        renderSVG: (aidActive) => aidActive ? `
+          <svg width="470" height="225" viewBox="0 0 470 225" class="w-full h-auto animate-pop">
+            <!-- Top Small Triangle -->
+            <polygon points="85,35 45,130 135,130" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+            <text x="58" y="122" class="svg-angle-label">68°</text>
+            <text x="20" y="84" class="svg-label">4 cm</text>
+            <text x="118" y="84" class="svg-label">6 cm</text>
+            <text x="74" y="148" class="svg-label">6 cm</text>
+
+            <!-- Full Large Triangle -->
+            <polygon points="315,20 245,180 395,180" fill="#f0fdf4" stroke="#059669" stroke-width="2.5" stroke-linejoin="round"/>
+            <text x="262" y="170" class="svg-angle-pronumeral">s°</text>
+            <text x="218" y="102" class="svg-pronumeral">4 + x cm</text>
+            <text x="366" y="102" class="svg-label">6 + 9 = 15 cm</text>
+            <text x="305" y="198" class="svg-pronumeral">y cm</text>
+          </svg>
+        ` : `
+          <svg width="470" height="225" viewBox="0 0 470 225" class="w-full h-auto">
+            <polygon points="225,20 140,185 320,185" fill="#f0fdf4" stroke="#0f172a" stroke-width="2.5" stroke-linejoin="round"/>
+            <line x1="174" y1="119" x2="282" y2="119" stroke="#2563eb" stroke-width="2.5"/>
+            <polyline points="224,115 231,119 224,123" fill="none" stroke="#2563eb" stroke-width="2"/>
+            <polyline points="225,181 232,185 225,189" fill="none" stroke="#0f172a" stroke-width="2"/>
+            <text x="184" y="112" class="svg-angle-label">68°</text>
+            <text x="155" y="177" class="svg-angle-pronumeral">s°</text>
+            <text x="155" y="72" class="svg-label" fill="#2563eb">4 cm</text>
+            <text x="122" y="156" class="svg-pronumeral">x cm</text>
+            <text x="262" y="72" class="svg-label" fill="#2563eb">6 cm</text>
+            <text x="306" y="156" class="svg-label">9 cm</text>
+            <text x="218" y="135" class="svg-label" fill="#2563eb">6 cm</text>
+            <text x="216" y="203" class="svg-pronumeral">y cm</text>
+          </svg>
+        `
+      },
+      {
+        level: 2,
+        levelName: "Level 2: Nested Triangles",
+        levelColor: "bg-blue-100 text-blue-800",
+        hasVisualAid: true,
+        aidLabel: "Separate Triangles",
+        aidActiveLabel: "Combine Triangles",
+        prompt: "Double-variable nested triangle with parallel bases! Find angle w, the upper-left side p, and the lower-right segment q.",
+        steps: [
+          { type: "angle", label: "Part 1: Find unknown angle w", varName: "w =", answer: 72, displayAnswer: "72°", unit: "°" },
+          { type: "side", label: "Part 2: Find upper-left side p", varName: "p =", answer: 10, displayAnswer: "10 m", unit: "m" },
+          { type: "side", label: "Part 3: Find lower-right segment q", varName: "q =", answer: 5, displayAnswer: "5 m", unit: "m" }
+        ],
+        hints: [
+          "Click 'Separate Triangles'! Parallel bases are 14 m and 21 m, so scale factor k = 21 ÷ 14 = 1.5.",
+          "For p: the full left side is 15 m, so divide 15 m by 1.5 (15 ÷ 1.5 = 10 m). For q: full right side = 10 × 1.5 = 15 m, so q = 15 − 10 = 5 m!"
+        ],
+        solution: [
+          "<strong>Angle w:</strong> Corresponding angles on parallel lines are equal, so <strong>w = 72°</strong>.",
+          "<strong>Scale Factor (k):</strong> Parallel bases: k = 21 ÷ 14 = <strong>1.5</strong>.",
+          "<strong>Side p (on small triangle):</strong> Full left side is 15 m, so p = 15 ÷ 1.5 = <strong>10 m</strong>.",
+          "<strong>Segment q:</strong> Full right side = 10 × 1.5 = 15 m. Subtract top 10 m: q = 15 − 10 = <strong>5 m</strong>."
+        ],
+        renderSVG: (aidActive) => aidActive ? `
+          <svg width="470" height="225" viewBox="0 0 470 225" class="w-full h-auto animate-pop">
+            <polygon points="85,35 45,135 135,135" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+            <text x="58" y="127" class="svg-angle-label">72°</text>
+            <text x="24" y="88" class="svg-pronumeral">p m</text>
+            <text x="118" y="88" class="svg-label">10 m</text>
+            <text x="72" y="153" class="svg-label">14 m</text>
+
+            <polygon points="315,20 245,180 395,180" fill="#f0fdf4" stroke="#059669" stroke-width="2.5" stroke-linejoin="round"/>
+            <text x="262" y="170" class="svg-angle-pronumeral">w°</text>
+            <text x="220" y="102" class="svg-label">15 m (full)</text>
+            <text x="366" y="102" class="svg-pronumeral">10 + q m</text>
+            <text x="302" y="198" class="svg-label">21 m</text>
+          </svg>
+        ` : `
+          <svg width="470" height="225" viewBox="0 0 470 225" class="w-full h-auto">
+            <polygon points="225,20 140,185 320,185" fill="#f0fdf4" stroke="#0f172a" stroke-width="2.5" stroke-linejoin="round"/>
+            <line x1="164" y1="138" x2="293" y2="138" stroke="#2563eb" stroke-width="2.5"/>
+            <polyline points="224,134 231,138 224,142" fill="none" stroke="#2563eb" stroke-width="2"/>
+            <polyline points="225,181 232,185 225,189" fill="none" stroke="#0f172a" stroke-width="2"/>
+            <text x="174" y="130" class="svg-angle-label">72°</text>
+            <text x="155" y="177" class="svg-angle-pronumeral">w°</text>
+            <text x="150" y="82" class="svg-pronumeral">p m</text>
+            <text x="108" y="130" class="svg-label">15 m (full)</text>
+            <text x="268" y="82" class="svg-label" fill="#2563eb">10 m</text>
+            <text x="312" y="166" class="svg-pronumeral">q m</text>
+            <text x="214" y="153" class="svg-label" fill="#2563eb">14 m</text>
+            <text x="214" y="203" class="svg-label">21 m</text>
+          </svg>
+        `
+      },
+
+      // =======================================================================
+      // LEVEL 3: BOWTIE / HOURGLASS & INVERTED OVERLAPPING (Q7–Q9)
+      // =======================================================================
+      {
+        level: 3,
+        levelName: "Level 3: Bowtie & Inverted",
+        levelColor: "bg-purple-100 text-purple-800",
+        hasVisualAid: true,
+        aidLabel: "Separate & Align",
+        aidActiveLabel: "Combine Bowtie",
+        prompt: "Bowtie triangles between two parallel lines! Use alternate (Z) angles to find angle z and sides a and b.",
+        steps: [
+          { type: "angle", label: "Part 1: Find alternate angle z", varName: "z =", answer: 44, displayAnswer: "44°", unit: "°" },
+          { type: "side", label: "Part 2: Find side a", varName: "a =", answer: 12, displayAnswer: "12 cm", unit: "cm" },
+          { type: "side", label: "Part 3: Find side b", varName: "b =", answer: 6, displayAnswer: "6 cm", unit: "cm" }
+        ],
+        hints: [
+          "Click 'Separate & Align'! Because the top and bottom lines are parallel, alternate angles form a Z-shape (44° = z°).",
+          "Parallel sides are 10 cm and 15 cm, so scale factor k = 15 ÷ 10 = 1.5. Multiply 8 cm by 1.5 to get a, and divide 9 cm by 1.5 to get b!"
+        ],
+        solution: [
+          "<strong>Angle z:</strong> Alternate angles on parallel lines (Z-angles) are equal, so <strong>z = 44°</strong>.",
+          "<strong>Scale Factor (k):</strong> Parallel bases: k = 15 ÷ 10 = <strong>1.5</strong>.",
+          "<strong>Side a (on large triangle):</strong> Corresponds to 8 cm: a = 8 × 1.5 = <strong>12 cm</strong>.",
+          "<strong>Side b (on small triangle):</strong> Corresponds to 9 cm: b = 9 ÷ 1.5 = <strong>6 cm</strong>."
+        ],
+        renderSVG: (aidActive) => aidActive ? `
+          <svg width="470" height="225" viewBox="0 0 470 225" class="w-full h-auto animate-pop">
+            <!-- Small Triangle (Aligned) -->
+            <polygon points="40,175 150,175 95,95" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+            <text x="58" y="167" class="svg-angle-label">44°</text>
+            <text x="78" y="194" class="svg-label">10 cm</text>
+            <text x="35" y="132" class="svg-label">8 cm</text>
+            <text x="130" y="132" class="svg-pronumeral">b cm</text>
+
+            <!-- Large Bottom Triangle -->
+            <polygon points="220,185 385,185 302,65" fill="#f0fdf4" stroke="#059669" stroke-width="2.5" stroke-linejoin="round"/>
+            <text x="242" y="177" class="svg-angle-pronumeral">z°</text>
+            <text x="285" y="203" class="svg-label">15 cm</text>
+            <text x="225" y="122" class="svg-pronumeral">a cm</text>
+            <text x="355" y="122" class="svg-label">9 cm</text>
+          </svg>
+        ` : `
+          <svg width="470" height="225" viewBox="0 0 470 225" class="w-full h-auto">
+            <!-- Top Small Inverted Triangle -->
+            <polygon points="165,35 285,35 225,105" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+            <!-- Bottom Large Triangle -->
+            <polygon points="225,105 135,195 315,195" fill="#f0fdf4" stroke="#059669" stroke-width="2.5" stroke-linejoin="round"/>
+            <!-- Parallel Arrows -->
+            <polyline points="221,31 228,35 221,39" fill="none" stroke="#2563eb" stroke-width="2"/>
+            <polyline points="221,191 228,195 221,199" fill="none" stroke="#059669" stroke-width="2"/>
+            <!-- Alternate Angles -->
+            <text x="242" y="54" class="svg-angle-label">44°</text>
+            <text x="165" y="187" class="svg-angle-pronumeral">z°</text>
+            <!-- Labels -->
+            <text x="208" y="24" class="svg-label" fill="#2563eb">10 cm</text>
+            <text x="155" y="75" class="svg-pronumeral">b cm</text>
+            <text x="265" y="75" class="svg-label" fill="#2563eb">8 cm</text>
+            <text x="148" y="145" class="svg-label">9 cm</text>
+            <text x="278" y="145" class="svg-pronumeral">a cm</text>
+            <text x="208" y="213" class="svg-label">15 cm</text>
+          </svg>
+        `
+      },
+      {
+        level: 3,
+        levelName: "Level 3: Bowtie & Inverted",
+        levelColor: "bg-purple-100 text-purple-800",
+        hasVisualAid: true,
+        aidLabel: "Separate & Align",
+        aidActiveLabel: "Combine Triangles",
+        prompt: "Just like Q14 on your worksheet! A small right triangle sits flipped inside a large right triangle. Find angle c and sides d and e.",
+        steps: [
+          { type: "angle", label: "Part 1: Find unknown angle c", varName: "c =", answer: 37, displayAnswer: "37°", unit: "°" },
+          { type: "side", label: "Part 2: Find hypotenuse d", varName: "d =", answer: 25, displayAnswer: "25 cm", unit: "cm" },
+          { type: "side", label: "Part 3: Find vertical side e", varName: "e =", answer: 15, displayAnswer: "15 cm", unit: "cm" }
+        ],
+        hints: [
+          "Click 'Separate & Align'! Both triangles share the bottom-left 37° angle and both have a 90° angle, so their corresponding acute angles are equal.",
+          "Notice the side adjacent to 37° is 8 cm in the small triangle and 20 cm in the large triangle! Scale factor k = 20 ÷ 8 = 2.5. Multiply 10 cm by 2.5 for d, and 6 cm by 2.5 for e!"
+        ],
+        solution: [
+          "<strong>Angle c:</strong> Both triangles share the 37° angle and have a 90° angle, so <strong>c = 37°</strong>.",
+          "<strong>Scale Factor (k):</strong> Adjacent side to 37° goes from 8 cm to 20 cm: k = 20 ÷ 8 = <strong>2.5</strong>.",
+          "<strong>Hypotenuse d:</strong> Small hypotenuse is 10 cm: d = 10 × 2.5 = <strong>25 cm</strong>.",
+          "<strong>Vertical side e:</strong> Opposite 37° is 6 cm in the small triangle: e = 6 × 2.5 = <strong>15 cm</strong>."
+        ],
+        renderSVG: (aidActive) => aidActive ? `
+          <svg width="470" height="225" viewBox="0 0 470 225" class="w-full h-auto animate-pop">
+            <!-- Small Triangle Aligned -->
+            <polygon points="35,185 135,185 135,110" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+            <polyline points="123,185 123,173 135,173" fill="none" stroke="#64748b" stroke-width="2"/>
+            <text x="64" y="177" class="svg-angle-label">37°</text>
+            <text x="72" y="203" class="svg-label">8 cm</text>
+            <text x="142" y="152" class="svg-label">6 cm</text>
+            <text x="58" y="138" class="svg-label">10 cm</text>
+
+            <!-- Large Triangle -->
+            <polygon points="205,185 405,185 405,35" fill="#f0fdf4" stroke="#059669" stroke-width="2.5" stroke-linejoin="round"/>
+            <polyline points="391,185 391,171 405,171" fill="none" stroke="#64748b" stroke-width="2"/>
+            <text x="238" y="177" class="svg-angle-pronumeral">c°</text>
+            <text x="290" y="203" class="svg-label">20 cm</text>
+            <text x="412" y="115" class="svg-pronumeral">e cm</text>
+            <text x="275" y="100" class="svg-pronumeral">d cm</text>
+          </svg>
+        ` : `
+          <svg width="470" height="225" viewBox="0 0 470 225" class="w-full h-auto">
+            <!-- Large Outer Right Triangle -->
+            <polygon points="65,185 385,185 385,25" fill="#f0fdf4" stroke="#0f172a" stroke-width="2.5" stroke-linejoin="round"/>
+            <polyline points="371,185 371,171 385,171" fill="none" stroke="#64748b" stroke-width="2"/>
+            <!-- Inner Inverted Right Triangle sharing bottom-left vertex -->
+            <line x1="225" y1="185" x2="193" y2="121" stroke="#2563eb" stroke-width="2.5"/>
+            <polyline points="184,132 196,138 202,126" fill="none" stroke="#2563eb" stroke-width="2"/>
+            <!-- Shared Angle -->
+            <text x="108" y="177" class="svg-angle-pronumeral">37° / c°</text>
+            <!-- Labels -->
+            <text x="105" y="142" class="svg-label" fill="#2563eb">8 cm</text>
+            <text x="215" y="152" class="svg-label" fill="#2563eb">6 cm</text>
+            <text x="135" y="203" class="svg-label" fill="#2563eb">10 cm</text>
+            <text x="285" y="203" class="svg-label">20 cm (full base)</text>
+            <text x="394" y="110" class="svg-pronumeral">e cm</text>
+            <text x="245" y="88" class="svg-pronumeral">d cm (full)</text>
+          </svg>
+        `
+      },
+      {
+        level: 3,
+        levelName: "Level 3: Bowtie & Inverted",
+        levelColor: "bg-purple-100 text-purple-800",
+        hasVisualAid: true,
+        aidLabel: "Separate & Align",
+        aidActiveLabel: "Combine Triangles",
+        prompt: "Final Boss Challenge! Two overlapping triangles share the top vertex (flipped). Find angle m and sides p and q.",
+        steps: [
+          { type: "angle", label: "Part 1: Find unknown angle m", varName: "m =", answer: 74, displayAnswer: "74°", unit: "°" },
+          { type: "side", label: "Part 2: Find lower-left segment p", varName: "p =", answer: 7.5, displayAnswer: "7.5 cm (or 15/2)", unit: "cm" },
+          { type: "side", label: "Part 3: Find bottom base q", varName: "q =", answer: 18, displayAnswer: "18 cm", unit: "cm" }
+        ],
+        hints: [
+          "Click 'Separate & Align'! Notice the dot marks the 74° angle at the bottom-left of the small triangle and bottom-right of the large triangle.",
+          "The side between the top vertex and the dot goes from 8 cm to 12 cm, so scale factor k = 12 ÷ 8 = 1.5! Full left side = 10 × 1.5 = 15 cm, so p = 15 − 7.5 = 7.5 cm!"
+        ],
+        solution: [
+          "<strong>Angle m:</strong> Both angles are marked with a dot, meaning they correspond. So <strong>m = 74°</strong>.",
+          "<strong>Scale Factor (k):</strong> Side between top vertex and the dot goes from 8 cm to 12 cm: k = 12 ÷ 8 = <strong>1.5</strong>.",
+          "<strong>Segment p:</strong> Small triangle's other slanted side is 10 cm, so the large triangle's full left side = 10 × 1.5 = 15 cm. Subtract top 7.5 cm: p = 15 − 7.5 = <strong>7.5 cm</strong> (or 15/2).",
+          "<strong>Bottom Base q:</strong> Multiply small base (12 cm) by 1.5: q = 12 × 1.5 = <strong>18 cm</strong>."
+        ],
+        renderSVG: (aidActive) => aidActive ? `
+          <svg width="470" height="225" viewBox="0 0 470 225" class="w-full h-auto animate-pop">
+            <!-- Small Triangle Aligned -->
+            <polygon points="85,35 45,130 140,130" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="58" cy="121" r="3.5" fill="#0f766e"/>
+            <text x="65" y="124" class="svg-angle-label">74°</text>
+            <text x="26" y="84" class="svg-label">8 cm</text>
+            <text x="122" y="84" class="svg-label">10 cm</text>
+            <text x="74" y="148" class="svg-label">12 cm</text>
+
+            <!-- Large Triangle -->
+            <polygon points="315,20 245,180 395,180" fill="#f0fdf4" stroke="#059669" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="262" cy="170" r="4" fill="#d97706"/>
+            <text x="270" y="173" class="svg-angle-pronumeral">m°</text>
+            <text x="225" y="102" class="svg-label">12 cm</text>
+            <text x="366" y="102" class="svg-pronumeral">7.5 + p cm</text>
+            <text x="302" y="198" class="svg-pronumeral">q cm</text>
+          </svg>
+        ` : `
+          <svg width="470" height="225" viewBox="0 0 470 225" class="w-full h-auto">
+            <!-- Large Outer Triangle -->
+            <polygon points="225,20 140,185 320,185" fill="#f0fdf4" stroke="#0f172a" stroke-width="2.5" stroke-linejoin="round"/>
+            <!-- Inner Flipped Chord -->
+            <line x1="176" y1="115" x2="278" y2="132" stroke="#2563eb" stroke-width="2.5"/>
+            <!-- Dots showing flipped correspondence -->
+            <circle cx="262" cy="123" r="3.5" fill="#0f766e"/>
+            <text x="228" y="118" class="svg-angle-label">74°</text>
+            <circle cx="298" cy="175" r="4" fill="#d97706"/>
+            <text x="272" y="177" class="svg-angle-pronumeral">m°</text>
+            <!-- Labels -->
+            <text x="155" y="68" class="svg-label" fill="#2563eb">7.5 cm</text>
+            <text x="122" y="156" class="svg-pronumeral">p cm</text>
+            <text x="262" y="75" class="svg-label" fill="#2563eb">8 cm</text>
+            <text x="308" y="156" class="svg-label">12 cm (full)</text>
+            <text x="205" y="138" class="svg-label" fill="#2563eb">12 cm</text>
+            <text x="214" y="203" class="svg-pronumeral">q cm</text>
+          </svg>
+        `
+      }
+    ];
+
+    // =========================================================================
+    // STATE MANAGEMENT
+    // =========================================================================
+    const QUESTIONS_PER_LEVEL = 3;
+    let studentName = "Year 9 Student";
+    let currentIndex = 0;
+    let attemptsOnCurrent = 0;
+    let hintsRevealed = 0;
+    let visualAidActive = false;
+    let questionSolved = false;
+    let levelScores = [0, 0, 0];
+    let questionResults = new Array(QUESTIONS.length).fill(null);
+
+    // =========================================================================
+    // NAVIGATION & UI CONTROLS
+    // =========================================================================
+    function toggleRecap() {
+      const banner = document.getElementById("recapBanner");
+      const btnText = document.getElementById("recapBtnText");
+      const isHidden = banner.classList.contains("hidden");
+      if (isHidden) {
+        banner.classList.remove("hidden");
+        btnText.textContent = "Hide Rules Recap";
+      } else {
+        banner.classList.add("hidden");
+        btnText.textContent = "Show Rules Recap";
+      }
+    }
+
+    function startPractice() {
+      const nameInput = document.getElementById("studentNameInput").value.trim();
+      if (nameInput) {
+        studentName = nameInput;
+      }
+      document.getElementById("welcomeScreen").classList.add("hidden");
+      document.getElementById("practiceScreen").classList.remove("hidden");
+      document.getElementById("headerScoreBadge").classList.remove("hidden");
+      loadQuestion(0);
+    }
+
+    function loadQuestion(index) {
+      currentIndex = index;
+      attemptsOnCurrent = 0;
+      hintsRevealed = 0;
+      visualAidActive = false;
+      questionSolved = false;
+
+      const q = QUESTIONS[index];
+
+      // Update Header & Progress
+      const levelBadge = document.getElementById("levelBadge");
+      levelBadge.textContent = q.levelName;
+      levelBadge.className = `px-2.5 py-1 rounded-lg text-xs font-bold ${q.levelColor}`;
+
+      const qInLevel = (index % QUESTIONS_PER_LEVEL) + 1;
+      document.getElementById("questionCounterText").textContent = `Question ${qInLevel} of ${QUESTIONS_PER_LEVEL}`;
+
+      const pct = Math.round(((index) / QUESTIONS.length) * 100);
+      document.getElementById("overallProgressBar").style.width = `${Math.max(10, pct)}%`;
+
+      renderProgressDots();
+
+      // Update Prompt & Render Dynamic Multi-Variable Inputs (No Spinner Arrows, No Scroll Mutation)
+      document.getElementById("questionPrompt").textContent = q.prompt;
+      const stepsContainer = document.getElementById("stepsContainer");
+      stepsContainer.innerHTML = q.steps.map((step, idx) => {
+        const varColor = step.type === "angle" ? "text-amber-600" : "text-blue-600";
+        return `
+          <div id="stepBox_${idx}" class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 transition">
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="inputStep_${idx}" class="text-xs font-bold uppercase tracking-wide text-slate-700">
+                ${step.label}
+              </label>
+              <span id="stepStatusIcon_${idx}" class="text-sm"></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="font-serif italic font-bold text-lg ${varColor} min-w-[30px]">${step.varName}</span>
+              <input
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                id="inputStep_${idx}"
+                onwheel="this.blur()"
+                onkeydown="if(event.key==='Enter') checkAnswers()"
+                placeholder="?"
+                class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-base font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <span class="text-sm font-bold text-slate-600 min-w-[28px]">${step.unit}</span>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // Reset Feedback, Hints & Solutions
+      const fb = document.getElementById("feedbackBox");
+      fb.classList.add("hidden");
+      fb.innerHTML = "";
+
+      document.getElementById("hintBox").classList.add("hidden");
+      document.getElementById("hintBtn").classList.remove("hidden");
+      document.getElementById("hintBtnLabel").textContent = "Need a Hint? (0/2)";
+
+      document.getElementById("solutionBox").classList.add("hidden");
+      document.getElementById("showSolutionBtn").classList.add("hidden");
+
+      document.getElementById("checkBtn").classList.remove("hidden");
+      document.getElementById("nextBtn").classList.add("hidden");
+
+      // Configure Visual Aid Button
+      const aidBtn = document.getElementById("visualAidBtn");
+      const aidStatus = document.getElementById("visualAidStatus");
+      if (q.hasVisualAid) {
+        aidBtn.classList.remove("hidden");
+        document.getElementById("visualAidIcon").textContent = q.level === 1 ? "🔄" : "✂️";
+        document.getElementById("visualAidLabel").textContent = q.aidLabel;
+        aidStatus.classList.add("hidden");
+      } else {
+        aidBtn.classList.add("hidden");
+        aidStatus.classList.add("hidden");
+      }
+
+      // Render SVG Diagram
+      document.getElementById("svgContainer").innerHTML = q.renderSVG(false);
+    }
+
+    function renderProgressDots() {
+      const container = document.getElementById("progressDots");
+      const levelStart = Math.floor(currentIndex / QUESTIONS_PER_LEVEL) * QUESTIONS_PER_LEVEL;
+      let html = "";
+      for (let i = 0; i < QUESTIONS_PER_LEVEL; i++) {
+        const globalIdx = levelStart + i;
+        let colorClass = "bg-slate-200";
+        if (questionResults[globalIdx] === "correct") colorClass = "bg-emerald-500";
+        else if (questionResults[globalIdx] === "assisted") colorClass = "bg-amber-400";
+        else if (globalIdx === currentIndex) colorClass = "bg-indigo-600 ring-2 ring-indigo-200";
+
+        html += `<span class="w-3 h-3 rounded-full ${colorClass} transition"></span>`;
+      }
+      container.innerHTML = html;
+    }
+
+    function toggleVisualAid() {
+      const q = QUESTIONS[currentIndex];
+      if (!q.hasVisualAid) return;
+
+      visualAidActive = !visualAidActive;
+      document.getElementById("svgContainer").innerHTML = q.renderSVG(visualAidActive);
+
+      const aidLabel = document.getElementById("visualAidLabel");
+      const aidStatus = document.getElementById("visualAidStatus");
+
+      if (visualAidActive) {
+        aidLabel.textContent = q.aidActiveLabel;
+        aidStatus.textContent = q.level === 1 ? "Shapes aligned!" : "Triangles separated & aligned!";
+        aidStatus.classList.remove("hidden");
+      } else {
+        aidLabel.textContent = q.aidLabel;
+        aidStatus.classList.add("hidden");
+      }
+    }
+
+    // =========================================================================
+    // PARSING (Decimals + Fractions), VALIDATION & SOLUTIONS
+    // =========================================================================
+    function parseMathInput(raw) {
+      if (!raw) return NaN;
+      const cleaned = raw.trim().replace(/[°cm]/gi, "").trim();
+      if (!cleaned) return NaN;
+
+      // Support simple fractions like "15/2" or "27/2"
+      if (/^[+-]?\d+(\.\d+)?\s*\/\s*[+-]?\d+(\.\d+)?$/.test(cleaned)) {
+        const parts = cleaned.split("/");
+        const num = parseFloat(parts[0]);
+        const den = parseFloat(parts[1]);
+        if (den === 0) return NaN;
+        return num / den;
+      }
+
+      // Standard decimal/integer
+      if (/^[+-]?(\d+\.?\d*|\.\d+)$/.test(cleaned)) {
+        return parseFloat(cleaned);
+      }
+
+      return NaN;
+    }
+
+    function isCloseEnough(userVal, targetVal) {
+      if (isNaN(userVal)) return false;
+      return Math.abs(userVal - targetVal) <= 0.05;
+    }
+
+    function checkAnswers() {
+      if (questionSolved) return;
+
+      const q = QUESTIONS[currentIndex];
+      const fb = document.getElementById("feedbackBox");
+      const userValues = [];
+
+      for (let i = 0; i < q.steps.length; i++) {
+        const raw = document.getElementById(`inputStep_${i}`).value;
+        const parsed = parseMathInput(raw);
+        if (isNaN(parsed)) {
+          fb.className = "p-3.5 rounded-xl text-xs sm:text-sm leading-relaxed border bg-amber-50 border-amber-200 text-amber-900";
+          fb.innerHTML = "⚠️ Please enter a valid number or fraction (e.g. <strong>7.5</strong> or <strong>15/2</strong>) for <strong>every part</strong> before checking.";
+          fb.classList.remove("hidden");
+          return;
+        }
+        userValues.push(parsed);
+      }
+
+      attemptsOnCurrent++;
+      let allCorrect = true;
+      let angleWrong = false;
+      let sideWrong = false;
+
+      q.steps.forEach((step, idx) => {
+        const box = document.getElementById(`stepBox_${idx}`);
+        const icon = document.getElementById(`stepStatusIcon_${idx}`);
+        const correct = isCloseEnough(userValues[idx], step.answer);
+
+        if (correct) {
+          box.className = "p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-300 transition";
+          icon.textContent = "✅";
+        } else {
+          allCorrect = false;
+          box.className = "p-3.5 rounded-xl bg-rose-50/70 border border-rose-300 transition";
+          icon.textContent = "❌";
+          if (step.type === "angle") angleWrong = true;
+          if (step.type === "side") sideWrong = true;
+        }
+      });
+
+      if (allCorrect) {
+        questionSolved = true;
+        q.steps.forEach((_, idx) => {
+          document.getElementById(`inputStep_${idx}`).disabled = true;
+        });
+
+        const lvlIdx = q.level - 1;
+        levelScores[lvlIdx]++;
+        questionResults[currentIndex] = "correct";
+        updateTotalScoreDisplay();
+        renderProgressDots();
+
+        const summaryList = q.steps.map(s => `${s.varName} ${s.displayAnswer}`).join(", ");
+        fb.className = "p-3.5 rounded-xl text-xs sm:text-sm leading-relaxed border bg-emerald-50 border-emerald-200 text-emerald-900";
+        fb.innerHTML = `🎉 <strong>Spot on!</strong> All pronumerals are correct (${summaryList}).`;
+        fb.classList.remove("hidden");
+
+        document.getElementById("checkBtn").classList.add("hidden");
+        document.getElementById("nextBtn").classList.remove("hidden");
+        document.getElementById("showSolutionBtn").classList.remove("hidden");
+      } else {
+        let msg = "";
+        if (angleWrong && !sideWrong) {
+          msg = "Your <strong>side lengths are right</strong>, but check your <strong>angle</strong>! Corresponding, alternate (Z), or co-interior angles don't get multiplied by the scale factor.";
+        } else if (!angleWrong && sideWrong) {
+          msg = "Your <strong>angle is right</strong>! Now check the highlighted <strong>side length(s)</strong>—make sure you added segments for nested triangles and checked whether to multiply or divide by <em>k</em>.";
+        } else {
+          msg = "Not quite yet. Check the red boxes—use the <strong>Hint</strong> button or the <strong>Visual Aid</strong> on the diagram to separate/align the shapes!";
+        }
+
+        fb.className = "p-3.5 rounded-xl text-xs sm:text-sm leading-relaxed border bg-rose-50 border-rose-200 text-rose-900";
+        fb.innerHTML = msg;
+        fb.classList.remove("hidden");
+
+        if (attemptsOnCurrent >= 2) {
+          document.getElementById("showSolutionBtn").classList.remove("hidden");
+        }
+      }
+    }
+
+    function revealHint() {
+      const q = QUESTIONS[currentIndex];
+      if (hintsRevealed >= q.hints.length) return;
+
+      hintsRevealed++;
+      const hintBox = document.getElementById("hintBox");
+      document.getElementById("hintTitle").textContent = `Hint ${hintsRevealed} of ${q.hints.length}`;
+      document.getElementById("hintText").textContent = q.hints[hintsRevealed - 1];
+      hintBox.classList.remove("hidden");
+
+      document.getElementById("hintBtnLabel").textContent = `Need a Hint? (${hintsRevealed}/${q.hints.length})`;
+      if (hintsRevealed >= q.hints.length) {
+        document.getElementById("showSolutionBtn").classList.remove("hidden");
+      }
+    }
+
+    function revealSolution() {
+      const q = QUESTIONS[currentIndex];
+      const solBox = document.getElementById("solutionBox");
+      const solText = document.getElementById("solutionText");
+
+      solText.innerHTML = q.solution.map(line => `<p>• ${line}</p>`).join("");
+      solBox.classList.remove("hidden");
+
+      if (!questionSolved) {
+        questionSolved = true;
+        q.steps.forEach((step, idx) => {
+          const inp = document.getElementById(`inputStep_${idx}`);
+          inp.value = step.answer;
+          inp.disabled = true;
+        });
+
+        questionResults[currentIndex] = "assisted";
+        renderProgressDots();
+
+        document.getElementById("checkBtn").classList.add("hidden");
+        document.getElementById("nextBtn").classList.remove("hidden");
+      }
+    }
+
+    function updateTotalScoreDisplay() {
+      const total = levelScores.reduce((a, b) => a + b, 0);
+      document.getElementById("headerScoreText").textContent = `${total} / ${QUESTIONS.length}`;
+    }
+
+    // =========================================================================
+    // LEVEL TRANSITIONS & CERTIFICATE
+    // =========================================================================
+    function nextQuestion() {
+      const nextIdx = currentIndex + 1;
+
+      if (nextIdx === 3 || nextIdx === 6) {
+        showLevelCompleteScreen(nextIdx === 3 ? 1 : 2);
+        return;
+      }
+
+      if (nextIdx >= QUESTIONS.length) {
+        showCertificate();
+        return;
+      }
+
+      loadQuestion(nextIdx);
+    }
+
+    function showLevelCompleteScreen(completedLevel) {
+      document.getElementById("practiceScreen").classList.add("hidden");
+      document.getElementById("levelCompleteScreen").classList.remove("hidden");
+
+      const score = levelScores[completedLevel - 1];
+      document.getElementById("lvlCompleteTag").textContent = `Level ${completedLevel} Complete`;
+      document.getElementById("lvlCompleteScore").textContent = `${score} / ${QUESTIONS_PER_LEVEL}`;
+
+      if (completedLevel === 1) {
+        document.getElementById("lvlCompleteTitle").textContent = "Rotated & Flipped Mastered!";
+        document.getElementById("lvlCompleteDesc").textContent = "Next up: Level 2 (Nested & Overlapping Triangles). Remember to add segments together for full side lengths!";
+        document.getElementById("startNextLevelBtn").textContent = "Start Level 2: Nested Triangles →";
+      } else {
+        document.getElementById("lvlCompleteTitle").textContent = "Nested Triangles Mastered!";
+        document.getElementById("lvlCompleteDesc").textContent = "Final challenge: Level 3 (Bowtie/Hourglass & Inverted Overlapping Triangles). Use the 'Separate & Align' button if needed!";
+        document.getElementById("startNextLevelBtn").textContent = "Start Level 3: Bowtie & Inverted →";
+      }
+    }
+
+    function proceedToNextLevel() {
+      document.getElementById("levelCompleteScreen").classList.add("hidden");
+      document.getElementById("practiceScreen").classList.remove("hidden");
+      loadQuestion(currentIndex + 1);
+    }
+
+    function showCertificate() {
+      document.getElementById("practiceScreen").classList.add("hidden");
+      document.getElementById("levelCompleteScreen").classList.add("hidden");
+      document.getElementById("certificateScreen").classList.remove("hidden");
+
+      const total = levelScores.reduce((a, b) => a + b, 0);
+      document.getElementById("certStudentName").textContent = studentName;
+      document.getElementById("certLvl1Score").textContent = `${levelScores[0]} / ${QUESTIONS_PER_LEVEL}`;
+      document.getElementById("certLvl2Score").textContent = `${levelScores[1]} / ${QUESTIONS_PER_LEVEL}`;
+      document.getElementById("certLvl3Score").textContent = `${levelScores[2]} / ${QUESTIONS_PER_LEVEL}`;
+      document.getElementById("certTotalScore").textContent = `${total} / ${QUESTIONS.length}`;
+
+      const now = new Date();
+      const formattedDate = now.toLocaleDateString("en-AU", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+      document.getElementById("certTimestamp").textContent = `Completed: ${formattedDate}`;
+    }
+
+    function restartAll() {
+      levelScores = [0, 0, 0];
+      questionResults = new Array(QUESTIONS.length).fill(null);
+      updateTotalScoreDisplay();
+      document.getElementById("certificateScreen").classList.add("hidden");
+      document.getElementById("welcomeScreen").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
