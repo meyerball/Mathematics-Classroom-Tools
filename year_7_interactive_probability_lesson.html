@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Year 7 Probability: Interactive Lesson & Arcade</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .tab-active {
+            background-color: #1e3a8a;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.2);
+        }
+        .tab-inactive {
+            background-color: #e2e8f0;
+            color: #475569;
+        }
+        .tab-inactive:hover {
+            background-color: #cbd5e1;
+        }
+        /* Custom Range Slider for Probability Scale */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border: 2px solid white;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: linear-gradient(to right, #ef4444, #f59e0b, #10b981);
+            border-radius: 999px;
+        }
+        @keyframes diceShake {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(15deg) scale(1.1); }
+            50% { transform: rotate(-15deg) scale(1.1); }
+            75% { transform: rotate(10deg) scale(1.05); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+        .animate-dice {
+            animation: diceShake 0.4s ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white py-5 px-4 shadow-lg border-b-4 border-amber-500">
+        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-amber-500 text-slate-900 p-2.5 rounded-xl font-extrabold text-xl shadow">
+                    <i class="fas fa-dice"></i>
+                </div>
+                <div>
+                    <span class="text-xs uppercase tracking-wider text-amber-400 font-bold">Year 7 Mathematics • Topic 11</span>
+                    <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight">Lesson 1: Describing Probability</h1>
+                </div>
+            </div>
+            <div class="mt-4 sm:mt-0 bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 text-sm">
+                <span class="text-slate-400">Progress:</span>
+                <span id="progress-text" class="font-bold text-emerald-400 ml-1">Stage 1 of 6</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="max-w-5xl mx-auto w-full px-4 mt-6">
+        <div class="grid grid-cols-2 sm:grid-cols-6 gap-2">
+            <button onclick="switchTab(1)" id="tab-1" class="tab-active py-3 px-3 rounded-t-xl font-bold text-xs sm:text-sm transition flex items-center justify-center space-x-1.5">
+                <i class="fas fa-fire"></i> <span>1. Warm-Up</span>
+            </button>
+            <button onclick="switchTab(2)" id="tab-2" class="tab-inactive py-3 px-3 rounded-t-xl font-bold text-xs sm:text-sm transition flex items-center justify-center space-x-1.5">
+                <i class="fas fa-language"></i> <span>2. Words</span>
+            </button>
+            <button onclick="switchTab(3)" id="tab-3" class="tab-inactive py-3 px-3 rounded-t-xl font-bold text-xs sm:text-sm transition flex items-center justify-center space-x-1.5">
+                <i class="fas fa-list-ol"></i> <span>3. Sample Space</span>
+            </button>
+            <button onclick="switchTab(4)" id="tab-4" class="tab-inactive py-3 px-3 rounded-t-xl font-bold text-xs sm:text-sm transition flex items-center justify-center space-x-1.5">
+                <i class="fas fa-sliders-h"></i> <span>4. The Scale</span>
+            </button>
+            <button onclick="switchTab(5)" id="tab-5" class="tab-inactive py-3 px-3 rounded-t-xl font-bold text-xs sm:text-sm transition flex items-center justify-center space-x-1.5">
+                <i class="fas fa-trophy"></i> <span>5. Mastery Quiz</span>
+            </button>
+            <button onclick="switchTab(6)" id="tab-6" class="tab-inactive py-3 px-3 rounded-t-xl font-bold text-xs sm:text-sm transition flex items-center justify-center space-x-1.5">
+                <i class="fas fa-gamepad text-purple-600"></i> <span>6. Carnival Arcade</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="max-w-5xl mx-auto w-full px-4 flex-grow mb-12">
+        <div class="bg-white rounded-b-2xl rounded-tr-2xl shadow-md border border-slate-200 p-6 sm:p-8">
+
+            <!-- Learning Intention Banner -->
+            <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r-xl mb-8 flex items-start space-x-3">
+                <i class="fas fa-bullseye text-blue-600 text-xl mt-0.5"></i>
+                <div>
+                    <h2 class="text-xs font-extrabold uppercase tracking-wider text-blue-800">Learning Intention</h2>
+                    <p class="text-slate-700 font-medium text-sm sm:text-base mt-0.5">
+                        "We are learning how to use the language that is used to talk about chance/probability, and how to list out a Sample Space."
+                    </p>
+                </div>
+            </div>
+
+            <!-- STAGE 1: WARM UP -->
+            <section id="stage-1" class="stage-section">
+                <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Quick Maths Warm-Up</h2>
+                <p class="text-slate-600 mb-6">Before diving into probability, let's warm up your fraction, decimal, and percentage skills!</p>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Q1: Simplify -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <span class="text-xs font-bold uppercase text-blue-600">Question 1</span>
+                        <p class="font-bold text-lg mt-1 mb-3">Simplify the fraction: <span class="bg-white px-2.5 py-1 rounded border text-blue-900">12 / 18</span></p>
+                        <div class="flex space-x-2">
+                            <input type="text" id="wu-1" placeholder="e.g. 1/2" class="border border-slate-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button onclick="checkWarmup1()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg transition">Check</button>
+                        </div>
+                        <p id="wu-1-fb" class="text-sm font-semibold mt-2 hidden"></p>
+                    </div>
+
+                    <!-- Q2: Convert -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <span class="text-xs font-bold uppercase text-blue-600">Question 2</span>
+                        <p class="font-bold text-lg mt-1 mb-3">Convert <span class="bg-white px-2.5 py-1 rounded border text-blue-900">25%</span> into a fraction AND a decimal:</p>
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            <input type="text" id="wu-2a" placeholder="Fraction (e.g. 1/2)" class="border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" id="wu-2b" placeholder="Decimal (e.g. 0.5)" class="border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <button onclick="checkWarmup2()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg transition">Check Both</button>
+                        <p id="wu-2-fb" class="text-sm font-semibold mt-2 hidden"></p>
+                    </div>
+
+                    <!-- Q3: Rounding -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <span class="text-xs font-bold uppercase text-blue-600">Question 3</span>
+                        <p class="font-bold text-lg mt-1 mb-3">Round <span class="bg-white px-2.5 py-1 rounded border text-blue-900">0.4543</span> to 2 decimal places (2 d.p.):</p>
+                        <div class="flex space-x-2">
+                            <input type="text" id="wu-3" placeholder="0.00" class="border border-slate-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button onclick="checkWarmup3()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg transition">Check</button>
+                        </div>
+                        <p id="wu-3-fb" class="text-sm font-semibold mt-2 hidden"></p>
+                    </div>
+
+                    <!-- Q4: Spelling Unscramble -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <span class="text-xs font-bold uppercase text-blue-600">Question 4 • Key Vocabulary</span>
+                        <p class="font-bold text-base mt-1 mb-3">Unscramble today's key maths words:</p>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="font-mono bg-amber-100 text-amber-900 px-2 py-1 rounded font-bold">B O P R A B I L I T Y</span>
+                                <input type="text" id="wu-4a" placeholder="Type word..." class="border border-slate-300 rounded-lg px-2.5 py-1.5 w-40">
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="font-mono bg-amber-100 text-amber-900 px-2 py-1 rounded font-bold">E X E P R I M E N T</span>
+                                <input type="text" id="wu-4b" placeholder="Type word..." class="border border-slate-300 rounded-lg px-2.5 py-1.5 w-40">
+                            </div>
+                            <button onclick="checkWarmup4()" class="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 rounded-lg transition">Check Spelling</button>
+                            <p id="wu-4-fb" class="text-sm font-semibold mt-1 hidden"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-end">
+                    <button onclick="switchTab(2)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow transition flex items-center space-x-2">
+                        <span>Next: Language of Chance</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- STAGE 2: LANGUAGE OF CHANCE & SPINNER -->
+            <section id="stage-2" class="stage-section hidden">
+                <h2 class="text-2xl font-extrabold text-slate-800 mb-2">The Language of Chance</h2>
+                <p class="text-slate-600 mb-6">In maths, we use specific words to describe how likely an event is to happen.</p>
+
+                <!-- Example 1: Interactive Spinner -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 mb-8">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">Example 1</span>
+                        <h3 class="font-extrabold text-lg text-slate-800">Test the Spinner!</h3>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <!-- Spinner Canvas Container -->
+                        <div class="flex flex-col items-center">
+                            <div class="relative w-64 h-64 sm:w-72 sm:h-72">
+                                <!-- Pointer -->
+                                <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-10 text-slate-900 text-3xl drop-shadow">
+                                    <i class="fas fa-caret-down"></i>
+                                </div>
+                                <canvas id="spinnerCanvas" width="300" height="300" class="w-full h-full rounded-full shadow-lg border-4 border-slate-800"></canvas>
+                            </div>
+                            <button onclick="spinWheel()" id="spin-btn" class="mt-4 bg-amber-500 hover:bg-amber-600 text-slate-900 font-extrabold py-2.5 px-6 rounded-full shadow-md transition transform active:scale-95">
+                                <i class="fas fa-sync-alt mr-2"></i>Spin the Wheel!
+                            </button>
+                            <p id="spin-result" class="mt-2 text-sm font-bold text-slate-700 h-5"></p>
+                        </div>
+
+                        <!-- Example 1 Questions -->
+                        <div class="space-y-6">
+                            <div>
+                                <p class="font-bold text-slate-800 mb-2">a. Look at the 8 slices. What is the <span class="underline decoration-blue-500">most likely</span> symbol to spin?</p>
+                                <div class="grid grid-cols-2 gap-2.5">
+                                    <button onclick="checkEx1a('basketball', this)" class="ex1a-btn bg-white border-2 border-slate-200 hover:border-blue-400 p-3 rounded-xl font-bold flex items-center justify-center space-x-2 transition">
+                                        <span class="text-2xl">🏀</span> <span>Basketball</span>
+                                    </button>
+                                    <button onclick="checkEx1a('star', this)" class="ex1a-btn bg-white border-2 border-slate-200 hover:border-blue-400 p-3 rounded-xl font-bold flex items-center justify-center space-x-2 transition">
+                                        <span class="text-2xl">⭐</span> <span>Star</span>
+                                    </button>
+                                    <button onclick="checkEx1a('apple', this)" class="ex1a-btn bg-white border-2 border-slate-200 hover:border-blue-400 p-3 rounded-xl font-bold flex items-center justify-center space-x-2 transition">
+                                        <span class="text-2xl">🍎</span> <span>Apple</span>
+                                    </button>
+                                    <button onclick="checkEx1a('pig', this)" class="ex1a-btn bg-white border-2 border-slate-200 hover:border-blue-400 p-3 rounded-xl font-bold flex items-center justify-center space-x-2 transition">
+                                        <span class="text-2xl">🐷</span> <span>Pig</span>
+                                    </button>
+                                </div>
+                                <p id="ex1a-fb" class="text-sm font-semibold mt-2 hidden"></p>
+                            </div>
+
+                            <div>
+                                <p class="font-bold text-slate-800 mb-2">b. What is the likelihood of spinning a <span class="text-xl">🏀</span>?</p>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                    <button onclick="checkEx1b('Impossible', this)" class="ex1b-btn bg-white border-2 border-slate-200 hover:border-blue-400 py-2 px-3 rounded-xl text-sm font-bold transition">Impossible</button>
+                                    <button onclick="checkEx1b('Unlikely', this)" class="ex1b-btn bg-white border-2 border-slate-200 hover:border-blue-400 py-2 px-3 rounded-xl text-sm font-bold transition">Unlikely</button>
+                                    <button onclick="checkEx1b('Even chance', this)" class="ex1b-btn bg-white border-2 border-slate-200 hover:border-blue-400 py-2 px-3 rounded-xl text-sm font-bold transition">Even chance</button>
+                                    <button onclick="checkEx1b('Likely', this)" class="ex1b-btn bg-white border-2 border-slate-200 hover:border-blue-400 py-2 px-3 rounded-xl text-sm font-bold transition">Likely</button>
+                                    <button onclick="checkEx1b('Certain', this)" class="ex1b-btn bg-white border-2 border-slate-200 hover:border-blue-400 py-2 px-3 rounded-xl text-sm font-bold transition">Certain</button>
+                                </div>
+                                <p id="ex1b-fb" class="text-sm font-semibold mt-2 hidden"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Example 2: Fill in the blanks -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <span class="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">Example 2</span>
+                        <h3 class="font-extrabold text-lg text-slate-800">Complete the Definitions</h3>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-4">Choose the correct word from: <span class="font-bold text-blue-800">unlikely, even, impossible, certain, chance</span></p>
+
+                    <div class="space-y-4 text-base">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="font-bold text-blue-600">a.</span>
+                            <span>If an event is guaranteed to occur, we say it is</span>
+                            <select id="ex2-a" class="border-2 border-slate-300 rounded-lg px-3 py-1.5 font-bold bg-white">
+                                <option value="">-- select --</option>
+                                <option value="unlikely">unlikely</option>
+                                <option value="even">even</option>
+                                <option value="impossible">impossible</option>
+                                <option value="certain">certain</option>
+                                <option value="chance">chance</option>
+                            </select>.
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="font-bold text-blue-600">b.</span>
+                            <span>An event that is equally likely to occur or not occur has an</span>
+                            <select id="ex2-b1" class="border-2 border-slate-300 rounded-lg px-3 py-1.5 font-bold bg-white">
+                                <option value="">-- select --</option>
+                                <option value="unlikely">unlikely</option>
+                                <option value="even">even</option>
+                                <option value="impossible">impossible</option>
+                                <option value="certain">certain</option>
+                                <option value="chance">chance</option>
+                            </select>
+                            <select id="ex2-b2" class="border-2 border-slate-300 rounded-lg px-3 py-1.5 font-bold bg-white">
+                                <option value="">-- select --</option>
+                                <option value="unlikely">unlikely</option>
+                                <option value="even">even</option>
+                                <option value="impossible">impossible</option>
+                                <option value="certain">certain</option>
+                                <option value="chance">chance</option>
+                            </select>.
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="font-bold text-blue-600">c.</span>
+                            <span>A rare event is considered</span>
+                            <select id="ex2-c" class="border-2 border-slate-300 rounded-lg px-3 py-1.5 font-bold bg-white">
+                                <option value="">-- select --</option>
+                                <option value="unlikely">unlikely</option>
+                                <option value="even">even</option>
+                                <option value="impossible">impossible</option>
+                                <option value="certain">certain</option>
+                                <option value="chance">chance</option>
+                            </select>.
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="font-bold text-blue-600">d.</span>
+                            <span>An event that will never occur is called</span>
+                            <select id="ex2-d" class="border-2 border-slate-300 rounded-lg px-3 py-1.5 font-bold bg-white">
+                                <option value="">-- select --</option>
+                                <option value="unlikely">unlikely</option>
+                                <option value="even">even</option>
+                                <option value="impossible">impossible</option>
+                                <option value="certain">certain</option>
+                                <option value="chance">chance</option>
+                            </select>.
+                        </div>
+                    </div>
+
+                    <button onclick="checkEx2()" class="mt-5 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-lg transition">Check Definitions</button>
+                    <p id="ex2-fb" class="text-sm font-bold mt-2 hidden"></p>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button onclick="switchTab(1)" class="text-slate-600 hover:text-slate-900 font-bold py-3 px-4 flex items-center space-x-2">
+                        <i class="fas fa-arrow-left"></i> <span>Back</span>
+                    </button>
+                    <button onclick="switchTab(3)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow transition flex items-center space-x-2">
+                        <span>Next: Sample Space</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- STAGE 3: SAMPLE SPACE & EXPERIMENTS -->
+            <section id="stage-3" class="stage-section hidden">
+                <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Experiments, Outcomes & Sample Space</h2>
+                <p class="text-slate-600 mb-6">Let's learn the three essential words used in every probability problem.</p>
+
+                <!-- Key Definitions Cards -->
+                <div class="grid md:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-xl">
+                        <div class="text-indigo-600 font-extrabold text-sm uppercase mb-1">1. Chance Experiment</div>
+                        <p class="text-sm text-slate-700">An activity where the result is uncertain (e.g., rolling a die, flipping a coin).</p>
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+                        <div class="text-emerald-600 font-extrabold text-sm uppercase mb-1">2. Outcome</div>
+                        <p class="text-sm text-slate-700">A single possible result of an experiment (e.g., rolling a <strong>4</strong>, or flipping <strong>Heads</strong>).</p>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl">
+                        <div class="text-amber-700 font-extrabold text-sm uppercase mb-1">3. Sample Space</div>
+                        <p class="text-sm text-slate-700">A list of <strong>ALL</strong> possible outcomes, usually written inside curly brackets: <code class="bg-white px-1.5 py-0.5 rounded font-bold">{ ... }</code></p>
+                    </div>
+                </div>
+
+                <!-- Example 3: Interactive Die Simulator -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">Example 3</span>
+                        <h3 class="font-extrabold text-lg text-slate-800">Rolling a Standard 6-Sided Die</h3>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-6 items-center">
+                        <!-- Virtual Die -->
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 flex flex-col items-center text-center shadow-sm">
+                            <div id="die-display" class="w-20 h-20 bg-red-600 text-white rounded-2xl flex items-center justify-center text-4xl font-extrabold shadow-md mb-4">
+                                5
+                            </div>
+                            <button onclick="rollDie()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 px-5 rounded-lg transition w-full">
+                                <i class="fas fa-dice mr-2"></i>Roll Die
+                            </button>
+                            <p class="text-xs text-slate-500 mt-3">Roll history: <span id="die-history" class="font-mono font-bold text-slate-700">5</span></p>
+                        </div>
+
+                        <!-- Questions a, b, c, d -->
+                        <div class="md:col-span-2 space-y-5">
+                            <div>
+                                <p class="font-bold text-sm text-slate-800 mb-1.5">a. What is the <span class="text-indigo-600">chance experiment</span> in this example?</p>
+                                <select id="ex3-a" onchange="checkEx3()" class="w-full border border-slate-300 rounded-lg px-3 py-2 bg-white text-sm font-medium">
+                                    <option value="">-- Choose the best description --</option>
+                                    <option value="wrong1">Getting the number 6</option>
+                                    <option value="correct">Throwing a normal six-sided die</option>
+                                    <option value="wrong2">The numbers 1, 2, 3, 4, 5, 6</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <p class="font-bold text-sm text-slate-800 mb-1.5">b. Click any TWO valid <span class="text-emerald-600">outcomes</span> of this experiment:</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <button onclick="toggleOutcome(this, true)" class="out-btn border border-slate-300 bg-white px-3 py-1.5 rounded-lg text-sm font-bold">Rolling a 1</button>
+                                    <button onclick="toggleOutcome(this, false)" class="out-btn border border-slate-300 bg-white px-3 py-1.5 rounded-lg text-sm font-bold">Rolling a 7</button>
+                                    <button onclick="toggleOutcome(this, true)" class="out-btn border border-slate-300 bg-white px-3 py-1.5 rounded-lg text-sm font-bold">Rolling a 4</button>
+                                    <button onclick="toggleOutcome(this, false)" class="out-btn border border-slate-300 bg-white px-3 py-1.5 rounded-lg text-sm font-bold">Flipping Tails</button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="font-bold text-sm text-slate-800 mb-1.5">c. Build the <span class="text-amber-600">Sample Space</span> (click all numbers that belong inside):</p>
+                                <div class="flex flex-wrap gap-2 items-center">
+                                    <span class="font-mono font-bold text-lg">{</span>
+                                    <button onclick="toggleSS(0, this)" class="ss-btn w-9 h-9 rounded-lg border border-slate-300 bg-white font-bold">0</button>
+                                    <button onclick="toggleSS(1, this)" class="ss-btn w-9 h-9 rounded-lg border border-slate-300 bg-white font-bold">1</button>
+                                    <button onclick="toggleSS(2, this)" class="ss-btn w-9 h-9 rounded-lg border border-slate-300 bg-white font-bold">2</button>
+                                    <button onclick="toggleSS(3, this)" class="ss-btn w-9 h-9 rounded-lg border border-slate-300 bg-white font-bold">3</button>
+                                    <button onclick="toggleSS(4, this)" class="ss-btn w-9 h-9 rounded-lg border border-slate-300 bg-white font-bold">4</button>
+                                    <button onclick="toggleSS(5, this)" class="ss-btn w-9 h-9 rounded-lg border border-slate-300 bg-white font-bold">5</button>
+                                    <button onclick="toggleSS(6, this)" class="ss-btn w-9 h-9 rounded-lg border border-slate-300 bg-white font-bold">6</button>
+                                    <button onclick="toggleSS(7, this)" class="ss-btn w-9 h-9 rounded-lg border border-slate-300 bg-white font-bold">7</button>
+                                    <span class="font-mono font-bold text-lg">}</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="font-bold text-sm text-slate-800 mb-1.5">d. Are all the outcomes <span class="underline">equally likely</span>?</p>
+                                <div class="flex space-x-3">
+                                    <button onclick="checkEx3d(true, this)" class="ex3d-btn border border-slate-300 bg-white px-4 py-1.5 rounded-lg text-sm font-bold">Yes (each has a 1 in 6 chance)</button>
+                                    <button onclick="checkEx3d(false, this)" class="ex3d-btn border border-slate-300 bg-white px-4 py-1.5 rounded-lg text-sm font-bold">No (6 is harder to roll)</button>
+                                </div>
+                            </div>
+                            <p id="ex3-fb" class="text-sm font-bold text-emerald-700 hidden"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button onclick="switchTab(2)" class="text-slate-600 hover:text-slate-900 font-bold py-3 px-4 flex items-center space-x-2">
+                        <i class="fas fa-arrow-left"></i> <span>Back</span>
+                    </button>
+                    <button onclick="switchTab(4)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow transition flex items-center space-x-2">
+                        <span>Next: The Probability Scale</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- STAGE 4: THE PROBABILITY SCALE & PROBLEM SOLVING -->
+            <section id="stage-4" class="stage-section hidden">
+                <h2 class="text-2xl font-extrabold text-slate-800 mb-2">The Probability Scale (0 to 1)</h2>
+                <p class="text-slate-600 mb-6">Every probability sits on a number line between <strong>0 (Impossible)</strong> and <strong>1 (Certain)</strong>.</p>
+
+                <!-- Visual Reference Scale -->
+                <div class="bg-slate-900 text-white p-6 rounded-2xl mb-8 shadow">
+                    <div class="flex justify-between text-xs sm:text-sm font-extrabold text-amber-400 mb-2">
+                        <span>0 (0%)</span>
+                        <span>0.25 (25%)</span>
+                        <span>0.5 or ½ (50%)</span>
+                        <span>0.75 (75%)</span>
+                        <span>1.0 (100%)</span>
+                    </div>
+                    <div class="h-3 w-full rounded-full bg-gradient-to-r from-red-500 via-amber-400 to-emerald-500 mb-2"></div>
+                    <div class="flex justify-between text-xs text-slate-300 font-semibold">
+                        <span>Impossible</span>
+                        <span>Unlikely</span>
+                        <span>Even Chance</span>
+                        <span>Likely</span>
+                        <span>Certain</span>
+                    </div>
+                </div>
+
+                <!-- Problem Solving Example 1 -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 mb-8">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <span class="bg-purple-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">Problem Solving 1</span>
+                        <h3 class="font-extrabold text-lg text-slate-800">Place These Events on the Scale</h3>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-5">Drag each slider to where you think the probability sits between <strong>0.0</strong> and <strong>1.0</strong>, then check your answers!</p>
+
+                    <div class="space-y-5" id="scale-events-container">
+                        <!-- Event A -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-bold text-sm text-slate-800"><span class="text-purple-600 mr-1">a.</span> All your teeth will fall out tonight.</span>
+                                <span id="val-a" class="font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded text-sm">0.50</span>
+                            </div>
+                            <input type="range" id="slider-a" min="0" max="1" step="0.05" value="0.5" oninput="document.getElementById('val-a').innerText = parseFloat(this.value).toFixed(2)">
+                        </div>
+
+                        <!-- Event B -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-bold text-sm text-slate-800"><span class="text-purple-600 mr-1">b.</span> You will be sitting in this exact same room, this time next week.</span>
+                                <span id="val-b" class="font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded text-sm">0.50</span>
+                            </div>
+                            <input type="range" id="slider-b" min="0" max="1" step="0.05" value="0.5" oninput="document.getElementById('val-b').innerText = parseFloat(this.value).toFixed(2)">
+                        </div>
+
+                        <!-- Event C -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-bold text-sm text-slate-800"><span class="text-purple-600 mr-1">c.</span> You will have a birthday next year.</span>
+                                <span id="val-c" class="font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded text-sm">0.50</span>
+                            </div>
+                            <input type="range" id="slider-c" min="0" max="1" step="0.05" value="0.5" oninput="document.getElementById('val-c').innerText = parseFloat(this.value).toFixed(2)">
+                        </div>
+
+                        <!-- Event D -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-bold text-sm text-slate-800"><span class="text-purple-600 mr-1">d.</span> Russell Crowe will walk through the classroom door right NOW.</span>
+                                <span id="val-d" class="font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded text-sm">0.50</span>
+                            </div>
+                            <input type="range" id="slider-d" min="0" max="1" step="0.05" value="0.5" oninput="document.getElementById('val-d').innerText = parseFloat(this.value).toFixed(2)">
+                        </div>
+
+                        <!-- Event E -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-bold text-sm text-slate-800"><span class="text-purple-600 mr-1">e.</span> You will get homework in maths this week.</span>
+                                <span id="val-e" class="font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded text-sm">0.50</span>
+                            </div>
+                            <input type="range" id="slider-e" min="0" max="1" step="0.05" value="0.5" oninput="document.getElementById('val-e').innerText = parseFloat(this.value).toFixed(2)">
+                        </div>
+                    </div>
+
+                    <button onclick="checkSliders()" class="mt-5 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 px-6 rounded-xl transition">Check My Scale Placements</button>
+                    <div id="sliders-fb" class="mt-4 p-4 rounded-xl bg-white border border-slate-200 text-sm hidden"></div>
+                </div>
+
+                <!-- Problem Solving Example 2 -->
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <span class="bg-amber-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">Problem Solving 2 • Tricky Question!</span>
+                        <h3 class="font-extrabold text-lg text-slate-800">Jack's Lucky Streak</h3>
+                    </div>
+                    <p class="text-slate-700 mb-4">
+                        Jack rolls a standard 6-sided die three times. He rolls a <strong>6</strong> each time (6, 6, 6).<br>
+                        Jack then has a <strong>fourth roll</strong>. Which of the following is true?
+                    </p>
+
+                    <div class="grid sm:grid-cols-2 gap-3">
+                        <button onclick="checkJack(1, this)" class="jack-btn text-left p-3.5 rounded-xl bg-white border-2 border-slate-200 hover:border-amber-500 font-semibold text-sm transition">
+                            He is more likely to roll a six than a four.
+                        </button>
+                        <button onclick="checkJack(2, this)" class="jack-btn text-left p-3.5 rounded-xl bg-white border-2 border-slate-200 hover:border-amber-500 font-semibold text-sm transition">
+                            He is certain to roll a six.
+                        </button>
+                        <button onclick="checkJack(3, this)" class="jack-btn text-left p-3.5 rounded-xl bg-white border-2 border-slate-200 hover:border-amber-500 font-semibold text-sm transition">
+                            He has an equal chance of rolling a six as a four.
+                        </button>
+                        <button onclick="checkJack(4, this)" class="jack-btn text-left p-3.5 rounded-xl bg-white border-2 border-slate-200 hover:border-amber-500 font-semibold text-sm transition">
+                            He is more likely to roll a four than a six.
+                        </button>
+                    </div>
+                    <p id="jack-fb" class="text-sm font-bold mt-3 hidden"></p>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button onclick="switchTab(3)" class="text-slate-600 hover:text-slate-900 font-bold py-3 px-4 flex items-center space-x-2">
+                        <i class="fas fa-arrow-left"></i> <span>Back</span>
+                    </button>
+                    <button onclick="switchTab(5)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow transition flex items-center space-x-2">
+                        <span>Next: Mastery Quiz</span>
+                        <i class="fas fa-trophy"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- STAGE 5: PRACTICE QUIZ & SUCCESS CRITERIA -->
+            <section id="stage-5" class="stage-section hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-slate-800">Practice & Mastery Check</h2>
+                        <p class="text-slate-600">Test everything you've learned before entering the Probability Carnival!</p>
+                    </div>
+                    <div class="mt-3 sm:mt-0 bg-blue-900 text-white px-4 py-2 rounded-xl font-bold text-sm">
+                        Score: <span id="quiz-score" class="text-amber-400 text-lg">0</span> / 8
+                    </div>
+                </div>
+
+                <div id="quiz-container" class="space-y-6">
+                    <!-- Questions injected by JS -->
+                </div>
+
+                <!-- Success Criteria Self-Reflection -->
+                <div class="mt-10 bg-slate-900 text-white rounded-2xl p-6 sm:p-8">
+                    <h3 class="text-xl font-extrabold text-amber-400 mb-2"><i class="fas fa-clipboard-check mr-2"></i>Success Criteria Check-In</h3>
+                    <p class="text-slate-300 text-sm mb-6">Rate how confident you feel with today's learning intentions:</p>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-700 text-xs uppercase text-slate-400">
+                                    <th class="py-3 pr-4">Success Criterion</th>
+                                    <th class="py-3 px-3 text-center">Rarely</th>
+                                    <th class="py-3 px-3 text-center">Sometimes</th>
+                                    <th class="py-3 px-3 text-center">Always</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800 text-sm">
+                                <tr>
+                                    <td class="py-4 pr-4 font-semibold">I know what a chance experiment is</td>
+                                    <td class="py-4 px-3 text-center"><input type="radio" name="sc1" class="w-4 h-4 accent-amber-500"></td>
+                                    <td class="py-4 px-3 text-center"><input type="radio" name="sc1" class="w-4 h-4 accent-amber-500"></td>
+                                    <td class="py-4 px-3 text-center"><input type="radio" name="sc1" class="w-4 h-4 accent-amber-500"></td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 pr-4 font-semibold">I can describe the probability of events using chance words</td>
+                                    <td class="py-4 px-3 text-center"><input type="radio" name="sc2" class="w-4 h-4 accent-amber-500"></td>
+                                    <td class="py-4 px-3 text-center"><input type="radio" name="sc2" class="w-4 h-4 accent-amber-500"></td>
+                                    <td class="py-4 px-3 text-center"><input type="radio" name="sc2" class="w-4 h-4 accent-amber-500"></td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 pr-4 font-semibold">I can list out a Sample Space</td>
+                                    <td class="py-4 px-3 text-center"><input type="radio" name="sc3" class="w-4 h-4 accent-amber-500"></td>
+                                    <td class="py-4 px-3 text-center"><input type="radio" name="sc3" class="w-4 h-4 accent-amber-500"></td>
+                                    <td class="py-4 px-3 text-center"><input type="radio" name="sc3" class="w-4 h-4 accent-amber-500"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button onclick="switchTab(4)" class="text-slate-600 hover:text-slate-900 font-bold py-3 px-4 flex items-center space-x-2">
+                        <i class="fas fa-arrow-left"></i> <span>Back</span>
+                    </button>
+                    <button onclick="switchTab(6)" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-xl shadow transition flex items-center space-x-2">
+                        <span>Enter the Probability Carnival!</span>
+                        <i class="fas fa-gamepad"></i>
+                    </button>
+                </div>
+
+                <!-- OFFICIAL CERTIFICATE OF COMPLETION (STAGES 1-5) -->
+                <div class="mt-10 border-t-2 border-slate-200 pt-8">
+                    <div id="cert-locked-box" class="bg-slate-100 border-2 border-dashed border-slate-300 rounded-2xl p-6 text-center">
+                        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-200 text-slate-500 text-xl mb-3">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3 class="text-lg font-extrabold text-slate-800">Certificate of Mastery (Stages 1–5)</h3>
+                        <p class="text-sm text-slate-600 max-w-lg mx-auto mt-1 mb-4">
+                            Complete every question correctly across <strong>Stages 1 to 5</strong> (and get a clean <strong>8/8</strong> run on the Mastery Quiz) to unlock your official completion certificate.
+                        </p>
+                        <div class="flex flex-wrap justify-center gap-2 text-xs font-bold" id="cert-checklist-pills">
+                            <!-- Stage status pills injected by JS -->
+                        </div>
+                    </div>
+
+                    <div id="cert-unlocked-box" class="hidden">
+                        <div class="bg-gradient-to-br from-amber-50 via-white to-amber-50 border-8 border-double border-amber-500 rounded-2xl p-6 sm:p-10 shadow-xl text-center relative overflow-hidden">
+                            <div class="text-amber-500 text-4xl mb-2"><i class="fas fa-award"></i></div>
+                            <div class="text-xs font-extrabold uppercase tracking-widest text-amber-700">Year 7 Mathematics • Topic 11: Probability</div>
+                            <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Certificate of Mastery</h3>
+                            <p class="text-sm text-slate-600 mt-3">This certifies that</p>
+
+                            <div class="my-3 max-w-md mx-auto">
+                                <input type="text" id="cert-student-name" placeholder="Type your full name here..." class="w-full text-center text-xl sm:text-2xl font-extrabold text-blue-900 bg-white/80 border-b-2 border-slate-400 focus:border-blue-600 focus:outline-none py-1.5 px-3 rounded-t">
+                            </div>
+
+                            <p class="text-sm text-slate-700 max-w-xl mx-auto leading-relaxed">
+                                has successfully completed all learning activities, examples, and mastery assessments for <strong>Lesson 1: Describing Probability & Sample Space</strong> with 100% accuracy.
+                            </p>
+
+                            <div class="mt-6 pt-4 border-t border-amber-200 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-2 max-w-lg mx-auto">
+                                <div><span class="font-bold text-slate-700">Date Completed:</span> <span id="cert-date"></span></div>
+                                <div class="font-extrabold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
+                                    <i class="fas fa-check-circle mr-1"></i>Verified 100% Complete
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STAGE 6: MEGA PROBABILITY CARNIVAL ARCADE -->
+            <section id="stage-6" class="stage-section hidden">
+                <!-- Carnival Header & Ticket Counter -->
+                <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 rounded-2xl shadow-lg border-b-4 border-amber-400 mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-amber-400 text-slate-900 text-xs font-extrabold uppercase px-2.5 py-0.5 rounded-full">Grand Midway</span>
+                            <span class="text-xs text-indigo-300 font-semibold">6 Mini-Games + 8-Tier Prize Booth</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold mt-1 tracking-tight">🎪 The Probability Carnival</h2>
+                        <p class="text-slate-300 text-xs sm:text-sm mt-1">Master all 6 carnival booths to earn big tickets and unlock every trophy in the Prize Shop!</p>
+                    </div>
+                    <div class="flex items-center space-x-3 bg-slate-800/90 px-5 py-3 rounded-2xl border-2 border-amber-400 shrink-0">
+                        <i class="fas fa-ticket-alt text-amber-400 text-3xl animate-bounce"></i>
+                        <div>
+                            <div class="text-xs text-slate-400 uppercase font-bold">Tickets Won</div>
+                            <div id="carnival-tickets" class="text-3xl font-extrabold text-amber-400">100</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6-Booth Grid of Carnival Mini-Games -->
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+
+                    <!-- BOOTH 1: MYSTERY GUMBALL MACHINE -->
+                    <div class="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-2xl p-5 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="font-extrabold text-base sm:text-lg text-indigo-950"><i class="fas fa-circle text-pink-500 mr-2"></i>Booth 1: Mystery Gumballs</h3>
+                                <span id="gb-round" class="text-xs font-bold bg-white px-2.5 py-1 rounded-full text-indigo-700 border border-indigo-200">Round 1</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-3">Predict the likelihood of pulling the target colour from the 10 gumballs, then pull the lever!</p>
+
+                            <div class="bg-white rounded-xl p-3.5 border-2 border-slate-200 mb-3 text-center">
+                                <div id="gumball-jar" class="flex flex-wrap justify-center gap-1.5 text-2xl my-1"></div>
+                                <div id="gumball-target-prompt" class="mt-2 font-bold text-slate-800 text-xs sm:text-sm bg-slate-100 py-1.5 px-3 rounded-lg"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                                    <button onclick="selectGbGuess('Impossible', this)" class="gb-guess-btn bg-white border border-slate-300 hover:border-indigo-500 py-1.5 px-2 rounded-lg text-xs font-bold">Impossible (0)</button>
+                                    <button onclick="selectGbGuess('Unlikely', this)" class="gb-guess-btn bg-white border border-slate-300 hover:border-indigo-500 py-1.5 px-2 rounded-lg text-xs font-bold">Unlikely</button>
+                                    <button onclick="selectGbGuess('Even chance', this)" class="gb-guess-btn bg-white border border-slate-300 hover:border-indigo-500 py-1.5 px-2 rounded-lg text-xs font-bold">Even chance</button>
+                                    <button onclick="selectGbGuess('Likely', this)" class="gb-guess-btn bg-white border border-slate-300 hover:border-indigo-500 py-1.5 px-2 rounded-lg text-xs font-bold">Likely</button>
+                                    <button onclick="selectGbGuess('Certain', this)" class="gb-guess-btn bg-white border border-slate-300 hover:border-indigo-500 py-1.5 px-2 rounded-lg text-xs font-bold">Certain (1)</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button id="gb-pull-btn" onclick="playGumballRound()" disabled class="w-full bg-indigo-600 disabled:bg-slate-300 hover:bg-indigo-700 text-white font-extrabold py-2.5 rounded-xl shadow transition text-sm">
+                                <i class="fas fa-hand-pointer mr-2"></i>Lock In Guess & Pull Lever!
+                            </button>
+                            <div id="gb-feedback" class="mt-2.5 text-xs font-bold p-2.5 rounded-xl hidden"></div>
+                        </div>
+                    </div>
+
+                    <!-- BOOTH 2: SAMPLE SPACE SPEED BUILDER -->
+                    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-2xl p-5 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="font-extrabold text-base sm:text-lg text-emerald-950"><i class="fas fa-layer-group text-emerald-600 mr-2"></i>Booth 2: Sample Space Builder</h3>
+                                <span id="ssb-level" class="text-xs font-bold bg-white px-2.5 py-1 rounded-full text-emerald-700 border border-emerald-200">Level 1/6</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-3">Tap <strong>ALL</strong> possible outcomes to construct the exact Sample Space inside the brackets.</p>
+
+                            <div class="bg-white rounded-xl p-3.5 border-2 border-slate-200 mb-3">
+                                <div class="text-xs font-bold uppercase text-emerald-600 mb-0.5">Experiment:</div>
+                                <p id="ssb-prompt" class="font-extrabold text-slate-800 text-sm mb-2.5">Loading...</p>
+                                
+                                <div id="ssb-pool" class="flex flex-wrap gap-1.5 mb-3"></div>
+
+                                <div class="bg-slate-900 text-emerald-400 font-mono text-xs p-2.5 rounded-lg overflow-x-auto">
+                                    S = { <span id="ssb-basket" class="text-white"></span> }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button onclick="checkSsbRound()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-2.5 rounded-xl shadow transition text-sm">
+                                <i class="fas fa-check-circle mr-2"></i>Submit Sample Space (+75 Tickets)
+                            </button>
+                            <div id="ssb-feedback" class="mt-2.5 text-xs font-bold p-2.5 rounded-xl hidden"></div>
+                        </div>
+                    </div>
+
+                    <!-- BOOTH 3: HIGHER OR LOWER CARD STREAK -->
+                    <div class="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-5 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="font-extrabold text-base sm:text-lg text-amber-950"><i class="fas fa-clone text-amber-600 mr-2"></i>Booth 3: Higher or Lower?</h3>
+                                <span class="text-xs font-bold bg-white px-2.5 py-1 rounded-full text-amber-700 border border-amber-200">Streak: <span id="hl-streak">0</span> 🔥</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-3">Cards go from <strong>1 (Low)</strong> to <strong>10 (High)</strong>. Based on the current card, is the next random card <em>Likely</em> to be Higher or Lower?</p>
+
+                            <div class="bg-white rounded-xl p-4 border-2 border-slate-200 mb-3 flex items-center justify-around">
+                                <div class="text-center">
+                                    <div class="text-xs font-bold text-slate-400 uppercase mb-1">Current Card</div>
+                                    <div id="hl-current-card" class="w-16 h-24 mx-auto rounded-xl bg-slate-900 text-amber-400 border-2 border-amber-400 flex items-center justify-center text-3xl font-extrabold shadow-md">
+                                        5
+                                    </div>
+                                </div>
+                                <div class="text-center max-w-[160px]">
+                                    <div class="text-xs font-bold text-slate-500 mb-1">Probability Tip:</div>
+                                    <p id="hl-hint" class="text-xs text-slate-600 italic">If the card is 2, rolling Higher is very likely!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <button onclick="playHigherLower('lower')" class="bg-rose-600 hover:bg-rose-700 text-white font-extrabold py-2.5 rounded-xl shadow transition text-sm">
+                                    <i class="fas fa-arrow-down mr-1"></i> Lower
+                                </button>
+                                <button onclick="playHigherLower('higher')" class="bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-2.5 rounded-xl shadow transition text-sm">
+                                    <i class="fas fa-arrow-up mr-1"></i> Higher
+                                </button>
+                            </div>
+                            <div id="hl-feedback" class="mt-2.5 text-xs font-bold p-2.5 rounded-xl hidden"></div>
+                        </div>
+                    </div>
+
+                    <!-- BOOTH 4: RIGGED WHEEL DETECTIVE -->
+                    <div class="bg-gradient-to-br from-sky-50 to-blue-50 border-2 border-sky-200 rounded-2xl p-5 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="font-extrabold text-base sm:text-lg text-sky-950"><i class="fas fa-search text-sky-600 mr-2"></i>Booth 4: Fair or Rigged?</h3>
+                                <span id="det-case" class="text-xs font-bold bg-white px-2.5 py-1 rounded-full text-sky-700 border border-sky-200">Case 1/4</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-3">Look at the carnival game setup and the test results. Is the game <strong>Fair (Equally Likely)</strong> or <strong>Rigged</strong>?</p>
+
+                            <div class="bg-white rounded-xl p-3.5 border-2 border-slate-200 mb-3">
+                                <div id="det-scenario" class="text-xs sm:text-sm font-bold text-slate-800 mb-2"></div>
+                                <div id="det-results" class="bg-slate-100 p-2.5 rounded-lg font-mono text-xs text-slate-700"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <button onclick="checkDetective('fair')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-2.5 rounded-xl shadow transition text-sm">
+                                    <i class="fas fa-balance-scale mr-1"></i> Fair Game
+                                </button>
+                                <button onclick="checkDetective('rigged')" class="bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-2.5 rounded-xl shadow transition text-sm">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i> Rigged!
+                                </button>
+                            </div>
+                            <div id="det-feedback" class="mt-2.5 text-xs font-bold p-2.5 rounded-xl hidden"></div>
+                        </div>
+                    </div>
+
+                    <!-- BOOTH 5: SCALE SNIPER -->
+                    <div class="bg-gradient-to-br from-rose-50 to-pink-50 border-2 border-rose-200 rounded-2xl p-5 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="font-extrabold text-base sm:text-lg text-rose-950"><i class="fas fa-crosshairs text-rose-600 mr-2"></i>Booth 5: Scale Sniper</h3>
+                                <span id="sniper-round" class="text-xs font-bold bg-white px-2.5 py-1 rounded-full text-rose-700 border border-rose-200">Target 1</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-3">Aim the slider at the exact probability value (between <strong>0.00</strong> and <strong>1.00</strong>) for the event below!</p>
+
+                            <div class="bg-white rounded-xl p-3.5 border-2 border-slate-200 mb-3">
+                                <div class="text-xs font-bold uppercase text-rose-600 mb-1">Target Event:</div>
+                                <p id="sniper-prompt" class="font-extrabold text-slate-800 text-xs sm:text-sm mb-3">Loading...</p>
+                                
+                                <div class="flex justify-between text-[11px] font-bold text-slate-400 mb-1">
+                                    <span>0.00 (Impossible)</span>
+                                    <span id="sniper-val" class="text-rose-600 font-mono text-sm">0.50</span>
+                                    <span>1.00 (Certain)</span>
+                                </div>
+                                <input type="range" id="sniper-slider" min="0" max="1" step="0.05" value="0.5" oninput="document.getElementById('sniper-val').innerText = parseFloat(this.value).toFixed(2)">
+                            </div>
+                        </div>
+
+                        <div>
+                            <button onclick="fireScaleSniper()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold py-2.5 rounded-xl shadow transition text-sm">
+                                <i class="fas fa-bullseye mr-2"></i>Take the Shot! (+85 Tickets)
+                            </button>
+                            <div id="sniper-feedback" class="mt-2.5 text-xs font-bold p-2.5 rounded-xl hidden"></div>
+                        </div>
+                    </div>
+
+                    <!-- BOOTH 6: DICE SUM SHOWDOWN -->
+                    <div class="bg-gradient-to-br from-violet-50 to-fuchsia-50 border-2 border-violet-200 rounded-2xl p-5 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="font-extrabold text-base sm:text-lg text-violet-950"><i class="fas fa-dice text-violet-600 mr-2"></i>Booth 6: Dice Sum Showdown</h3>
+                                <span class="text-xs font-bold bg-white px-2.5 py-1 rounded-full text-violet-700 border border-violet-200">2 Dice Total</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-3">Roll <strong>TWO 6-sided dice</strong> and add them together (Totals range from 2 to 12). Predict which zone the sum will land in!</p>
+
+                            <div class="bg-white rounded-xl p-3.5 border-2 border-slate-200 mb-3 flex items-center justify-around">
+                                <div class="flex space-x-2">
+                                    <div id="ds-die1" class="w-12 h-12 rounded-xl bg-violet-700 text-white flex items-center justify-center text-2xl font-extrabold shadow">3</div>
+                                    <div id="ds-die2" class="w-12 h-12 rounded-xl bg-violet-700 text-white flex items-center justify-center text-2xl font-extrabold shadow">4</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-[11px] font-bold uppercase text-slate-400">Last Total</div>
+                                    <div id="ds-total" class="text-2xl font-extrabold text-violet-900">7</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="grid grid-cols-3 gap-1.5">
+                                <button onclick="playDiceSum('low')" class="bg-slate-800 hover:bg-slate-900 text-white font-extrabold py-2 px-1 rounded-xl shadow transition text-xs">
+                                    Low (2–5)<br><span class="text-[10px] text-amber-300">Unlikely • +90</span>
+                                </button>
+                                <button onclick="playDiceSum('mid')" class="bg-violet-600 hover:bg-violet-700 text-white font-extrabold py-2 px-1 rounded-xl shadow transition text-xs">
+                                    Middle (6–8)<br><span class="text-[10px] text-amber-300">Likely • +50</span>
+                                </button>
+                                <button onclick="playDiceSum('high')" class="bg-slate-800 hover:bg-slate-900 text-white font-extrabold py-2 px-1 rounded-xl shadow transition text-xs">
+                                    High (9–12)<br><span class="text-[10px] text-amber-300">Unlikely • +90</span>
+                                </button>
+                            </div>
+                            <div id="ds-feedback" class="mt-2.5 text-xs font-bold p-2.5 rounded-xl hidden"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- CARNIVAL PRIZE SHOP -->
+                <div class="bg-slate-900 text-white rounded-2xl p-6 border-2 border-slate-700 shadow-md mb-8">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+                        <div>
+                            <h3 class="text-lg font-extrabold text-amber-400"><i class="fas fa-store mr-2"></i>Carnival Prize Booth</h3>
+                            <p class="text-xs text-slate-300">Keep playing the 6 carnival booths to save up tickets and unlock all 8 rare trophies!</p>
+                        </div>
+                        <span class="text-xs bg-slate-800 text-amber-300 px-3 py-1.5 rounded-lg border border-slate-700 font-bold">
+                            Unlocked: <span id="prizes-unlocked-count">0</span> / 8 Prizes
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="prize-shelf">
+                        <!-- Prizes injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Footer Navigation -->
+                <div class="flex justify-between items-center pt-2">
+                    <button onclick="switchTab(5)" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-bold py-2.5 px-4 rounded-xl transition">
+                        <i class="fas fa-arrow-left mr-1"></i> Back to Quiz
+                    </button>
+                    <button onclick="resetLesson()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition">
+                        <i class="fas fa-redo mr-1"></i> Restart Lesson
+                    </button>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        // --- NAVIGATION ---
+        function switchTab(stageNum) {
+            document.querySelectorAll('.stage-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`stage-${stageNum}`).classList.remove('hidden');
+            
+            for (let i = 1; i <= 6; i++) {
+                const tab = document.getElementById(`tab-${i}`);
+                if (i === stageNum) {
+                    tab.classList.remove('tab-inactive');
+                    tab.classList.add('tab-active');
+                } else {
+                    tab.classList.remove('tab-active');
+                    tab.classList.add('tab-inactive');
+                }
+            }
+            document.getElementById('progress-text').innerText = `Stage ${stageNum} of 6`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- STAGE 1: WARM UP ---
+        const masteryState = {
+            wu1: false, wu2: false, wu3: false, wu4: false,
+            ex1a: false, ex1b: false, ex2: false,
+            ex3a: false, ex3b: false, ex3c: false, ex3d: false,
+            ex4_sliders: false, ex4_jack: false,
+            quizSolved: new Set()
+        };
+
+        function updateCertificateStatus() {
+            const s1Done = masteryState.wu1 && masteryState.wu2 && masteryState.wu3 && masteryState.wu4;
+            const s2Done = masteryState.ex1a && masteryState.ex1b && masteryState.ex2;
+            const s3Done = masteryState.ex3a && masteryState.ex3b && masteryState.ex3c && masteryState.ex3d;
+            const s4Done = masteryState.ex4_sliders && masteryState.ex4_jack;
+            const s5Done = masteryState.quizSolved.size === quizQuestions.length;
+
+            const pillsEl = document.getElementById('cert-checklist-pills');
+            if (pillsEl) {
+                const stages = [
+                    { label: 'Stage 1: Warm-Up', done: s1Done },
+                    { label: 'Stage 2: Chance Words', done: s2Done },
+                    { label: 'Stage 3: Sample Space', done: s3Done },
+                    { label: 'Stage 4: The Scale', done: s4Done },
+                    { label: `Stage 5: Quiz (${masteryState.quizSolved.size}/${quizQuestions.length})`, done: s5Done }
+                ];
+                pillsEl.innerHTML = stages.map(st => `
+                    <span class="px-3 py-1.5 rounded-full border ${st.done ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-white text-slate-500 border-slate-300'}">
+                        ${st.done ? '✅' : '⏳'} ${st.label}
+                    </span>
+                `).join('');
+            }
+
+            if (s1Done && s2Done && s3Done && s4Done && s5Done) {
+                document.getElementById('cert-locked-box').classList.add('hidden');
+                document.getElementById('cert-unlocked-box').classList.remove('hidden');
+                const dateEl = document.getElementById('cert-date');
+                if (dateEl && !dateEl.innerText) {
+                    dateEl.innerText = new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+                }
+            }
+        }
+
+        function showFb(id, isCorrect, msg) {
+            const el = document.getElementById(id);
+            el.classList.remove('hidden', 'text-emerald-600', 'text-red-600');
+            el.classList.add(isCorrect ? 'text-emerald-600' : 'text-red-600');
+            el.innerText = msg;
+        }
+
+        function checkWarmup1() {
+            const val = document.getElementById('wu-1').value.trim().replace(/\s+/g, '');
+            if (val === '2/3') {
+                masteryState.wu1 = true;
+                updateCertificateStatus();
+                showFb('wu-1-fb', true, '✅ Spot on! Dividing top and bottom by 6 gives 2/3.');
+            } else {
+                showFb('wu-1-fb', false, '❌ Not quite. Hint: Both 12 and 18 can be divided by 6!');
+            }
+        }
+
+        function checkWarmup2() {
+            const frac = document.getElementById('wu-2a').value.trim().replace(/\s+/g, '');
+            const dec = document.getElementById('wu-2b').value.trim();
+            if ((frac === '1/4' || frac === '25/100') && (dec === '0.25' || dec === '.25')) {
+                masteryState.wu2 = true;
+                updateCertificateStatus();
+                showFb('wu-2-fb', true, '✅ Awesome! 25% = 1/4 = 0.25.');
+            } else {
+                showFb('wu-2-fb', false, '❌ Try again! Think of a quarter of a dollar (25 cents).');
+            }
+        }
+
+        function checkWarmup3() {
+            const val = document.getElementById('wu-3').value.trim();
+            if (val === '0.45') {
+                masteryState.wu3 = true;
+                updateCertificateStatus();
+                showFb('wu-3-fb', true, '✅ Correct! The third digit is 4, so we round down to 0.45.');
+            } else {
+                showFb('wu-3-fb', false, '❌ Look at the third decimal digit (4). Since it is less than 5, keep it at 0.45.');
+            }
+        }
+
+        function checkWarmup4() {
+            const w1 = document.getElementById('wu-4a').value.trim().toLowerCase();
+            const w2 = document.getElementById('wu-4b').value.trim().toLowerCase();
+            if (w1 === 'probability' && w2 === 'experiment') {
+                masteryState.wu4 = true;
+                updateCertificateStatus();
+                showFb('wu-4-fb', true, '✅ Nailed both spellings: PROBABILITY & EXPERIMENT!');
+            } else {
+                showFb('wu-4-fb', false, '❌ Check your spelling carefully: Probability and Experiment.');
+            }
+        }
+
+        // --- STAGE 2: SPINNER & DEFINITIONS ---
+        const slices = [
+            { label: '🍎', name: 'Apple', color: '#f59e0b' },
+            { label: '🏀', name: 'Basketball', color: '#ef4444' },
+            { label: '🐷', name: 'Pig', color: '#1e1b4b' },
+            { label: '⭐', name: 'Star', color: '#065f46' },
+            { label: '🏀', name: 'Basketball', color: '#ef4444' },
+            { label: '⭐', name: 'Star', color: '#065f46' },
+            { label: '🐷', name: 'Pig', color: '#1e1b4b' },
+            { label: '🏀', name: 'Basketball', color: '#ef4444' }
+        ];
+
+        let currentRotation = 0;
+        let isSpinning = false;
+
+        function drawSpinner(rotationAngle = 0) {
+            const canvas = document.getElementById('spinnerCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = canvas.width / 2;
+            const arc = (2 * Math.PI) / slices.length;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            slices.forEach((slice, i) => {
+                const angle = rotationAngle + i * arc - Math.PI / 2;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, angle, angle + arc);
+                ctx.fillStyle = slice.color;
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+
+                // Draw Emoji
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(angle + arc / 2);
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = '32px Arial';
+                ctx.fillText(slice.label, radius * 0.65, 0);
+                ctx.restore();
+            });
+
+            // Center Pin
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 16, 0, 2 * Math.PI);
+            ctx.fillStyle = '#94a3b8';
+            ctx.fill();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = '#0f172a';
+            ctx.stroke();
+        }
+
+        function spinWheel() {
+            if (isSpinning) return;
+            isSpinning = true;
+            document.getElementById('spin-result').innerText = 'Spinning...';
+            const extraSpins = (Math.floor(Math.random() * 5) + 5) * 2 * Math.PI;
+            const randomOffset = Math.random() * 2 * Math.PI;
+            const targetRotation = currentRotation + extraSpins + randomOffset;
+            const duration = 2000;
+            const startTime = performance.now();
+            const startRotation = currentRotation;
+
+            function animate(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                currentRotation = startRotation + (targetRotation - startRotation) * easeOut;
+                drawSpinner(currentRotation);
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    isSpinning = false;
+                    const normalized = (2 * Math.PI - (currentRotation % (2 * Math.PI))) % (2 * Math.PI);
+                    const arc = (2 * Math.PI) / slices.length;
+                    const index = Math.floor(normalized / arc);
+                    const landed = slices[index];
+                    document.getElementById('spin-result').innerText = `Landed on: ${landed.label} ${landed.name}!`;
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function checkEx1a(choice, btn) {
+            document.querySelectorAll('.ex1a-btn').forEach(b => b.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-red-500', 'bg-red-50'));
+            if (choice === 'basketball') {
+                btn.classList.add('border-emerald-500', 'bg-emerald-50');
+                masteryState.ex1a = true;
+                updateCertificateStatus();
+                showFb('ex1a-fb', true, '✅ Correct! Basketball appears on 3 out of 8 slices—more than any other symbol.');
+            } else {
+                btn.classList.add('border-red-500', 'bg-red-50');
+                showFb('ex1a-fb', false, '❌ Count each symbol carefully! Basketball has 3 slices, Star has 2, Pig has 2, Apple has 1.');
+            }
+        }
+
+        function checkEx1b(choice, btn) {
+            document.querySelectorAll('.ex1b-btn').forEach(b => b.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-red-500', 'bg-red-50'));
+            if (choice === 'Unlikely') {
+                btn.classList.add('border-emerald-500', 'bg-emerald-50');
+                masteryState.ex1b = true;
+                updateCertificateStatus();
+                showFb('ex1b-fb', true, '✅ Yes! 3 out of 8 is less than half (4 out of 8), so spinning a basketball is Unlikely.');
+            } else {
+                btn.classList.add('border-red-500', 'bg-red-50');
+                showFb('ex1b-fb', false, '❌ Hint: Even chance would be 4 out of 8 slices. Basketball only has 3 out of 8 slices!');
+            }
+        }
+
+        function checkEx2() {
+            const a = document.getElementById('ex2-a').value;
+            const b1 = document.getElementById('ex2-b1').value;
+            const b2 = document.getElementById('ex2-b2').value;
+            const c = document.getElementById('ex2-c').value;
+            const d = document.getElementById('ex2-d').value;
+
+            if (a === 'certain' && b1 === 'even' && b2 === 'chance' && c === 'unlikely' && d === 'impossible') {
+                masteryState.ex2 = true;
+                updateCertificateStatus();
+                showFb('ex2-fb', true, '✅ All 4 definitions are 100% correct!');
+            } else {
+                showFb('ex2-fb', false, '❌ One or more words need adjusting. Check: certain, even chance, unlikely, impossible.');
+            }
+        }
+
+        // --- STAGE 3: SAMPLE SPACE & DIE ---
+        let dieRolls = [5];
+        function rollDie() {
+            const dieEl = document.getElementById('die-display');
+            dieEl.classList.remove('animate-dice');
+            void dieEl.offsetWidth;
+            dieEl.classList.add('animate-dice');
+            const val = Math.floor(Math.random() * 6) + 1;
+            dieEl.innerText = val;
+            dieRolls.push(val);
+            if (dieRolls.length > 8) dieRolls.shift();
+            document.getElementById('die-history').innerText = dieRolls.join(', ');
+        }
+
+        function checkEx3() {
+            const val = document.getElementById('ex3-a').value;
+            if (val === 'correct') {
+                masteryState.ex3a = true;
+                updateCertificateStatus();
+                checkAllEx3Complete();
+            }
+        }
+
+        let validOutcomesSelected = 0;
+        let invalidOutcomesSelected = 0;
+        function toggleOutcome(btn, isValid) {
+            const isSelected = btn.classList.contains('bg-emerald-600') || btn.classList.contains('bg-red-500');
+            if (isSelected) {
+                btn.classList.remove('bg-emerald-600', 'text-white', 'border-emerald-600', 'bg-red-500', 'border-red-500');
+                btn.classList.add('bg-white', 'border-slate-300');
+                if (isValid) validOutcomesSelected--; else invalidOutcomesSelected--;
+            } else {
+                btn.classList.remove('bg-white', 'border-slate-300');
+                if (isValid) {
+                    btn.classList.add('bg-emerald-600', 'text-white', 'border-emerald-600');
+                    validOutcomesSelected++;
+                } else {
+                    btn.classList.add('bg-red-500', 'text-white', 'border-red-500');
+                    invalidOutcomesSelected++;
+                }
+            }
+            masteryState.ex3b = (validOutcomesSelected === 2 && invalidOutcomesSelected === 0);
+            updateCertificateStatus();
+            checkAllEx3Complete();
+        }
+
+        const ssSelectedSet = new Set();
+        function toggleSS(num, btn) {
+            if (ssSelectedSet.has(num)) {
+                ssSelectedSet.delete(num);
+                btn.classList.remove('bg-amber-500', 'text-white', 'border-amber-500');
+                btn.classList.add('bg-white', 'border-slate-300');
+            } else {
+                ssSelectedSet.add(num);
+                btn.classList.remove('bg-white', 'border-slate-300');
+                btn.classList.add('bg-amber-500', 'text-white', 'border-amber-500');
+            }
+            const validNums = [1, 2, 3, 4, 5, 6];
+            masteryState.ex3c = (ssSelectedSet.size === 6 && validNums.every(n => ssSelectedSet.has(n)));
+            updateCertificateStatus();
+            checkAllEx3Complete();
+        }
+
+        function checkEx3d(isCorrect, btn) {
+            document.querySelectorAll('.ex3d-btn').forEach(b => b.classList.remove('bg-emerald-600', 'text-white', 'border-emerald-600', 'bg-red-500', 'border-red-500'));
+            btn.classList.remove('bg-white', 'border-slate-300');
+            if (isCorrect) {
+                btn.classList.add('bg-emerald-600', 'text-white', 'border-emerald-600');
+                masteryState.ex3d = true;
+                updateCertificateStatus();
+                checkAllEx3Complete();
+            } else {
+                btn.classList.add('bg-red-500', 'text-white', 'border-red-500');
+                masteryState.ex3d = false;
+                updateCertificateStatus();
+            }
+        }
+
+        function checkAllEx3Complete() {
+            const fb = document.getElementById('ex3-fb');
+            if (masteryState.ex3a && masteryState.ex3b && masteryState.ex3c && masteryState.ex3d) {
+                fb.classList.remove('hidden');
+                fb.innerText = '✅ Brilliant! You mastered Experiment, Outcomes, Sample Space {1, 2, 3, 4, 5, 6}, and Equally Likely!';
+            }
+        }
+
+        // --- STAGE 4: SLIDERS & JACK'S DICE ---
+        function checkSliders() {
+            const a = parseFloat(document.getElementById('slider-a').value);
+            const b = parseFloat(document.getElementById('slider-b').value);
+            const c = parseFloat(document.getElementById('slider-c').value);
+            const d = parseFloat(document.getElementById('slider-d').value);
+            const e = parseFloat(document.getElementById('slider-e').value);
+
+            const okA = a <= 0.15;
+            const okB = b >= 0.65;
+            const okC = c >= 0.85;
+            const okD = d <= 0.10;
+            const okE = e >= 0.50;
+
+            const fb = document.getElementById('sliders-fb');
+            fb.classList.remove('hidden');
+
+            if (okA && okB && okC && okD && okE) {
+                masteryState.ex4_sliders = true;
+                updateCertificateStatus();
+                fb.innerHTML = `<span class="text-emerald-700 font-bold">✅ Spot on!</span> Teeth falling out & Russell Crowe walking in are near <strong>0 (Impossible/Unlikely)</strong>, while having a birthday & regular school routines are near <strong>0.75–1.0 (Likely/Certain)</strong>.`;
+            } else {
+                let tips = [];
+                if (!okA) tips.push("a. Teeth falling out tonight should be very close to 0.00");
+                if (!okB) tips.push("b. Being in this classroom next week is quite likely (0.70+)");
+                if (!okC) tips.push("c. Having a birthday next year is almost certain (0.90–1.00)");
+                if (!okD) tips.push("d. Russell Crowe walking in right now is practically impossible (0.00–0.05)");
+                if (!okE) tips.push("e. Getting maths homework this week is at least an even chance or likely (0.50+)");
+                fb.innerHTML = `<span class="text-red-600 font-bold">❌ Adjust these sliders and try again:</span><ul class="list-disc ml-5 mt-1 text-slate-700">${tips.map(t => `<li>${t}</li>`).join('')}</ul>`;
+            }
+        }
+
+        function checkJack(opt, btn) {
+            document.querySelectorAll('.jack-btn').forEach(b => b.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-red-500', 'bg-red-50'));
+            if (opt === 3) {
+                btn.classList.add('border-emerald-500', 'bg-emerald-50');
+                masteryState.ex4_jack = true;
+                updateCertificateStatus();
+                showFb('jack-fb', true, '✅ Correct! A die has no memory—every roll is independent, so 6 and 4 still have an equal 1 in 6 chance!');
+            } else {
+                btn.classList.add('border-red-500', 'bg-red-50');
+                showFb('jack-fb', false, '❌ Careful! Previous rolls do not change the physical faces of the die. Every number still has a 1 in 6 chance.');
+            }
+        }
+
+        // --- STAGE 6: PROBABILITY CARNIVAL ARCADE ---
+        let tickets = 100;
+        function addTickets(amount) {
+            tickets = Math.max(0, tickets + amount);
+            document.getElementById('carnival-tickets').innerText = tickets;
+            renderPrizeShop();
+        }
+
+        // Booth 1: Mystery Gumballs
+        const gumballScenarios = [
+            { balls: ['🔴','🔴','🔴','🔴','🔴','🔴','🔴','🔴','🔵','🔵'], target: '🔴 Red', correctWord: 'Likely', explanation: '8 out of 10 are Red (more than half, so Likely!).' },
+            { balls: ['🟢','🟢','🟢','🟢','🟢','🟡','🟡','🟡','🟡','🟡'], target: '🟢 Green', correctWord: 'Even chance', explanation: '5 out of 10 are Green (exact half = 0.5 = Even chance!).' },
+            { balls: ['🟣','🟣','🟣','🟣','🟣','🟣','🟣','🟣','🟣','🟠'], target: '🟠 Orange', correctWord: 'Unlikely', explanation: 'Only 1 out of 10 is Orange (less than half, so Unlikely!).' },
+            { balls: ['🔵','🔵','🔵','🔵','🔵','🔵','🔵','🔵','🔵','🔵'], target: '🔵 Blue', correctWord: 'Certain', explanation: '10 out of 10 are Blue (100% guaranteed = Certain!).' },
+            { balls: ['🔴','🔴','🔴','🟡','🟡','🟡','🟢','🟢','🟢','🟢'], target: '🟣 Purple', correctWord: 'Impossible', explanation: '0 out of 10 are Purple (0% chance = Impossible!).' },
+            { balls: ['🟡','🟡','🟡','🟡','🔵','🔵','🔵','🔵','🔵','🔵'], target: '🟡 Yellow', correctWord: 'Unlikely', explanation: '4 out of 10 is less than half (5/10), so it is Unlikely!' }
+        ];
+        let gbIndex = 0;
+        let selectedGbWord = null;
+
+        function loadGumballRound() {
+            const sc = gumballScenarios[gbIndex % gumballScenarios.length];
+            document.getElementById('gb-round').innerText = `Round ${gbIndex + 1}`;
+            const shuffled = [...sc.balls].sort(() => Math.random() - 0.5);
+            document.getElementById('gumball-jar').innerHTML = shuffled.map(b => `<span class="inline-block transform hover:scale-110 transition">${b}</span>`).join('');
+            document.getElementById('gumball-target-prompt').innerHTML = `Target Gumball: <span class="text-indigo-700 underline">${sc.target}</span>`;
+            
+            selectedGbWord = null;
+            document.querySelectorAll('.gb-guess-btn').forEach(b => b.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600'));
+            const pullBtn = document.getElementById('gb-pull-btn');
+            pullBtn.disabled = true;
+            pullBtn.innerHTML = `<i class="fas fa-hand-pointer mr-2"></i>Lock In Guess & Pull Lever!`;
+            pullBtn.onclick = playGumballRound;
+        }
+
+        function selectGbGuess(word, btn) {
+            selectedGbWord = word;
+            document.querySelectorAll('.gb-guess-btn').forEach(b => b.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600'));
+            btn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-600');
+            document.getElementById('gb-pull-btn').disabled = false;
+        }
+
+        function playGumballRound() {
+            if (!selectedGbWord) return;
+            const sc = gumballScenarios[gbIndex % gumballScenarios.length];
+            const pulledBall = sc.balls[Math.floor(Math.random() * sc.balls.length)];
+            const fb = document.getElementById('gb-feedback');
+            fb.classList.remove('hidden');
+
+            const isWordRight = selectedGbWord === sc.correctWord;
+            const gotTarget = sc.target.includes(pulledBall);
+
+            let msg = `Pulled a ${pulledBall}! `;
+            if (isWordRight) {
+                let bonus = gotTarget ? 80 : 50;
+                addTickets(bonus);
+                msg += `✅ Spot on (${sc.correctWord})! +${bonus} tickets! ${sc.explanation}`;
+                fb.className = "mt-2.5 text-xs font-bold p-2.5 rounded-xl bg-emerald-100 text-emerald-900 border border-emerald-300";
+            } else {
+                msg += `❌ You guessed '${selectedGbWord}', answer was '${sc.correctWord}'. ${sc.explanation}`;
+                fb.className = "mt-2.5 text-xs font-bold p-2.5 rounded-xl bg-red-100 text-red-900 border border-red-300";
+            }
+            fb.innerText = msg;
+
+            const pullBtn = document.getElementById('gb-pull-btn');
+            pullBtn.innerHTML = `<i class="fas fa-forward mr-2"></i>Next Gumball Machine`;
+            pullBtn.onclick = () => {
+                gbIndex++;
+                fb.classList.add('hidden');
+                loadGumballRound();
+            };
+        }
+
+        // Booth 2: Sample Space Builder
+        const ssbChallenges = [
+            {
+                prompt: "Choosing a primary colour from a paint set",
+                pool: ["Red", "Green", "Blue", "Yellow", "Purple", "Orange"],
+                correct: ["Red", "Blue", "Yellow"]
+            },
+            {
+                prompt: "Spinning a spinner numbered 1 to 4",
+                pool: ["0", "1", "2", "3", "4", "5"],
+                correct: ["1", "2", "3", "4"]
+            },
+            {
+                prompt: "Picking a vowel from the English alphabet",
+                pool: ["A", "B", "C", "E", "I", "O", "U", "Y"],
+                correct: ["A", "E", "I", "O", "U"]
+            },
+            {
+                prompt: "Choosing a weekend day",
+                pool: ["Monday", "Wednesday", "Friday", "Saturday", "Sunday"],
+                correct: ["Saturday", "Sunday"]
+            },
+            {
+                prompt: "Drawing a suit from a standard deck of playing cards",
+                pool: ["Hearts", "Stars", "Diamonds", "Clubs", "Spades", "Jokers"],
+                correct: ["Hearts", "Diamonds", "Clubs", "Spades"]
+            },
+            {
+                prompt: "Rolling an EVEN number on a standard 6-sided die",
+                pool: ["1", "2", "3", "4", "5", "6"],
+                correct: ["2", "4", "6"]
+            }
+        ];
+        let ssbIdx = 0;
+        let ssbSelected = new Set();
+
+        function loadSsbRound() {
+            const ch = ssbChallenges[ssbIdx % ssbChallenges.length];
+            document.getElementById('ssb-level').innerText = `Level ${(ssbIdx % ssbChallenges.length) + 1}/${ssbChallenges.length}`;
+            document.getElementById('ssb-prompt').innerText = ch.prompt;
+            ssbSelected.clear();
+            document.getElementById('ssb-basket').innerText = "";
+            
+            const poolDiv = document.getElementById('ssb-pool');
+            poolDiv.innerHTML = ch.pool.map(item => `
+                <button onclick="toggleSsbItem('${item}', this)" class="px-2.5 py-1 rounded-lg border-2 border-slate-300 bg-slate-50 hover:border-emerald-500 text-xs font-bold transition">
+                    ${item}
+                </button>
+            `).join('');
+        }
+
+        function toggleSsbItem(item, btn) {
+            if (ssbSelected.has(item)) {
+                ssbSelected.delete(item);
+                btn.classList.remove('bg-emerald-600', 'text-white', 'border-emerald-600');
+                btn.classList.add('bg-slate-50', 'border-slate-300');
+            } else {
+                ssbSelected.add(item);
+                btn.classList.add('bg-emerald-600', 'text-white', 'border-emerald-600');
+                btn.classList.remove('bg-slate-50', 'border-slate-300');
+            }
+            document.getElementById('ssb-basket').innerText = Array.from(ssbSelected).join(', ');
+        }
+
+        function checkSsbRound() {
+            const ch = ssbChallenges[ssbIdx % ssbChallenges.length];
+            const fb = document.getElementById('ssb-feedback');
+            fb.classList.remove('hidden');
+
+            const isCorrect = ssbSelected.size === ch.correct.length && ch.correct.every(x => ssbSelected.has(x));
+            if (isCorrect) {
+                addTickets(75);
+                fb.innerText = `✅ Perfect Sample Space! +75 Tickets! Next level loading...`;
+                fb.className = "mt-2.5 text-xs font-bold p-2.5 rounded-xl bg-emerald-100 text-emerald-900 border border-emerald-300";
+                setTimeout(() => {
+                    ssbIdx++;
+                    fb.classList.add('hidden');
+                    loadSsbRound();
+                }, 1400);
+            } else {
+                fb.innerText = `❌ Not quite! Make sure you included ALL valid outcomes and no extras.`;
+                fb.className = "mt-2.5 text-xs font-bold p-2.5 rounded-xl bg-red-100 text-red-900 border border-red-300";
+            }
+        }
+
+        // Booth 3: Higher or Lower Card Streak
+        let hlCard = 5;
+        let hlStreak = 0;
+
+        function playHigherLower(guess) {
+            let nextCard = Math.floor(Math.random() * 10) + 1;
+            while (nextCard === hlCard) {
+                nextCard = Math.floor(Math.random() * 10) + 1;
+            }
+            const fb = document.getElementById('hl-feedback');
+            fb.classList.remove('hidden');
+
+            const isHigher = nextCard > hlCard;
+            const won = (guess === 'higher' && isHigher) || (guess === 'lower' && !isHigher);
+
+            if (won) {
+                hlStreak++;
+                const reward = 30 + (hlStreak * 10);
+                addTickets(reward);
+                fb.innerText = `✅ Next card was ${nextCard}! Streak: ${hlStreak} (+${reward} tickets!)`;
+                fb.className = "mt-2.5 text-xs font-bold p-2.5 rounded-xl bg-emerald-100 text-emerald-900 border border-emerald-300";
+            } else {
+                hlStreak = 0;
+                fb.innerText = `❌ Unlucky! Next card was ${nextCard}. Streak reset to 0—try again!`;
+                fb.className = "mt-2.5 text-xs font-bold p-2.5 rounded-xl bg-red-100 text-red-900 border border-red-300";
+            }
+
+            hlCard = nextCard;
+            document.getElementById('hl-current-card').innerText = hlCard;
+            document.getElementById('hl-streak').innerText = hlStreak;
+        }
+
+        // Booth 4: Rigged Wheel Detective
+        const detectiveCases = [
+            {
+                scenario: "A coin is flipped 100 times. Sample space = {Heads, Tails}.",
+                results: "Results: Heads = 52 times, Tails = 48 times.",
+                ans: "fair",
+                exp: "52 and 48 are very close to an even 50/50 split—totally normal for a fair coin!"
+            },
+            {
+                scenario: "A 6-sided die is rolled 60 times. Each number should appear around 10 times.",
+                results: "Results: 1 (2x), 2 (3x), 3 (2x), 4 (3x), 5 (2x), 6 (48x).",
+                ans: "rigged",
+                exp: "Rolling a 6 forty-eight times out of 60 is way too unlikely—that die is weighted!"
+            },
+            {
+                scenario: "A spinner has 4 equal-sized quarters: Red, Blue, Green, Yellow. Spun 40 times.",
+                results: "Results: Red (11x), Blue (9x), Green (10x), Yellow (10x).",
+                ans: "fair",
+                exp: "All 4 colours landed almost 10 times each, matching equally likely outcomes!"
+            },
+            {
+                scenario: "A bag supposedly has 5 Gold tokens and 5 Silver tokens. Drawn & replaced 50 times.",
+                results: "Results: Gold = 0 times, Silver = 50 times.",
+                ans: "rigged",
+                exp: "Getting 0 Gold tokens in 50 draws means Gold is impossible—someone took them out!"
+            }
+        ];
+        let detIdx = 0;
+
+        function loadDetectiveCase() {
+            const c = detectiveCases[detIdx % detectiveCases.length];
+            document.getElementById('det-case').innerText = `Case ${(detIdx % detectiveCases.length) + 1}/${detectiveCases.length}`;
+            document.getElementById('det-scenario').innerText = c.scenario;
+            document.getElementById('det-results').innerText = c.results;
+        }
+
+        function checkDetective(choice) {
+            const c = detectiveCases[detIdx % detectiveCases.length];
+            const fb = document.getElementById('det-feedback');
+            fb.classList.remove('hidden');
+
+            if (choice === c.ans) {
+                addTickets(60);
+                fb.innerText = `✅ Great detective work! +60 Tickets! ${c.exp}`;
+                fb.className = "mt-2.5 text-xs font-bold p-2.5 rounded-xl bg-emerald-100 text-emerald-900 border border-emerald-300";
+                setTimeout(() => {
+                    detIdx++;
+                    fb.classList.add('hidden');
+                    loadDetectiveCase();
+                }, 2200);
+            } else {
+                fb.innerText = `❌ Look closer at the numbers! ${c.exp}`;
+                fb.className = "mt-2.5 text-xs font-bold p-2.5 rounded-xl bg-red-100 text-red-900 border border-red-300";
+            }
+        }
+
+        // Booth 5: Scale Sniper
+        const sniperTargets = [
+            { prompt: "Flipping Tails on a standard fair coin", target: 0.50, tol: 0.05, hint: "Even chance sits right in the middle at 0.50." },
+            { prompt: "Rolling a 7 on a standard 6-sided die", target: 0.00, tol: 0.05, hint: "Impossible events have a probability of 0.00." },
+            { prompt: "Picking a Heart from a standard deck of cards (1 in 4 chance)", target: 0.25, tol: 0.05, hint: "1 quarter = 25% = 0.25." },
+            { prompt: "A triangle having 3 straight sides", target: 1.00, tol: 0.05, hint: "Certain events sit at 1.00." },
+            { prompt: "Spinning a 1, 2, or 3 on a fair spinner numbered 1 to 4 (3 out of 4)", target: 0.75, tol: 0.05, hint: "3 quarters = 75% = 0.75." },
+            { prompt: "Rolling a 3 on a 10-sided die (1 in 10 chance)", target: 0.10, tol: 0.05, hint: "1 tenth = 10% = 0.10." },
+            { prompt: "Pulling a green marble from a bag with 9 green and 1 red marble", target: 0.90, tol: 0.05, hint: "9 out of 10 = 90% = 0.90." }
+        ];
+        let sniperIdx = 0;
+
+        function loadSniperRound() {
+            const t = sniperTargets[sniperIdx % sniperTargets.length];
+            document.getElementById('sniper-round').innerText = `Target ${sniperIdx + 1}`;
+            document.getElementById('sniper-prompt').innerText = t.prompt;
+        }
+
+        function fireScaleSniper() {
+            const t = sniperTargets[sniperIdx % sniperTargets.length];
+            const guess = parseFloat(document.getElementById('sniper-slider').value);
+            const fb = document.getElementById('sniper-feedback');
+            fb.classList.remove('hidden');
+
+            if (Math.abs(guess - t.target) <= t.tol) {
+                addTickets(85);
+                fb.innerText = `🎯 Bullseye! Exact value is ${t.target.toFixed(2)}. +85 Tickets!`;
+                fb.className = "mt-2.5 text-xs font-bold p-2.5 rounded-xl bg-emerald-100 text-emerald-900 border border-emerald-300";
+                setTimeout(() => {
+                    sniperIdx++;
+                    fb.classList.add('hidden');
+                    loadSniperRound();
+                }, 1500);
+            } else {
+                fb.innerText = `❌ Missed! You aimed at ${guess.toFixed(2)}. Hint: ${t.hint}`;
+                fb.className = "mt-2.5 text-xs font-bold p-2.5 rounded-xl bg-red-100 text-red-900 border border-red-300";
+            }
+        }
+
+        // Booth 6: Dice Sum Showdown
+        function playDiceSum(zone) {
+            const d1 = Math.floor(Math.random() * 6) + 1;
+            const d2 = Math.floor(Math.random() * 6) + 1;
+            const total = d1 + d2;
+
+            document.getElementById('ds-die1').innerText = d1;
+            document.getElementById('ds-die2').innerText = d2;
+            document.getElementById('ds-total').innerText = total;
+
+            let actualZone = 'mid';
+            if (total <= 5) actualZone = 'low';
+            else if (total >= 9) actualZone = 'high';
+
+            const fb = document.getElementById('ds-feedback');
+            fb.classList.remove('hidden');
+
+            if (zone === actualZone) {
+                const pts = (zone === 'mid') ? 50 : 90;
+                addTickets(pts);
+                fb.innerText = `✅ Rolled ${d1} + ${d2} = ${total}! You nailed the zone (+${pts} tickets!)`;
+                fb.className = "mt-2.5 text-xs font-bold p-2.5 rounded-xl bg-emerald-100 text-emerald-900 border border-emerald-300";
+            } else {
+                fb.innerText = `❌ Rolled ${d1} + ${d2} = ${total}. Notice how 6, 7, and 8 appear most often!`;
+                fb.className = "mt-2.5 text-xs font-bold p-2.5 rounded-xl bg-red-100 text-red-900 border border-red-300";
+            }
+        }
+
+        // Carnival Prize Shop (8 Challenging Tiers!)
+        const prizes = [
+            { id: 'teddy', name: 'Giant Teddy Bear', icon: '🧸', cost: 250, unlocked: false },
+            { id: 'spinner', name: 'Golden Spinner Pin', icon: '🎡', cost: 450, unlocked: false },
+            { id: 'wizard', name: 'Sample Space Wizard', icon: '🧙‍♂️', cost: 700, unlocked: false },
+            { id: 'shark', name: 'Probability Shark', icon: '🦈', cost: 1000, unlocked: false },
+            { id: 'dragon', name: 'Lucky Dice Dragon', icon: '🐉', cost: 1350, unlocked: false },
+            { id: 'astronaut', name: 'Zero-G Explorer', icon: '🧑‍🚀', cost: 1700, unlocked: false },
+            { id: 'crown', name: 'Carnival Champion Crown', icon: '👑', cost: 2100, unlocked: false },
+            { id: 'trophy', name: 'Grandmaster of Chance', icon: '🏆', cost: 2500, unlocked: false }
+        ];
+
+        function renderPrizeShop() {
+            const shelf = document.getElementById('prize-shelf');
+            if (!shelf) return;
+            const unlockedCount = prizes.filter(p => p.unlocked).length;
+            document.getElementById('prizes-unlocked-count').innerText = unlockedCount;
+
+            shelf.innerHTML = prizes.map((p, idx) => {
+                if (p.unlocked) {
+                    return `
+                        <div class="bg-emerald-900/50 border-2 border-emerald-400 rounded-xl p-3 text-center">
+                            <div class="text-3xl mb-1">${p.icon}</div>
+                            <div class="font-bold text-xs text-white">${p.name}</div>
+                            <div class="mt-2 text-xs font-extrabold text-emerald-400">✅ UNLOCKED</div>
+                        </div>
+                    `;
+                }
+                const canAfford = tickets >= p.cost;
+                return `
+                    <div class="bg-slate-800 border border-slate-700 rounded-xl p-3 text-center flex flex-col justify-between">
+                        <div>
+                            <div class="text-3xl mb-1 opacity-80">${p.icon}</div>
+                            <div class="font-bold text-xs text-slate-200">${p.name}</div>
+                        </div>
+                        <button onclick="buyPrize(${idx})" ${canAfford ? '' : 'disabled'} class="mt-2 w-full py-1.5 px-2 rounded-lg text-xs font-extrabold transition ${canAfford ? 'bg-amber-400 hover:bg-amber-300 text-slate-900' : 'bg-slate-700 text-slate-500 cursor-not-allowed'}">
+                            🎟️ ${p.cost} Tickets
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function buyPrize(idx) {
+            const p = prizes[idx];
+            if (!p.unlocked && tickets >= p.cost) {
+                p.unlocked = true;
+                addTickets(-p.cost);
+            }
+        }
+
+        // --- STAGE 5: MASTERY QUIZ ---
+        const baseQuizQuestions = [
+            {
+                q: "What is the Sample Space for flipping a standard $1 coin?",
+                options: ["{Heads}", "{Heads, Tails}", "{1, 2}", "{Coin}"],
+                ansText: "{Heads, Tails}",
+                exp: "A coin has two possible outcomes: Heads and Tails."
+            },
+            {
+                q: "A bag contains 9 red marbles and 1 blue marble. Pulling a blue marble is:",
+                options: ["Impossible", "Unlikely", "Even chance", "Certain"],
+                ansText: "Unlikely",
+                exp: "1 out of 10 is possible, so it's not impossible—it is Unlikely."
+            },
+            {
+                q: "Which probability number represents an 'Even chance'?",
+                options: ["0", "0.25", "0.5", "1"],
+                ansText: "0.5",
+                exp: "0.5 (or 50% or 1/2) sits right in the middle of the 0 to 1 scale."
+            },
+            {
+                q: "What is the Sample Space for the days of the weekend?",
+                options: ["{Saturday, Sunday}", "{Monday, Friday}", "{7 days}", "{Week}"],
+                ansText: "{Saturday, Sunday}",
+                exp: "The weekend consists of Saturday and Sunday."
+            },
+            {
+                q: "Rolling a 9 on a standard 6-sided die has a probability of:",
+                options: ["1", "0.5", "0.1", "0"],
+                ansText: "0",
+                exp: "A standard die only has numbers 1 to 6, so rolling a 9 is impossible (0)."
+            },
+            {
+                q: "A spinner has 4 equal sections: Red, Blue, Green, Yellow. Are the outcomes equally likely?",
+                options: ["Yes, each has a 1 in 4 chance", "No, Red is luckier", "Only if you spin fast", "Impossible to tell"],
+                ansText: "Yes, each has a 1 in 4 chance",
+                exp: "Because all 4 sections are equal in size, each has an equal probability."
+            },
+            {
+                q: "Which word describes an event with a probability of 0.92?",
+                options: ["Impossible", "Unlikely", "Even chance", "Likely"],
+                ansText: "Likely",
+                exp: "0.92 is very close to 1 (100%), making it very Likely."
+            },
+            {
+                q: "In the word 'MATHS', you pick one letter at random. How many outcomes are in the Sample Space?",
+                options: ["1", "4", "5", "26"],
+                ansText: "5",
+                exp: "There are 5 distinct letters: {M, A, T, H, S}."
+            }
+        ];
+
+        let quizQuestions = [];
+        let quizFailedAttempt = false;
+        let score = 0;
+
+        function shuffleArray(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function buildShuffledQuiz() {
+            quizQuestions = shuffleArray(baseQuizQuestions).map(item => {
+                const shuffledOptions = shuffleArray(item.options);
+                return {
+                    q: item.q,
+                    options: shuffledOptions,
+                    ans: shuffledOptions.indexOf(item.ansText),
+                    exp: item.exp
+                };
+            });
+        }
+
+        function renderQuiz() {
+            buildShuffledQuiz();
+            quizFailedAttempt = false;
+            masteryState.quizSolved.clear();
+            score = 0;
+            document.getElementById('quiz-score').innerText = '0';
+            updateCertificateStatus();
+
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = quizQuestions.map((item, qIdx) => `
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5" id="quiz-card-${qIdx}">
+                    <p class="font-bold text-slate-800 mb-3">${qIdx + 1}. ${item.q}</p>
+                    <div class="grid sm:grid-cols-2 gap-2.5">
+                        ${item.options.map((opt, oIdx) => `
+                            <button onclick="answerQuiz(${qIdx}, ${oIdx}, this)" id="q-${qIdx}-opt-${oIdx}" class="quiz-opt-btn text-left bg-white border-2 border-slate-200 hover:border-blue-400 p-3 rounded-lg text-sm font-semibold transition">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div id="q-fb-${qIdx}" class="text-xs font-bold mt-3 hidden"></div>
+                </div>
+            `).join('');
+        }
+
+        function answerQuiz(qIdx, oIdx, btn) {
+            if (quizFailedAttempt || masteryState.quizSolved.has(qIdx)) return;
+
+            const item = quizQuestions[qIdx];
+            const fb = document.getElementById(`q-fb-${qIdx}`);
+            fb.classList.remove('hidden');
+
+            if (oIdx === item.ans) {
+                masteryState.quizSolved.add(qIdx);
+                score = masteryState.quizSolved.size;
+                document.getElementById('quiz-score').innerText = score;
+                btn.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-900');
+                fb.innerText = `✅ Correct! ${item.exp}`;
+                fb.classList.add('text-emerald-700');
+                updateCertificateStatus();
+            } else {
+                quizFailedAttempt = true;
+                btn.classList.add('bg-red-100', 'border-red-500', 'text-red-900');
+                // Highlight the correct option so they learn from their mistake before restarting
+                const correctBtn = document.getElementById(`q-${qIdx}-opt-${item.ans}`);
+                if (correctBtn) {
+                    correctBtn.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                }
+                // Lock all remaining quiz buttons until restarted
+                document.querySelectorAll('.quiz-opt-btn').forEach(b => b.disabled = true);
+
+                fb.innerHTML = `
+                    <div class="p-3.5 rounded-xl bg-red-50 border border-red-300 text-red-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <div>❌ Incorrect! ${item.exp}</div>
+                            <div class="text-red-700 font-semibold mt-0.5">You need a clean 8/8 run—restart the quiz to try a new shuffled set!</div>
+                        </div>
+                        <button onclick="renderQuiz()" class="bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2 rounded-lg shadow transition shrink-0">
+                            <i class="fas fa-redo mr-1.5"></i>Restart Quiz
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function resetLesson() {
+            renderQuiz();
+            switchTab(1);
+        }
+
+        // Initialize Quiz, Spinner, Certificate Tracker, and Arcade on load
+        drawSpinner(0);
+        loadGumballRound();
+        loadSsbRound();
+        loadDetectiveCase();
+        loadSniperRound();
+        renderPrizeShop();
+        renderQuiz();
+    </script>
+</body>
+</html>
